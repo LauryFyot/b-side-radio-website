@@ -536,7 +536,7 @@
 			<footer class="footer">
     <nav class="footer__nav shuffle">
         <section class="footer__col footer__col--intro">
-            <a class="footer__logo" href="/" data-footer-link="1">
+			<a class="footer__logo" href="./" data-footer-link="1">
                 <!-- <svg width="90px" height="27px" viewBox="0 0 90 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="footer__logo-svg">
     <defs>
         <polygon id="envoy-logo-path-1" points="16.4473 0.613 0.9933 0.613 0.9933 26.9994 16.4473 26.9994 16.4473 0.613"></polygon>
