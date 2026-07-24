@@ -24,9 +24,9 @@ jobs:
       - name: Resolve remote directory from branch
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            echo "REMOTE_DIR=www/" >> "$GITHUB_ENV"
+            echo "REMOTE_DIR=./" >> "$GITHUB_ENV"
           elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
-            echo "REMOTE_DIR=www/dev/" >> "$GITHUB_ENV"
+            echo "REMOTE_DIR=dev/" >> "$GITHUB_ENV"
           else
             echo "Unsupported branch: ${GITHUB_REF_NAME}"
             exit 1
@@ -62,7 +62,9 @@ jobs:
           set cmd:fail-exit yes
           set net:max-retries 2
           set net:timeout 20
-          mkdir -p "$REMOTE_DIR"
+          if [ "$REMOTE_DIR" != "./" ]; then
+            mkdir -p "$REMOTE_DIR"
+          fi
           mirror -R --verbose \
             --exclude-glob .git* \
             --exclude .github/ \
