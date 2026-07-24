@@ -768,8 +768,8 @@
 
   if(isset($_POST['Submit'])){
 
-	$Name = trim($_POST['Name'] ?? '');
-	$Comment = trim($_POST['Comment'] ?? '');
+	$Name = isset($_POST['Name']) ? trim($_POST['Name']) : '';
+	$Comment = isset($_POST['Comment']) ? trim($_POST['Comment']) : '';
     
     setlocale(LC_TIME, 'fr','fr_FR','fr_FR@euro','fr_FR.utf8','fr-FR','fra');
     $months_list = array('janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre');
