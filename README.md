@@ -75,6 +75,13 @@ git merge dev
 git push origin main
 ```
 
+Checklist rapide avant merge `dev` -> `main`:
+
+1. Le workflow GitHub Actions sur `dev` est vert
+2. `https://b-side-radio.com/dev/index.php` repond correctement
+3. Les commentaires s affichent et l envoi email fonctionne
+4. Aucune credentielle n est committee
+
 ## CI/CD (GitHub Actions)
 
 Objectif:
@@ -88,21 +95,36 @@ Secrets GitHub a definir dans le repo:
 - `OVH_USERNAME`
 - `OVH_PASSWORD`
 
-Le workflow `.github/workflows/deploy.yml` peut etre ajoute ensuite.
+Le workflow est disponible dans `.github/workflows/deploy.yml`.
+
+Le workflow actuel inclut aussi un smoke test HTTP post-deploiement:
+
+- `dev` teste `https://b-side-radio.com/dev/index.php`
+- `main` teste `https://b-side-radio.com/index.php`
 
 ## Important securite
 
-Des identifiants SMTP sont actuellement presents en dur dans `index.php`.
+Les secrets SMTP ne doivent jamais etre stockes dans le repo.
 
-A faire en priorite:
+Le projet charge des secrets SMTP via:
 
-1. Regenerer/changer le mot de passe SMTP
-2. Sortir les secrets du code
-3. Utiliser des variables d environnement/secrets cote serveur
+1. Variables d environnement (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `SMTP_TO_EMAIL`)
+2. Ou un fichier local `smtp-config.php` non versionne
+
+Mise en place locale/OVH:
+
+1. Copier `smtp-config.example.php` en `smtp-config.php`
+2. Remplir avec tes vraies valeurs SMTP
+3. Verifier que `smtp-config.php` est bien ignore par git
+
+Important:
+
+1. Si un ancien mot de passe SMTP a deja ete committe, il faut le regenerer immediatement
+2. Ne jamais partager les captures avec des secrets visibles
 
 ## Roadmap courte
 
-- [ ] Ajouter workflow GitHub Actions deploy dev/prod
-- [ ] Externaliser les secrets mail
+- [x] Ajouter workflow GitHub Actions deploy dev/prod
+- [x] Externaliser les secrets mail
 - [ ] Ajouter un anti-spam plus robuste
 - [ ] Nettoyer les chemins d assets restants si besoin

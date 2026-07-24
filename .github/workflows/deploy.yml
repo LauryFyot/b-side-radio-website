@@ -25,8 +25,10 @@ jobs:
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             echo "REMOTE_DIR=./" >> "$GITHUB_ENV"
+            echo "PUBLIC_URL=https://b-side-radio.com/" >> "$GITHUB_ENV"
           elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
             echo "REMOTE_DIR=dev/" >> "$GITHUB_ENV"
+            echo "PUBLIC_URL=https://b-side-radio.com/dev/" >> "$GITHUB_ENV"
           else
             echo "Unsupported branch: ${GITHUB_REF_NAME}"
             exit 1
@@ -71,3 +73,10 @@ jobs:
             ./ "$REMOTE_DIR"
           bye
           EOF
+
+      - name: Smoke test deployed URL
+        run: |
+          TARGET_URL="${PUBLIC_URL}index.php"
+          echo "Smoke test URL: ${TARGET_URL}"
+          curl --fail --silent --show-error --location --retry 2 --retry-all-errors --max-time 20 "$TARGET_URL" > /dev/null
+          echo "Smoke test passed."
