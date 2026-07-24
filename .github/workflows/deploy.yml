@@ -1,0 +1,52 @@
+name: Deploy OVH (SFTP)
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Resolve remote directory from branch
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "REMOTE_DIR=/www/" >> "$GITHUB_ENV"
+          elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
+            echo "REMOTE_DIR=/www/dev/" >> "$GITHUB_ENV"
+          else
+            echo "Unsupported branch: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+      - name: Deploy files over SFTP
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" <<EOF
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:timeout 20
+          mirror -R --verbose \
+            --exclude-glob .git* \
+            --exclude .github/ \
+            --exclude .vscode/ \
+            --exclude README.md \
+            ./ "$REMOTE_DIR"
+          bye
+          EOF
