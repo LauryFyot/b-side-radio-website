@@ -24,13 +24,32 @@ jobs:
       - name: Resolve remote directory from branch
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            echo "REMOTE_DIR=/www/" >> "$GITHUB_ENV"
+            echo "REMOTE_DIR=www/" >> "$GITHUB_ENV"
           elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
-            echo "REMOTE_DIR=/www/dev/" >> "$GITHUB_ENV"
+            echo "REMOTE_DIR=www/dev/" >> "$GITHUB_ENV"
           else
             echo "Unsupported branch: ${GITHUB_REF_NAME}"
             exit 1
           fi
+
+      - name: Validate required secrets
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          [ -n "$OVH_HOST" ] || { echo "Missing secret: OVH_HOST"; exit 1; }
+          [ -n "$OVH_USERNAME" ] || { echo "Missing secret: OVH_USERNAME"; exit 1; }
+          [ -n "$OVH_PASSWORD" ] || { echo "Missing secret: OVH_PASSWORD"; exit 1; }
+          echo "Secrets are present."
+
+      - name: Test SFTP connection
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "set sftp:auto-confirm yes; set net:max-retries 1; set net:timeout 20; pwd; bye"
 
       - name: Deploy files over SFTP
         env:
@@ -40,8 +59,10 @@ jobs:
         run: |
           lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" <<EOF
           set sftp:auto-confirm yes
+          set cmd:fail-exit yes
           set net:max-retries 2
           set net:timeout 20
+          mkdir -p "$REMOTE_DIR"
           mirror -R --verbose \
             --exclude-glob .git* \
             --exclude .github/ \
