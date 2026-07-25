@@ -29,7 +29,7 @@
 			<div class="banner-overlay"></div>	
 		</div>
 		<div class="banner-content"  id="player-anchor">
-				<img class="logo-img" src="IMAGES/bside_logo.png">
+				<img class="logo-img" src="assets/images/bside_logo.png">
 				<div class="welcome">
 					<p class="p-title">Bienvenue sur</p>
 					<h1 class="banner-title">B Side Radio.com</h1>
@@ -68,12 +68,12 @@
 					<div class="container-player">
 		        		<div class="wrapper-player">
 					        <h1>BsidePlayer</h1>
-					        <img src="IMAGES/bsidedesign.png" class="player-img">
+					        <img src="assets/images/bsidedesign.png" class="player-img">
 					        <input id="range" class="level" type="range" value="0" min="0">
 					           	<div class="buttons-player">
-					               	<!-- <button id="pre"><img src="IMAGES/rewind.png"></button> -->
-					               	<button id="play"><img id="play_img" src="IMAGES/play.png"></button>
-					               	<!-- <button id="next"><img src="IMAGES/fast-forward.png"></button> -->
+					               	<!-- <button id="pre"><img src="assets/images/rewind.png"></button> -->
+					               	<button id="play"><img id="play_img" src="assets/images/play.png"></button>
+					               	<!-- <button id="next"><img src="assets/images/fast-forward.png"></button> -->
 					           	</div>
 	       		    	</div>
 	       			</div>
@@ -81,7 +81,7 @@
        			<div class="player-announcement" data-aos="fade-in" data-aos-duration="1000">
        				<h1>Listen to BsideRadio.com</h1>
 					<!-- <h2 class="fashion" style="font-size:20px;">The Fashion Mashup</h2> -->
-					<img src="IMAGES/fashion_mashup.png" width="240" height="70" class="fashionmashup">
+					<img src="assets/images/fashion_mashup.png" width="240" height="70" class="fashionmashup">
        				<h2>Vous écoutez B.Side.Radio.com tous les jours et sans publicités <strong>toute la journée</strong>.<br> Les meilleurs MashUps & remiXes des années 80 à aujourd’hui. <br> Mixes lives tous les vendredis et samedis soirs en mode Funky House & House.</h2>
        			</div>
 			</div>

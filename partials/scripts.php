@@ -1,5 +1,5 @@
 		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-		<script type="text/javascript" src="JAVASCRIPT/app.js"></script>
+		<script type="text/javascript" src="assets/js/app.js"></script>
 		<script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
 		<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v7.0" nonce="V6jLDkf0"></script>
 		<script type="text/javascript" src="path/to/instafeed.min.js"></script>

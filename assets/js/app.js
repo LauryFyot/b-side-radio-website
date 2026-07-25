@@ -37,18 +37,18 @@ function playSong(){
             isPlaying = true;
             total_time = song.duration;
             range.max = total_time;
-            play_img.src = "IMAGES/pause.png";
+            play_img.src = "assets/images/pause.png";
         }else{
             song.pause();
             isPlaying = false;
-            play_img.src = "IMAGES/play.png";
+            play_img.src = "assets/images/play.png";
         }
        song.addEventListener('ended',function(){
             song.currentTime = 0
             song.pause();
             isPlaying = false;
             range.value = 0;
-            play_img.src = "IMAGES/play.png";
+            play_img.src = "assets/images/play.png";
         })
         // song.addEventListener('timeupdate',function(){
         //     range.value = song.currentTime;

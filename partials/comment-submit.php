@@ -59,7 +59,7 @@
 		$safeComment = nl2br(htmlspecialchars($Comment, ENT_QUOTES, 'UTF-8'), false);
 
 	    $handle = fopen("comments.txt","a");
-	    fwrite($handle, "<div class=\"comments-content\"><div class=\"left\"><img src=\"IMAGES\Icon_user_".$r.".png\" class=\"icon-user\" width=\"70\" height=\"70\"></div><div class=\"right\"><h1 class=\"name-comments\">".$safeName."</h1><p class=\"date-comments\">".$day." ".$months_list[$nb_month-1]." ".$year." à ".$hour."h".$minutes."</p><p class=\"comment-comments\">".$safeComment."</p></div></div>\n\n\n\n");
+	    fwrite($handle, "<div class=\"comments-content\"><div class=\"left\"><img src=\"assets/images/Icon_user_".$r.".png\" class=\"icon-user\" width=\"70\" height=\"70\"></div><div class=\"right\"><h1 class=\"name-comments\">".$safeName."</h1><p class=\"date-comments\">".$day." ".$months_list[$nb_month-1]." ".$year." à ".$hour."h".$minutes."</p><p class=\"comment-comments\">".$safeComment."</p></div></div>\n\n\n\n");
 	    fclose($handle);
 
 		require_once 'PHPMailer/src/PHPMailer.php';

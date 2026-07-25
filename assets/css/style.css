@@ -154,7 +154,7 @@ nav a:hover{
 	height: 75vh;
 	width: 100%;
 	top: 75px;
-	background-image: url("IMAGES/mixbannerbw.jpeg");
+	background-image: url("../images/mixbannerbw.jpeg");
 	background-size: cover;
 	background-color: #2D2D31;
 	background-attachment: fixed;
@@ -1343,7 +1343,7 @@ footer{
 
 	.banner-area{
 		width: 100%;
-		background-image: url("IMAGES/mixbannerbw.jpeg");
+		background-image: url("../images/mixbannerbw.jpeg");
 		background-size: cover;
 		background-color: #2D2D31;
 		background-attachment: fixed;
@@ -1513,7 +1513,7 @@ footer{
 		height: 300px;
 		width: 100%;
 		top: 75px;
-		background-image: url("IMAGES/vinyle.jpg");
+		background-image: url("../images/vinyle.jpg");
 		background-size: cover;
 		background-color: #2D2D31;
 		-webkit-background-size: cover;
