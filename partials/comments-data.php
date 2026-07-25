@@ -44,11 +44,8 @@ if (!function_exists('supabaseHttpRequest')) {
 
                 if ($body === false) {
                     $error = curl_error($ch);
-                    curl_close($ch);
                     return array('ok' => false, 'status' => $status, 'body' => $error, 'data' => null);
                 }
-
-                curl_close($ch);
                 return array('ok' => $status >= 200 && $status < 300, 'status' => $status, 'body' => $body, 'data' => json_decode($body, true));
             }
         }

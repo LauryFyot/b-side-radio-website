@@ -66,10 +66,16 @@ jobs:
           set net:timeout 20
           cd www
           mirror -R --verbose \
-            --exclude-glob .git* \
-            --exclude .github/ \
-            --exclude .vscode/ \
-            --exclude README.md \
+            --exclude-glob .git \
+            --exclude-glob .git/* \
+            --exclude-glob .github \
+            --exclude-glob .github/* \
+            --exclude-glob .vscode \
+            --exclude-glob .vscode/* \
+            --exclude-glob README.md \
+            --exclude-glob admin-config.php \
+            --exclude-glob smtp-config.php \
+            --exclude-glob supabase-config.php \
             ./ "$REMOTE_DIR"
           bye
           EOF
