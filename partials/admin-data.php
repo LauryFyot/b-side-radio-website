@@ -29,35 +29,14 @@ function adminSupabaseRequest($method, $path, $payload = null){
         return array('ok' => false, 'status' => 0, 'body' => 'Supabase admin config missing', 'data' => null);
     }
 
-    $ch = curl_init($config['url'] . $path);
-    if ($ch === false) {
-        return array('ok' => false, 'status' => 0, 'body' => 'Unable to init cURL', 'data' => null);
-    }
-
     $headers = array(
         'apikey: ' . $config['service_role_key'],
         'Authorization: Bearer ' . $config['service_role_key'],
         'Content-Type: application/json'
     );
+    $requestBody = $payload !== null ? json_encode($payload) : null;
 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-
-    if ($payload !== null) {
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    }
-
-    $body = curl_exec($ch);
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if ($body === false) {
-        return array('ok' => false, 'status' => $status, 'body' => curl_error($ch), 'data' => null);
-    }
-
-    $decoded = json_decode($body, true);
-    return array('ok' => $status >= 200 && $status < 300, 'status' => $status, 'body' => $body, 'data' => $decoded);
+    return supabaseHttpRequest($method, $config['url'] . $path, $headers, $requestBody, 20);
 }
 
 function adminFetchRows($path){
@@ -119,11 +98,6 @@ function adminStorageRequest($method, $path, $payload = null, $contentType = nul
         return array('ok' => false, 'status' => 0, 'body' => 'Supabase admin config missing', 'data' => null);
     }
 
-    $ch = curl_init($config['url'] . $path);
-    if ($ch === false) {
-        return array('ok' => false, 'status' => 0, 'body' => 'Unable to init cURL', 'data' => null);
-    }
-
     $headers = array(
         'apikey: ' . $config['service_role_key'],
         'Authorization: Bearer ' . $config['service_role_key']
@@ -137,24 +111,7 @@ function adminStorageRequest($method, $path, $payload = null, $contentType = nul
         $headers[] = $header;
     }
 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 45);
-
-    if ($payload !== null) {
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    }
-
-    $body = curl_exec($ch);
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if ($body === false) {
-        return array('ok' => false, 'status' => $status, 'body' => curl_error($ch), 'data' => null);
-    }
-
-    $decoded = json_decode($body, true);
-    return array('ok' => $status >= 200 && $status < 300, 'status' => $status, 'body' => $body, 'data' => $decoded);
+    return supabaseHttpRequest($method, $config['url'] . $path, $headers, $payload, 45);
 }
 
 function adminEnsureStorageBucket(){

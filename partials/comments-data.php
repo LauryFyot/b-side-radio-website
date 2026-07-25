@@ -22,15 +22,83 @@ function loadSupabaseConfig(){
     return $config;
 }
 
+if (!function_exists('supabaseHttpRequest')) {
+    function supabaseHttpRequest($method, $url, $headers, $payload = null, $timeout = 20){
+        $method = strtoupper((string)$method);
+        $headers = array_values((array)$headers);
+
+        if (function_exists('curl_init')) {
+            $ch = curl_init($url);
+            if ($ch !== false) {
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_TIMEOUT, (int)$timeout);
+
+                if ($payload !== null) {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+                }
+
+                $body = curl_exec($ch);
+                $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                if ($body === false) {
+                    $error = curl_error($ch);
+                    curl_close($ch);
+                    return array('ok' => false, 'status' => $status, 'body' => $error, 'data' => null);
+                }
+
+                curl_close($ch);
+                return array('ok' => $status >= 200 && $status < 300, 'status' => $status, 'body' => $body, 'data' => json_decode($body, true));
+            }
+        }
+
+        $headerLines = $headers;
+        if ($payload !== null) {
+            $headerLines[] = 'Content-Length: ' . strlen((string)$payload);
+        }
+
+        $contextOptions = array(
+            'http' => array(
+                'method' => $method,
+                'header' => implode("\r\n", $headerLines),
+                'timeout' => (int)$timeout,
+                'ignore_errors' => true
+            )
+        );
+
+        if ($payload !== null) {
+            $contextOptions['http']['content'] = $payload;
+        }
+
+        $context = stream_context_create($contextOptions);
+        $body = @file_get_contents($url, false, $context);
+        $responseHeaders = function_exists('http_get_last_response_headers') ? http_get_last_response_headers() : array();
+        if (!is_array($responseHeaders)) {
+            $responseHeaders = array();
+        }
+        $status = 0;
+
+        foreach ($responseHeaders as $responseHeader) {
+            if (preg_match('/^HTTP\/\S+\s+(\d{3})/', $responseHeader, $matches)) {
+                $status = (int)$matches[1];
+                break;
+            }
+        }
+
+        if ($body === false) {
+            $error = error_get_last();
+            return array('ok' => false, 'status' => $status, 'body' => isset($error['message']) ? $error['message'] : 'HTTP request failed', 'data' => null);
+        }
+
+        return array('ok' => $status >= 200 && $status < 300, 'status' => $status, 'body' => $body, 'data' => json_decode($body, true));
+    }
+}
+
 function supabaseRequest($method, $path, $payload = null){
     $config = loadSupabaseConfig();
     if (!$config['enabled']) {
         return array('ok' => false, 'status' => 0, 'body' => 'Supabase config missing', 'data' => null);
-    }
-
-    $ch = curl_init($config['url'] . $path);
-    if ($ch === false) {
-        return array('ok' => false, 'status' => 0, 'body' => 'Unable to init cURL', 'data' => null);
     }
 
     $headers = array(
@@ -38,28 +106,9 @@ function supabaseRequest($method, $path, $payload = null){
         'Authorization: Bearer ' . $config['anon_key'],
         'Content-Type: application/json'
     );
+    $requestBody = $payload !== null ? json_encode($payload) : null;
 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-
-    if ($payload !== null) {
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    }
-
-    $body = curl_exec($ch);
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if ($body === false) {
-        $error = curl_error($ch);
-        return array('ok' => false, 'status' => $status, 'body' => $error, 'data' => null);
-    }
-
-    $decoded = json_decode($body, true);
-    $ok = $status >= 200 && $status < 300;
-
-    return array('ok' => $ok, 'status' => $status, 'body' => $body, 'data' => $decoded);
+    return supabaseHttpRequest($method, $config['url'] . $path, $headers, $requestBody, 20);
 }
 
 function fetchSupabaseRows($path){
