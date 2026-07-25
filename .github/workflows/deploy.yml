@@ -53,6 +53,13 @@ jobs:
         run: |
           lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "set sftp:auto-confirm yes; set net:max-retries 1; set net:timeout 20; pwd; bye"
 
+      - name: Debug deploy context
+        run: |
+          echo "Branch: ${GITHUB_REF_NAME}"
+          echo "REMOTE_DIR=${REMOTE_DIR}"
+          echo "PUBLIC_URL=${PUBLIC_URL}"
+          lftp --version
+
       - name: Deploy files over SFTP
         env:
           OVH_HOST: ${{ secrets.OVH_HOST }}
@@ -62,9 +69,12 @@ jobs:
           lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" <<EOF
           set sftp:auto-confirm yes
           set cmd:fail-exit yes
+          set cmd:trace yes
           set net:max-retries 2
           set net:timeout 20
           cd www
+          pwd
+          ls -la
           mirror -R --verbose --no-perms \
             --exclude-glob .git \
             --exclude-glob .git/* \
