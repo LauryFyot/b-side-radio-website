@@ -1,3 +1,4 @@
 .DS_Store
 .vscode/
 smtp-config.php
+supabase-config.php

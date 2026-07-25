@@ -1,4 +1,8 @@
-<?php include __DIR__ . '/partials/head.php'; ?>
+<?php
+include __DIR__ . '/partials/comments-data.php';
+include __DIR__ . '/partials/comment-submit.php';
+include __DIR__ . '/partials/head.php';
+?>
 
 <body>
 	<?php include __DIR__ . '/partials/header-hero-player.php'; ?>
@@ -13,5 +17,3 @@
 </body>
 
 </html>
-
-<?php include __DIR__ . '/partials/comment-submit.php'; ?>
