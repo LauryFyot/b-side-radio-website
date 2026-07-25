@@ -1,6 +1,27 @@
 			<div class="prog-wrapper" id="prog-anchor">
 				<h1 class="prog-title" data-aos="fade-in" data-aos-duration="500">Programmation</h1>
 				<div class="programmation">
+					<?php
+					$programSlots = fetchProgramSlots(80);
+					if (!empty($programSlots)) {
+						foreach ($programSlots as $slot) {
+							$show = isset($slot['show']) && is_array($slot['show']) ? $slot['show'] : array();
+							$title = htmlspecialchars($show['name'] ?? 'Emission', ENT_QUOTES, 'UTF-8');
+							$description = htmlspecialchars($show['description'] ?? '', ENT_QUOTES, 'UTF-8');
+							$hourRange = htmlspecialchars(formatHourRange($slot['start_time'] ?? '', $slot['end_time'] ?? ''), ENT_QUOTES, 'UTF-8');
+							$coverPath = normalizeAssetPath($show['cover_url'] ?? '');
+							if ($coverPath === '') {
+								$coverPath = 'https://picsum.photos/300';
+							}
+
+							echo '<div class="module" data-aos="fade-up" data-aos-duration="600">';
+							echo '<div class="imgBox"><img src="' . htmlspecialchars($coverPath, ENT_QUOTES, 'UTF-8') . '" width="250" height="250"></div>';
+							echo '<div class="details"><h1>' . $title . '</h1><h2>' . $hourRange . '</h2><p>' . $description . '</p></div>';
+							echo '</div>';
+						}
+					} else {
+					?>
+					# Fallback with old data just in case the database is empty, to avoid a blank page.
 					<div class="module" data-aos="fade-up" data-aos-duration="1000">
 						<div class="imgBox">
 							<img src="https://picsum.photos/300?random=1" width="250" height="250">
@@ -82,5 +103,6 @@
 							<p>Du son toute la journée !</p>
 						</div>
 					</div>
+					<?php } ?>
 				</div>
 			</div>

@@ -2,3 +2,4 @@
 .vscode/
 smtp-config.php
 supabase-config.php
+admin-config.php

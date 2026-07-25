@@ -150,6 +150,17 @@ nav a:hover{
 	/*border-bottom: solid 1px;*/
 }
 
+.nav-item-admin{
+	color: var(--bsidered);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.nav-item-admin:hover{
+	color: #ff6b6b;
+}
+
 .banner-area{
 	/* position: fixed; */
 	height: 75vh;
@@ -994,7 +1005,7 @@ audio::-webkit-media-controls-panel {
 
 #comments-inner{
 	display: flex;
-    flex-direction: column-reverse;
+	flex-direction: column;
     flex-grow: 1;
 }
 
@@ -1318,7 +1329,7 @@ footer{
 	color: var(--bsidegrey);
 }
 
-@media (max-width: 1080px){
+@media (max-width: 1160px){
 
 	.banner-area{
 		width: 100%;
@@ -1468,6 +1479,11 @@ footer{
 		background-color: khaki;
 		line-height: 0px;
 		margin-top: 30px; margin-bottom: 30px; 
+	}
+
+	.nav-item-admin{
+		color: var(--bsidered);
+		background-color: transparent;
 	}
 
 	.nav-item a{

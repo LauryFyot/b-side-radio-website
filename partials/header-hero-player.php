@@ -16,6 +16,7 @@
 					<a class="nav-item" href="#socials" onclick="closeMenu()">Réseaux</a>
 					<a class="nav-item" href="#comments" onclick="closeMenu()">CTKoi</a>
 					<a class="nav-item" href="#videos" onclick="closeMenu()">Vidéos</a>
+					<a class="nav-item nav-item-admin" href="admin.php" onclick="closeMenu()">B-Admin</a>
 				</nav>
 				<script type="text/javascript">
 					function closeMenu(){
@@ -38,7 +39,7 @@
 			<div class="onair">
 				<div class="sliding" data-aos="fade-left" data-aos-duration="600">
 					<div class="sliding-rtl">
-						<p>Only mashups & remixes</p>
+							<p><?php echo htmlspecialchars(fetchSiteSetting('hero_sliding_message', 'Only mashups & remixes'), ENT_QUOTES, 'UTF-8'); ?></p>
 					</div>
 				</div>
 				<div class="onair2">

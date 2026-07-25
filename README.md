@@ -122,6 +122,56 @@ Important:
 1. Si un ancien mot de passe SMTP a deja ete committe, il faut le regenerer immediatement
 2. Ne jamais partager les captures avec des secrets visibles
 
+## Supabase contenu admin
+
+Le site peut maintenant piloter ces blocs depuis Supabase:
+
+1. Horaires des emissions
+2. Vignettes des emissions
+3. Pochettes "titres majeurs" (This week)
+4. MP3 des titres preferes
+5. 3 videos YouTube mises en avant
+
+Si ton projet Supabase existe deja, execute aussi:
+
+```bash
+supabase/admin-content-migration.sql
+```
+
+Ce script ajoute les tables de contenu manquantes pour l admin.
+
+## Admin local (toi + ton pere)
+
+Une page admin est disponible sur:
+
+- `/admin.php`
+
+Configuration:
+
+1. Copier `admin-config.example.php` vers `admin-config.php`
+2. Generer un hash de mot de passe PHP:
+   ```bash
+   php -r "echo password_hash('TON_MDP', PASSWORD_DEFAULT), PHP_EOL;"
+   ```
+3. Remplacer les `password_hash` dans `admin-config.php`
+4. Ajouter `service_role_key` dans `supabase-config.php`
+
+Exemple minimal `supabase-config.php`:
+
+```php
+<?php
+return array(
+   'url' => 'https://xxxx.supabase.co',
+   'anon_key' => 'ey...public',
+   'service_role_key' => 'ey...service_role'
+);
+```
+
+Important:
+
+1. `service_role_key` ne doit jamais etre committe
+2. Restreindre l acces HTTP a `admin.php` (mot de passe fort + HTTPS)
+
 ## Roadmap courte
 
 - [x] Ajouter workflow GitHub Actions deploy dev/prod

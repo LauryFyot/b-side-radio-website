@@ -62,6 +62,32 @@ function supabaseRequest($method, $path, $payload = null){
     return array('ok' => $ok, 'status' => $status, 'body' => $body, 'data' => $decoded);
 }
 
+function fetchSupabaseRows($path){
+    $response = supabaseRequest('GET', $path);
+    if (!$response['ok'] || !is_array($response['data'])) {
+        error_log('Unable to fetch Supabase rows: ' . $response['body']);
+        return array();
+    }
+
+    return $response['data'];
+}
+
+function fetchSiteSetting($settingKey, $defaultValue = ''){
+    $settingKey = trim((string)$settingKey);
+    if ($settingKey === '') {
+        return $defaultValue;
+    }
+
+    $path = '/rest/v1/site_settings?select=setting_value&setting_key=eq.' . rawurlencode($settingKey) . '&limit=1';
+    $rows = fetchSupabaseRows($path);
+    if (empty($rows) || !isset($rows[0]['setting_value'])) {
+        return $defaultValue;
+    }
+
+    $value = (string)$rows[0]['setting_value'];
+    return $value !== '' ? $value : $defaultValue;
+}
+
 function fetchApprovedComments($limit = 60){
     $limit = (int)$limit;
     if ($limit <= 0) {
@@ -69,14 +95,7 @@ function fetchApprovedComments($limit = 60){
     }
 
     $path = '/rest/v1/comments?select=author_name,body,created_at,status&status=eq.approved&order=created_at.desc&limit=' . $limit;
-    $response = supabaseRequest('GET', $path);
-
-    if (!$response['ok'] || !is_array($response['data'])) {
-        error_log('Unable to fetch comments from Supabase: ' . $response['body']);
-        return array();
-    }
-
-    return $response['data'];
+    return fetchSupabaseRows($path);
 }
 
 function insertPendingComment($authorName, $body, $ipHash, $userAgent){
@@ -106,4 +125,83 @@ function formatCommentDate($isoDate){
     } catch (Exception $e) {
         return '';
     }
+}
+
+function normalizeAssetPath($path){
+    if (!$path) {
+        return '';
+    }
+
+    if (preg_match('/^https?:\/\//i', $path)) {
+        return $path;
+    }
+
+    return ltrim($path, '/');
+}
+
+function fetchProgramSlots($limit = 80){
+    $limit = (int)$limit;
+    if ($limit <= 0) {
+        $limit = 80;
+    }
+
+    $path = '/rest/v1/show_slots?select=id,day_of_week,start_time,end_time,priority,show:shows!inner(id,name,description,cover_url,is_active)&is_active=eq.true&show.is_active=eq.true&order=day_of_week.asc&order=start_time.asc&order=priority.asc&limit=' . $limit;
+    return fetchSupabaseRows($path);
+}
+
+function fetchFeaturedCovers($limit = 40){
+    $limit = (int)$limit;
+    if ($limit <= 0) {
+        $limit = 40;
+    }
+
+    $path = '/rest/v1/featured_covers?select=id,image_url,title,is_active,sort_order&is_active=eq.true&order=sort_order.asc&order=id.asc&limit=' . $limit;
+    return fetchSupabaseRows($path);
+}
+
+function fetchFavoriteTracks($limit = 20){
+    $limit = (int)$limit;
+    if ($limit <= 0) {
+        $limit = 20;
+    }
+
+    $path = '/rest/v1/favorite_tracks?select=id,title,mp3_url,is_active,sort_order&is_active=eq.true&order=sort_order.asc&order=id.asc&limit=' . $limit;
+    return fetchSupabaseRows($path);
+}
+
+function extractYoutubeId($url){
+    if (!$url) {
+        return '';
+    }
+
+    if (preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i', $url, $matches)) {
+        return $matches[1];
+    }
+
+    return '';
+}
+
+function toYoutubeEmbedUrl($url){
+    $id = extractYoutubeId($url);
+    if ($id === '') {
+        return '';
+    }
+
+    return 'https://www.youtube.com/embed/' . $id;
+}
+
+function fetchFeaturedVideos($limit = 3){
+    $limit = (int)$limit;
+    if ($limit <= 0) {
+        $limit = 3;
+    }
+
+    $path = '/rest/v1/featured_videos?select=id,slot,title,youtube_url,is_active&is_active=eq.true&order=slot.asc&order=id.asc&limit=' . $limit;
+    return fetchSupabaseRows($path);
+}
+
+function formatHourRange($start, $end){
+    $startHour = substr((string)$start, 0, 5);
+    $endHour = substr((string)$end, 0, 5);
+    return $startHour . ' / ' . $endHour;
 }
