@@ -65,7 +65,7 @@ jobs:
           set net:max-retries 2
           set net:timeout 20
           cd www
-          mirror -R --verbose \
+          mirror -R --verbose --no-perms \
             --exclude-glob .git \
             --exclude-glob .git/* \
             --exclude-glob .github \
