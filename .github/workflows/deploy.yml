@@ -73,7 +73,6 @@ jobs:
           set net:max-retries 2
           set net:timeout 20
           set mirror:set-permissions no
-          set mirror:set-umask no
           cd www
           pwd
           ls
@@ -89,7 +88,7 @@ jobs:
             --exclude-glob smtp-config.php \
             --exclude-glob supabase-config.php \
             ./ "$REMOTE_DIR"
-          bye
+          exit 0
           EOF
 
       - name: Smoke test deployed URL
