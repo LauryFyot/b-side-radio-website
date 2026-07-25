@@ -68,13 +68,15 @@ jobs:
         run: |
           lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" <<EOF
           set sftp:auto-confirm yes
-          set cmd:fail-exit yes
+          set cmd:fail-exit no
           set cmd:trace yes
           set net:max-retries 2
           set net:timeout 20
+          set mirror:set-permissions no
+          set mirror:set-umask no
           cd www
           pwd
-          ls -la
+          ls
           mirror -R --verbose --no-perms \
             --exclude-glob .git \
             --exclude-glob .git/* \
