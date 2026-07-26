@@ -1,155 +1,75 @@
-# B-Side Radio Website
+# B-Side Admin - Architecture definitive
 
-Site vitrine B-Side Radio (PHP + HTML/CSS/JS), avec une approche simple:
-
-- `main` = production
-- `dev` = preproduction (deploy dans `www/dev`)
+Ce repository est maintenant organise autour d un admin React connecte directement a Supabase.
 
 ## Stack
 
-- PHP (page principale + gestion commentaires)
-- CSS
-- JavaScript
+- React 18 + Vite
+- Supabase (Auth, Postgres, Storage)
+- GitHub Actions + SFTP OVH
 
-## Structure du projet
+## Structure
 
-- `index.php` : page principale + logique commentaire
-- `style.css` : styles principaux
-- `JAVASCRIPT/app.js` : scripts front
-- `IMAGES/` : assets
+- `apps/admin/` : application admin React (source principal)
+- `.github/workflows/deploy.yml` : build + deploy OVH
+- `supabase/` : schema SQL, migrations et seeds
+- `assets/` : assets historiques du site public
+- `config/` : configs PHP historiques (conservees temporairement)
 
-## Run local (dev)
-
-Le site est servi en local a la racine du projet:
-
-1. Installer PHP (macOS):
-   ```bash
-   brew install php
-   ```
-2. Lancer le serveur local depuis la racine:
-   ```bash
-   php -S localhost:8000
-   ```
-3. Ouvrir:
-   - `http://localhost:8000`
-
-Note: en local, tu n utilises pas `/dev`. Le chemin `/dev` est reserve a l hebergement OVH.
-
-## Environnements
-
-- Prod OVH: `www`
-- Dev OVH: `www/dev`
-
-URLs attendues:
-
-- Prod: `https://ton-domaine.tld/`
-- Dev: `https://ton-domaine.tld/dev/`
-
-## Workflow Git recommande
-
-1. Travailler sur `dev`
-2. Tester sur la version dev OVH
-3. Merge `dev` -> `main` quand c est valide
-4. Deployer en prod
-
-Exemple:
+## Lancer l admin en local
 
 ```bash
-git checkout dev
-git pull
-git add .
-git commit -m "feat: ..."
-git push origin dev
+npm run admin:install
+cp apps/admin/.env.example apps/admin/.env
+# Renseigner:
+# VITE_SUPABASE_URL
+# VITE_SUPABASE_ANON_KEY
+npm run dev
 ```
 
-Puis:
+## Build production
 
 ```bash
-git checkout main
-git pull
-git merge dev
-git push origin main
+npm run admin:ci
+npm run build
+npm run preview
 ```
 
-Checklist rapide avant merge `dev` -> `main`:
+## Variables d environnement
 
-1. Le workflow GitHub Actions sur `dev` est vert
-2. `https://b-side-radio.com/dev/index.php` repond correctement
-3. Les commentaires s affichent correctement
-4. Aucune credentielle n est committee
+Dans `apps/admin/.env` (local) et dans GitHub Secrets (CI):
 
-## CI/CD (GitHub Actions)
-
-Objectif:
-
-- push sur `dev` => sync SFTP vers `www/dev`
-- push sur `main` => sync SFTP vers `www`
-
-Secrets GitHub a definir dans le repo:
-
-- `OVH_HOST`
-- `OVH_USERNAME`
-- `OVH_PASSWORD`
-
-Le workflow est disponible dans `.github/workflows/deploy.yml`.
-
-Le workflow actuel inclut aussi un smoke test HTTP post-deploiement:
-
-- `dev` teste `https://b-side-radio.com/dev/index.php`
-- `main` teste `https://b-side-radio.com/index.php`
-
-## Supabase contenu admin
-
-Le site peut maintenant piloter ces blocs depuis Supabase:
-
-1. Horaires des emissions
-2. Vignettes des emissions
-3. Pochettes "titres majeurs" (This week)
-4. MP3 des titres preferes
-5. 3 videos YouTube mises en avant
-
-Si ton projet Supabase existe deja, execute aussi:
-
-```bash
-supabase/admin-content-migration.sql
-```
-
-Ce script ajoute les tables de contenu manquantes pour l admin.
-
-## Admin local (toi + ton pere)
-
-Une page admin est disponible sur:
-
-- `/admin.php`
-
-Configuration:
-
-1. Creer `config/admin-config.php`
-2. Generer un hash de mot de passe PHP:
-   ```bash
-   php -r "echo password_hash('TON_MDP', PASSWORD_DEFAULT), PHP_EOL;"
-   ```
-3. Remplacer les `password_hash` dans `config/admin-config.php`
-4. Ajouter `service_role_key` dans `config/supabase-config.php`
-
-Exemple minimal `config/supabase-config.php`:
-
-```php
-<?php
-return array(
-   'url' => 'https://xxxx.supabase.co',
-   'anon_key' => 'ey...public',
-   'service_role_key' => 'ey...service_role'
-);
-```
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_SUPABASE_MEDIA_BUCKET` (optionnel, defaut: `admin-media`)
 
 Important:
+- ne jamais exposer une `service_role_key` dans le frontend
+- `.env` et `node_modules` restent ignores par git
 
-1. `service_role_key` ne doit jamais etre committe
-2. Restreindre l acces HTTP a `admin.php` (mot de passe fort + HTTPS)
+## CI/CD OVH
 
-## Roadmap courte
+Le workflow deploye seulement le build admin:
 
-- [x] Ajouter workflow GitHub Actions deploy dev/prod
-- [ ] Ajouter un anti-spam plus robuste
-- [ ] Nettoyer les chemins d assets restants si besoin
+- branche `dev` -> `www/dev/frontend/admin/`
+- branche `main` -> `www/frontend/admin/`
+
+Pipeline:
+
+1. build de `apps/admin`
+2. test de connexion SFTP
+3. preflight ecriture/suppression sur le dossier distant
+4. mirror du dossier `apps/admin/dist/`
+5. smoke test URL
+
+## Supabase
+
+Appliquer le schema et migrations du dossier `supabase/`.
+
+En particulier:
+- `supabase/schema.sql`
+- `supabase/admin-content-migration.sql`
+
+## Statut PHP legacy
+
+Les fichiers PHP historiques sont encore presents dans le repo a titre de reference technique, mais l architecture cible de l admin est React + Supabase.

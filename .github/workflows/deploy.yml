@@ -59,7 +59,7 @@ jobs:
           node-version: 24
 
       - name: Build admin frontend
-        working-directory: frontend/admin
+        working-directory: apps/admin
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
@@ -125,7 +125,7 @@ jobs:
           set xfer:use-temp-file false
           cd www/${ADMIN_REMOTE_DIR}
           mirror -R --verbose --delete --no-perms --parallel=1 --overwrite \
-            frontend/admin/dist/ ./
+            apps/admin/dist/ ./
           bye
           EOF
           )

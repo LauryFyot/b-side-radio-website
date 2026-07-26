@@ -1,0 +1,12 @@
+{
+  "name": "bside-code",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "admin:install": "npm --prefix apps/admin install",
+    "admin:ci": "npm --prefix apps/admin ci",
+    "dev": "npm --prefix apps/admin run dev",
+    "build": "npm --prefix apps/admin run build",
+    "preview": "npm --prefix apps/admin run preview"
+  }
+}
