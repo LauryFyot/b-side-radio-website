@@ -66,30 +66,24 @@ jobs:
           OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
           OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
         run: |
-          lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" <<EOF
-          set sftp:auto-confirm yes
-          set cmd:fail-exit no
-          set cmd:trace yes
-          set net:max-retries 2
-          set net:timeout 20
-          set mirror:set-permissions no
-          cd www
-          pwd
-          ls
-          mirror -R --verbose --no-perms \
-            --exclude-glob .git \
-            --exclude-glob .git/* \
-            --exclude-glob .github \
-            --exclude-glob .github/* \
-            --exclude-glob .vscode \
-            --exclude-glob .vscode/* \
-            --exclude-glob README.md \
-            --exclude-glob admin-config.php \
-            --exclude-glob smtp-config.php \
-            --exclude-glob supabase-config.php \
-            ./ "$REMOTE_DIR"
-          exit 0
-          EOF
+          LFTP_CMDS='set sftp:auto-confirm yes; set cmd:fail-exit yes; set net:max-retries 5; set net:timeout 30; set mirror:set-permissions no; cd www; mirror -R --verbose --delete --no-perms --parallel=1 --exclude-glob .git --exclude-glob .git/* --exclude-glob .github --exclude-glob .github/* --exclude-glob .vscode --exclude-glob .vscode/* --exclude-glob README.md --exclude-glob admin-config.php --exclude-glob smtp-config.php --exclude-glob supabase-config.php ./ "'"$REMOTE_DIR"'"; bye'
+
+          for attempt in 1 2; do
+            echo "SFTP deploy attempt ${attempt}/2"
+
+            if lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "$LFTP_CMDS"
+            then
+              echo "SFTP deploy succeeded on attempt ${attempt}."
+              break
+            fi
+
+            if [ "$attempt" -eq 2 ]; then
+              echo "SFTP deploy failed after 2 attempts."
+              exit 1
+            fi
+
+            echo "SFTP deploy attempt ${attempt} failed, retrying..."
+          done
 
       - name: Smoke test deployed URL
         run: |
