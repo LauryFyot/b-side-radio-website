@@ -97,12 +97,13 @@ jobs:
             --exclude-glob .git --exclude-glob .git/* \
             --exclude-glob .github --exclude-glob .github/* \
             --exclude-glob .vscode --exclude-glob .vscode/* \
+            --exclude-glob node_modules --exclude-glob node_modules/* \
+            --exclude-glob frontend/admin --exclude-glob frontend/admin/* \
             --exclude-glob .gitignore \
             --exclude-glob README.md \
+            --exclude-glob .env --exclude-glob .env.* \
             --exclude-glob admin-config.php \
             --exclude-glob supabase-config.php \
-            --exclude-glob frontend/admin/dist \
-            --exclude-glob frontend/admin/dist/* \
             --exclude-glob config/*.php \
             ./ ${REMOTE_DIR}
           mirror -R --verbose --no-perms --parallel=1 --overwrite \
