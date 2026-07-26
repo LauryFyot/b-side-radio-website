@@ -52,7 +52,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Build admin frontend
         working-directory: frontend/admin
@@ -91,17 +91,21 @@ jobs:
           set net:max-retries 5
           set net:timeout 30
           set mirror:set-permissions no
+          set xfer:use-temp-file false
           cd www
-          mirror -R --verbose --delete --no-perms --parallel=1 \
+          mirror -R --verbose --no-perms --parallel=1 --overwrite \
             --exclude-glob .git --exclude-glob .git/* \
             --exclude-glob .github --exclude-glob .github/* \
             --exclude-glob .vscode --exclude-glob .vscode/* \
+            --exclude-glob .gitignore \
             --exclude-glob README.md \
             --exclude-glob admin-config.php \
             --exclude-glob supabase-config.php \
+            --exclude-glob frontend/admin/dist \
+            --exclude-glob frontend/admin/dist/* \
             --exclude-glob config/*.php \
             ./ ${REMOTE_DIR}
-          mirror -R --verbose --delete --no-perms --parallel=1 \
+          mirror -R --verbose --no-perms --parallel=1 --overwrite \
             frontend/admin/dist/ ${REMOTE_DIR}admin/
           bye
           EOF
