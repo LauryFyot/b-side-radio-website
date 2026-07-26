@@ -39,11 +39,30 @@ jobs:
           OVH_HOST: ${{ secrets.OVH_HOST }}
           OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
           OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: |
           [ -n "$OVH_HOST" ] || { echo "Missing secret: OVH_HOST"; exit 1; }
           [ -n "$OVH_USERNAME" ] || { echo "Missing secret: OVH_USERNAME"; exit 1; }
           [ -n "$OVH_PASSWORD" ] || { echo "Missing secret: OVH_PASSWORD"; exit 1; }
+          [ -n "$VITE_SUPABASE_URL" ] || { echo "Missing secret: VITE_SUPABASE_URL"; exit 1; }
+          [ -n "$VITE_SUPABASE_ANON_KEY" ] || { echo "Missing secret: VITE_SUPABASE_ANON_KEY"; exit 1; }
           echo "Secrets are present."
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build admin frontend
+        working-directory: frontend/admin
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_MEDIA_BUCKET: ${{ secrets.VITE_SUPABASE_MEDIA_BUCKET }}
+        run: |
+          npm ci
+          npm run build
 
       - name: Test SFTP connection
         env:
@@ -66,7 +85,7 @@ jobs:
           OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
           OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
         run: |
-          LFTP_CMDS='set sftp:auto-confirm yes; set cmd:fail-exit yes; set net:max-retries 5; set net:timeout 30; set mirror:set-permissions no; cd www; mirror -R --verbose --delete --no-perms --parallel=1 --exclude-glob .git --exclude-glob .git/* --exclude-glob .github --exclude-glob .github/* --exclude-glob .vscode --exclude-glob .vscode/* --exclude-glob README.md --exclude-glob admin-config.php --exclude-glob supabase-config.php --exclude-glob config/*.php ./ "'"$REMOTE_DIR"'"; bye'
+          LFTP_CMDS='set sftp:auto-confirm yes; set cmd:fail-exit yes; set net:max-retries 5; set net:timeout 30; set mirror:set-permissions no; cd www; mirror -R --verbose --delete --no-perms --parallel=1 --exclude-glob .git --exclude-glob .git/* --exclude-glob .github --exclude-glob .github/* --exclude-glob .vscode --exclude-glob .vscode/* --exclude-glob README.md --exclude-glob admin-config.php --exclude-glob supabase-config.php --exclude-glob config/*.php ./ "'"$REMOTE_DIR"'"; mirror -R --verbose --delete --no-perms --parallel=1 frontend/admin/dist/ "'"${REMOTE_DIR}admin/"'"; bye'
 
 
           for attempt in 1 2; do
