@@ -26,9 +26,13 @@ jobs:
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             echo "REMOTE_DIR=./" >> "$GITHUB_ENV"
             echo "PUBLIC_URL=https://b-side-radio.com/" >> "$GITHUB_ENV"
+            echo "ADMIN_REMOTE_DIR=frontend/admin/" >> "$GITHUB_ENV"
+            echo "ADMIN_PUBLIC_URL=https://b-side-radio.com/frontend/admin/" >> "$GITHUB_ENV"
           elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
             echo "REMOTE_DIR=dev/" >> "$GITHUB_ENV"
             echo "PUBLIC_URL=https://b-side-radio.com/dev/" >> "$GITHUB_ENV"
+            echo "ADMIN_REMOTE_DIR=dev/frontend/admin/" >> "$GITHUB_ENV"
+            echo "ADMIN_PUBLIC_URL=https://b-side-radio.com/dev/frontend/admin/" >> "$GITHUB_ENV"
           else
             echo "Unsupported branch: ${GITHUB_REF_NAME}"
             exit 1
@@ -77,6 +81,8 @@ jobs:
           echo "Branch: ${GITHUB_REF_NAME}"
           echo "REMOTE_DIR=${REMOTE_DIR}"
           echo "PUBLIC_URL=${PUBLIC_URL}"
+          echo "ADMIN_REMOTE_DIR=${ADMIN_REMOTE_DIR}"
+          echo "ADMIN_PUBLIC_URL=${ADMIN_PUBLIC_URL}"
           lftp --version
 
       - name: Preflight SFTP write test
@@ -94,15 +100,15 @@ jobs:
           set net:max-retries 1
           set net:timeout 12
           cd www
-          mkdir -p ${REMOTE_DIR}admin
-          put $TEST_FILE -o ${REMOTE_DIR}admin/$TEST_FILE
-          ls -l ${REMOTE_DIR}admin/$TEST_FILE
-          rm ${REMOTE_DIR}admin/$TEST_FILE
+          mkdir -p ${ADMIN_REMOTE_DIR}
+          put $TEST_FILE -o ${ADMIN_REMOTE_DIR}$TEST_FILE
+          ls -l ${ADMIN_REMOTE_DIR}$TEST_FILE
+          rm ${ADMIN_REMOTE_DIR}$TEST_FILE
           bye
           EOF
           )
 
-          echo "Running SFTP preflight write/delete check on www/${REMOTE_DIR}admin"
+          echo "Running SFTP preflight write/delete check on www/${ADMIN_REMOTE_DIR}"
           lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "$LFTP_PREFLIGHT"
 
       - name: Deploy files over SFTP
@@ -119,9 +125,9 @@ jobs:
           set mirror:set-permissions no
           set xfer:use-temp-file false
           cd www
-          mkdir -p ${REMOTE_DIR}admin
+          mkdir -p ${ADMIN_REMOTE_DIR}
           mirror -R --verbose --delete --no-perms --parallel=1 --overwrite \
-            frontend/admin/dist/ ${REMOTE_DIR}admin/
+            frontend/admin/dist/ ${ADMIN_REMOTE_DIR}
           bye
           EOF
           )
@@ -146,7 +152,7 @@ jobs:
 
       - name: Smoke test deployed URL
         run: |
-          TARGET_URL="${PUBLIC_URL}admin/"
+          TARGET_URL="${ADMIN_PUBLIC_URL}"
           echo "Smoke test URL: ${TARGET_URL}"
 
           HTTPS_BODY="$(mktemp)"
@@ -175,7 +181,7 @@ jobs:
           sed -n '1,40p' "$HTTPS_BODY"
           echo "----- HTTP response preview (first 40 lines) -----"
           sed -n '1,40p' "$HTTP_BODY"
-          HEALTHCHECK_URL="${PUBLIC_URL}admin/"
+          HEALTHCHECK_URL="${ADMIN_PUBLIC_URL}"
           echo "----- Healthcheck probe: ${HEALTHCHECK_URL} -----"
           curl --silent --show-error --location --retry 1 --max-time 20 --insecure "$HEALTHCHECK_URL" || true
           exit 1
