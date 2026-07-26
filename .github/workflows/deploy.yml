@@ -85,7 +85,27 @@ jobs:
           OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
           OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
         run: |
-          LFTP_CMDS='set sftp:auto-confirm yes; set cmd:fail-exit yes; set net:max-retries 5; set net:timeout 30; set mirror:set-permissions no; cd www; mirror -R --verbose --delete --no-perms --parallel=1 --exclude-glob .git --exclude-glob .git/* --exclude-glob .github --exclude-glob .github/* --exclude-glob .vscode --exclude-glob .vscode/* --exclude-glob README.md --exclude-glob admin-config.php --exclude-glob supabase-config.php --exclude-glob config/*.php ./ "'"$REMOTE_DIR"'"; mirror -R --verbose --delete --no-perms --parallel=1 frontend/admin/dist/ "'"${REMOTE_DIR}admin/"'"; bye'
+          LFTP_CMDS=$(cat <<EOF
+          set sftp:auto-confirm yes
+          set cmd:fail-exit yes
+          set net:max-retries 5
+          set net:timeout 30
+          set mirror:set-permissions no
+          cd www
+          mirror -R --verbose --delete --no-perms --parallel=1 \
+            --exclude-glob .git --exclude-glob .git/* \
+            --exclude-glob .github --exclude-glob .github/* \
+            --exclude-glob .vscode --exclude-glob .vscode/* \
+            --exclude-glob README.md \
+            --exclude-glob admin-config.php \
+            --exclude-glob supabase-config.php \
+            --exclude-glob config/*.php \
+            ./ ${REMOTE_DIR}
+          mirror -R --verbose --delete --no-perms --parallel=1 \
+            frontend/admin/dist/ ${REMOTE_DIR}admin/
+          bye
+          EOF
+          )
 
 
           for attempt in 1 2; do
