@@ -99,11 +99,10 @@ jobs:
           set cmd:fail-exit yes
           set net:max-retries 1
           set net:timeout 12
-          cd www
-          mkdir -p ${ADMIN_REMOTE_DIR}
-          put $TEST_FILE -o ${ADMIN_REMOTE_DIR}$TEST_FILE
-          ls -l ${ADMIN_REMOTE_DIR}$TEST_FILE
-          rm ${ADMIN_REMOTE_DIR}$TEST_FILE
+          cd www/${ADMIN_REMOTE_DIR}
+          put $TEST_FILE
+          ls -l $TEST_FILE
+          rm $TEST_FILE
           bye
           EOF
           )
@@ -124,10 +123,9 @@ jobs:
           set net:timeout 30
           set mirror:set-permissions no
           set xfer:use-temp-file false
-          cd www
-          mkdir -p ${ADMIN_REMOTE_DIR}
+          cd www/${ADMIN_REMOTE_DIR}
           mirror -R --verbose --delete --no-perms --parallel=1 --overwrite \
-            frontend/admin/dist/ ${ADMIN_REMOTE_DIR}
+            frontend/admin/dist/ ./
           bye
           EOF
           )
