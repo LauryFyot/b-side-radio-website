@@ -6,8 +6,16 @@ function loadSupabaseConfig(){
         'anon_key' => getenv('SUPABASE_ANON_KEY') ?: ''
     );
 
-    $localConfigPath = dirname(__DIR__) . '/supabase-config.php';
-    if (is_file($localConfigPath)) {
+    $configPaths = array(
+        dirname(__DIR__) . '/config/supabase-config.php',
+        dirname(__DIR__) . '/supabase-config.php'
+    );
+
+    foreach ($configPaths as $localConfigPath) {
+        if (!is_file($localConfigPath)) {
+            continue;
+        }
+
         $localConfig = require $localConfigPath;
         if (is_array($localConfig)) {
             foreach ($localConfig as $key => $value) {
@@ -16,6 +24,8 @@ function loadSupabaseConfig(){
                 }
             }
         }
+
+        break;
     }
 
     $config['enabled'] = $config['url'] !== '' && $config['anon_key'] !== '';

@@ -10,17 +10,13 @@ Site vitrine B-Side Radio (PHP + HTML/CSS/JS), avec une approche simple:
 - PHP (page principale + gestion commentaires)
 - CSS
 - JavaScript
-- PHPMailer (notification email)
 
 ## Structure du projet
 
-- `index.php` : page principale + logique commentaire/email
-- `comments.txt` : stockage des commentaires affiches
-- `comments-handler.php` : script annexe de gestion commentaires
+- `index.php` : page principale + logique commentaire
 - `style.css` : styles principaux
 - `JAVASCRIPT/app.js` : scripts front
 - `IMAGES/` : assets
-- `PHPMailer/` : librairie mail
 
 ## Run local (dev)
 
@@ -79,7 +75,7 @@ Checklist rapide avant merge `dev` -> `main`:
 
 1. Le workflow GitHub Actions sur `dev` est vert
 2. `https://b-side-radio.com/dev/index.php` repond correctement
-3. Les commentaires s affichent et l envoi email fonctionne
+3. Les commentaires s affichent correctement
 4. Aucune credentielle n est committee
 
 ## CI/CD (GitHub Actions)
@@ -101,26 +97,6 @@ Le workflow actuel inclut aussi un smoke test HTTP post-deploiement:
 
 - `dev` teste `https://b-side-radio.com/dev/index.php`
 - `main` teste `https://b-side-radio.com/index.php`
-
-## Important securite
-
-Les secrets SMTP ne doivent jamais etre stockes dans le repo.
-
-Le projet charge des secrets SMTP via:
-
-1. Variables d environnement (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `SMTP_TO_EMAIL`)
-2. Ou un fichier local `smtp-config.php` non versionne
-
-Mise en place locale/OVH:
-
-1. Copier `smtp-config.example.php` en `smtp-config.php`
-2. Remplir avec tes vraies valeurs SMTP
-3. Verifier que `smtp-config.php` est bien ignore par git
-
-Important:
-
-1. Si un ancien mot de passe SMTP a deja ete committe, il faut le regenerer immediatement
-2. Ne jamais partager les captures avec des secrets visibles
 
 ## Supabase contenu admin
 
@@ -148,15 +124,15 @@ Une page admin est disponible sur:
 
 Configuration:
 
-1. Copier `admin-config.example.php` vers `admin-config.php`
+1. Creer `config/admin-config.php`
 2. Generer un hash de mot de passe PHP:
    ```bash
    php -r "echo password_hash('TON_MDP', PASSWORD_DEFAULT), PHP_EOL;"
    ```
-3. Remplacer les `password_hash` dans `admin-config.php`
-4. Ajouter `service_role_key` dans `supabase-config.php`
+3. Remplacer les `password_hash` dans `config/admin-config.php`
+4. Ajouter `service_role_key` dans `config/supabase-config.php`
 
-Exemple minimal `supabase-config.php`:
+Exemple minimal `config/supabase-config.php`:
 
 ```php
 <?php
@@ -175,6 +151,5 @@ Important:
 ## Roadmap courte
 
 - [x] Ajouter workflow GitHub Actions deploy dev/prod
-- [x] Externaliser les secrets mail
 - [ ] Ajouter un anti-spam plus robuste
 - [ ] Nettoyer les chemins d assets restants si besoin

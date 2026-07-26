@@ -1,6 +1,6 @@
 <?php
-include __DIR__ . '/partials/comments-data.php';
-include __DIR__ . '/partials/comment-submit.php';
+include __DIR__ . '/services/comments-data.php';
+include __DIR__ . '/services/comment-submit.php';
 include __DIR__ . '/partials/head.php';
 ?>
 

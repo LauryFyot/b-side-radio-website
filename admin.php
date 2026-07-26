@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require __DIR__ . '/partials/comments-data.php';
-require __DIR__ . '/partials/admin-data.php';
+require __DIR__ . '/services/comments-data.php';
+require __DIR__ . '/services/admin-data.php';
 
 function ensureCsrfToken(){
   if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {

@@ -5,8 +5,16 @@ function loadAdminSupabaseConfig(){
     $config['service_role_key'] = getenv('SUPABASE_SERVICE_ROLE_KEY') ?: '';
     $config['storage_bucket'] = getenv('SUPABASE_STORAGE_BUCKET') ?: 'media';
 
-    $localConfigPath = dirname(__DIR__) . '/supabase-config.php';
-    if (is_file($localConfigPath)) {
+    $configPaths = array(
+        dirname(__DIR__) . '/config/supabase-config.php',
+        dirname(__DIR__) . '/supabase-config.php'
+    );
+
+    foreach ($configPaths as $localConfigPath) {
+        if (!is_file($localConfigPath)) {
+            continue;
+        }
+
         $localConfig = require $localConfigPath;
         if (is_array($localConfig)) {
             if (!empty($localConfig['service_role_key'])) {
@@ -17,6 +25,8 @@ function loadAdminSupabaseConfig(){
                 $config['storage_bucket'] = (string)$localConfig['storage_bucket'];
             }
         }
+
+        break;
     }
 
     $config['admin_enabled'] = $config['url'] !== '' && $config['service_role_key'] !== '';
@@ -256,17 +266,23 @@ function adminSlugify($value){
 }
 
 function adminLoadConfig(){
-    $configPath = __DIR__ . '/../admin-config.php';
-    if (!is_file($configPath)) {
-        return array();
+    $configPaths = array(
+        __DIR__ . '/../config/admin-config.php',
+        __DIR__ . '/../admin-config.php'
+    );
+
+    foreach ($configPaths as $configPath) {
+        if (!is_file($configPath)) {
+            continue;
+        }
+
+        $config = require $configPath;
+        if (is_array($config)) {
+            return $config;
+        }
     }
 
-    $config = require $configPath;
-    if (!is_array($config)) {
-        return array();
-    }
-
-    return $config;
+    return array();
 }
 
 function adminLoadConfigUsers(){

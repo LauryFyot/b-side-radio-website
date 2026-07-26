@@ -1,5 +1,6 @@
 .DS_Store
 .vscode/
-smtp-config.php
 supabase-config.php
 admin-config.php
+config/*.php
+!config/*.example.php
