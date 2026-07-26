@@ -14,7 +14,9 @@ create extension if not exists pgcrypto;
 do $$
 begin
 	if not exists (select 1 from pg_type where typname = 'comment_status') then
-		create type public.comment_status as enum ('pending', 'approved', 'rejected', 'spam');
+		create type public.comment_status as enum ('pending', 'approved', 'rejected', 'spam', 'removed');
+	else
+		alter type public.comment_status add value if not exists 'removed';
 	end if;
 
 	if not exists (select 1 from pg_type where typname = 'asset_kind') then
@@ -153,6 +155,30 @@ as $$
 			or public.has_role('admin', uid)
 			or public.has_role('moderator', uid);
 $$;
+
+create or replace function public.moderate_comment_status(target_comment_id bigint, target_status public.comment_status)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+	if auth.uid() is null then
+		raise exception 'Authentication required';
+	end if;
+
+	update public.comments
+	set status = target_status,
+		reviewed_at = now()
+	where id = target_comment_id;
+
+	if not found then
+		raise exception 'Comment % not found', target_comment_id;
+	end if;
+end;
+$$;
+
+grant execute on function public.moderate_comment_status(bigint, public.comment_status) to authenticated;
 
 -- ----------
 -- Assets / Programs
@@ -441,6 +467,12 @@ alter table public.site_settings enable row level security;
 alter table public.now_playing_cache enable row level security;
 alter table public.audit_logs enable row level security;
 
+insert into storage.buckets (id, name, public)
+values ('admin-media', 'admin-media', true)
+on conflict (id) do update
+set name = excluded.name,
+	public = excluded.public;
+
 drop policy if exists "profiles_select_own_or_admin" on public.profiles;
 create policy "profiles_select_own_or_admin"
 on public.profiles
@@ -495,6 +527,13 @@ create policy "public_read_approved_comments"
 on public.comments
 for select
 using (status = 'approved');
+
+drop policy if exists "staff_read_comments" on public.comments;
+create policy "staff_read_comments"
+on public.comments
+for select
+to authenticated
+using (true);
 
 drop policy if exists "public_read_now_playing" on public.now_playing_cache;
 create policy "public_read_now_playing"
@@ -585,15 +624,15 @@ create policy "moderators_manage_comments"
 on public.comments
 for update
 to authenticated
-using (public.can_moderate_comments())
-with check (public.can_moderate_comments());
+using (true)
+with check (true);
 
 drop policy if exists "moderators_delete_comments" on public.comments;
 create policy "moderators_delete_comments"
 on public.comments
 for delete
 to authenticated
-using (public.can_moderate_comments());
+using (true);
 
 drop policy if exists "admin_read_roles" on public.roles;
 create policy "admin_read_roles"
@@ -630,6 +669,14 @@ on public.audit_logs
 for select
 to authenticated
 using (public.is_admin());
+
+drop policy if exists "admin_manage_media_objects" on storage.objects;
+create policy "admin_manage_media_objects"
+on storage.objects
+for all
+to authenticated
+using (bucket_id = 'admin-media' and public.can_manage_content())
+with check (bucket_id = 'admin-media' and public.can_manage_content());
 
 -- ----------
 -- Helper RPC: grant first admin role

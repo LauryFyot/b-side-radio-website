@@ -4,3 +4,6 @@ supabase-config.php
 admin-config.php
 config/*.php
 !config/*.example.php
+.env
+.env.*
+!.env.example

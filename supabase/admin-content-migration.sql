@@ -3,6 +3,32 @@
 
 begin;
 
+alter type public.comment_status add value if not exists 'removed';
+
+create or replace function public.moderate_comment_status(target_comment_id bigint, target_status public.comment_status)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if auth.uid() is null then
+    raise exception 'Authentication required';
+  end if;
+
+  update public.comments
+  set status = target_status,
+      reviewed_at = now()
+  where id = target_comment_id;
+
+  if not found then
+    raise exception 'Comment % not found', target_comment_id;
+  end if;
+end;
+$$;
+
+grant execute on function public.moderate_comment_status(bigint, public.comment_status) to authenticated;
+
 alter table if exists public.shows
   add column if not exists cover_url text;
 
@@ -87,5 +113,54 @@ for all
 to authenticated
 using (public.can_manage_content())
 with check (public.can_manage_content());
+
+insert into storage.buckets (id, name, public)
+values ('admin-media', 'admin-media', true)
+on conflict (id) do update
+set name = excluded.name,
+    public = excluded.public;
+
+drop policy if exists "admin_manage_media_objects" on storage.objects;
+create policy "admin_manage_media_objects"
+on storage.objects
+for all
+to authenticated
+using (bucket_id = 'admin-media' and public.can_manage_content())
+with check (bucket_id = 'admin-media' and public.can_manage_content());
+
+drop policy if exists "public_read_approved_comments" on public.comments;
+create policy "public_read_approved_comments"
+on public.comments
+for select
+using (status = 'approved');
+
+drop policy if exists "staff_read_comments" on public.comments;
+create policy "staff_read_comments"
+on public.comments
+for select
+to authenticated
+using (true);
+
+drop policy if exists "public_insert_comments" on public.comments;
+create policy "public_insert_comments"
+on public.comments
+for insert
+to anon, authenticated
+with check (char_length(author_name) between 1 and 80 and char_length(body) between 1 and 1000);
+
+drop policy if exists "moderators_manage_comments" on public.comments;
+create policy "moderators_manage_comments"
+on public.comments
+for update
+to authenticated
+using (true)
+with check (true);
+
+drop policy if exists "moderators_delete_comments" on public.comments;
+create policy "moderators_delete_comments"
+on public.comments
+for delete
+to authenticated
+using (true);
 
 commit;
