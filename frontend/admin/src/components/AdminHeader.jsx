@@ -6,7 +6,7 @@ function AdminHeader({ adminUser }) {
     <header className="topbar">
       <input className="search" placeholder="Search tracks, shows, listeners..." />
       <div className="top-actions">
-        <button className="chip chip-alert">In: All</button>
+        <button className="chip chip-alert">Welcome {(adminUser?.email || 'Admin')}</button>
         <button className="avatar">{(adminUser?.email || 'AD').slice(0, 2).toUpperCase()}</button>
       </div>
     </header>

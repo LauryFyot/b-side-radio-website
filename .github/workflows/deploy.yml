@@ -91,7 +91,7 @@ jobs:
           OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
           OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
         run: |
-          TEST_FILE=".ci-write-test-${GITHUB_RUN_ID}.txt"
+          TEST_FILE="ci-write-test-${GITHUB_RUN_ID}.txt"
           echo "ci preflight" > "$TEST_FILE"
 
           LFTP_PREFLIGHT=$(cat <<EOF
