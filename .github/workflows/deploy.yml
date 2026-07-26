@@ -79,6 +79,32 @@ jobs:
           echo "PUBLIC_URL=${PUBLIC_URL}"
           lftp --version
 
+      - name: Preflight SFTP write test
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          TEST_FILE=".ci-write-test-${GITHUB_RUN_ID}.txt"
+          echo "ci preflight" > "$TEST_FILE"
+
+          LFTP_PREFLIGHT=$(cat <<EOF
+          set sftp:auto-confirm yes
+          set cmd:fail-exit yes
+          set net:max-retries 1
+          set net:timeout 12
+          cd www
+          mkdir -p ${REMOTE_DIR}admin
+          put $TEST_FILE -o ${REMOTE_DIR}admin/$TEST_FILE
+          ls -l ${REMOTE_DIR}admin/$TEST_FILE
+          rm ${REMOTE_DIR}admin/$TEST_FILE
+          bye
+          EOF
+          )
+
+          echo "Running SFTP preflight write/delete check on www/${REMOTE_DIR}admin"
+          lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "$LFTP_PREFLIGHT"
+
       - name: Deploy files over SFTP
         env:
           OVH_HOST: ${{ secrets.OVH_HOST }}
@@ -93,20 +119,8 @@ jobs:
           set mirror:set-permissions no
           set xfer:use-temp-file false
           cd www
-          mirror -R --verbose --no-perms --parallel=1 --overwrite \
-            --exclude-glob .git --exclude-glob .git/* \
-            --exclude-glob .github --exclude-glob .github/* \
-            --exclude-glob .vscode --exclude-glob .vscode/* \
-            --exclude-glob node_modules --exclude-glob node_modules/* \
-            --exclude-glob frontend/admin --exclude-glob frontend/admin/* \
-            --exclude-glob .gitignore \
-            --exclude-glob README.md \
-            --exclude-glob .env --exclude-glob .env.* \
-            --exclude-glob admin-config.php \
-            --exclude-glob supabase-config.php \
-            --exclude-glob config/*.php \
-            ./ ${REMOTE_DIR}
-          mirror -R --verbose --no-perms --parallel=1 --overwrite \
+          mkdir -p ${REMOTE_DIR}admin
+          mirror -R --verbose --delete --no-perms --parallel=1 --overwrite \
             frontend/admin/dist/ ${REMOTE_DIR}admin/
           bye
           EOF
@@ -132,7 +146,7 @@ jobs:
 
       - name: Smoke test deployed URL
         run: |
-          TARGET_URL="${PUBLIC_URL}index.php"
+          TARGET_URL="${PUBLIC_URL}admin/"
           echo "Smoke test URL: ${TARGET_URL}"
 
           HTTPS_BODY="$(mktemp)"
@@ -161,7 +175,7 @@ jobs:
           sed -n '1,40p' "$HTTPS_BODY"
           echo "----- HTTP response preview (first 40 lines) -----"
           sed -n '1,40p' "$HTTP_BODY"
-          HEALTHCHECK_URL="${PUBLIC_URL}healthcheck.php"
+          HEALTHCHECK_URL="${PUBLIC_URL}admin/"
           echo "----- Healthcheck probe: ${HEALTHCHECK_URL} -----"
           curl --silent --show-error --location --retry 1 --max-time 20 --insecure "$HEALTHCHECK_URL" || true
           exit 1
