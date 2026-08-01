@@ -1,5 +1,7 @@
 # B-Side Admin - Architecture definitive
 
+Juste un commit pour l'avant refont site principal.
+
 Ce repository est maintenant organise autour d un admin React connecte directement a Supabase.
 
 ## Stack
