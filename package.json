@@ -3,10 +3,18 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "dev": "npm run admin:dev",
+    "build": "npm run admin:build",
+    "preview": "npm run admin:preview",
     "admin:install": "npm --prefix apps/admin install",
     "admin:ci": "npm --prefix apps/admin ci",
-    "dev": "npm --prefix apps/admin run dev",
-    "build": "npm --prefix apps/admin run build",
-    "preview": "npm --prefix apps/admin run preview"
+    "admin:dev": "npm --prefix apps/admin run dev",
+    "admin:build": "npm --prefix apps/admin run build",
+    "admin:preview": "npm --prefix apps/admin run preview",
+    "site:install": "npm --prefix apps/site install",
+    "site:ci": "npm --prefix apps/site ci",
+    "site:dev": "npm --prefix apps/site run dev",
+    "site:build": "npm --prefix apps/site run build",
+    "site:preview": "npm --prefix apps/site run preview"
   }
 }

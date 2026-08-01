@@ -1,0 +1,10 @@
+{
+  "name": "bside-site-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "echo 'Site app not imported yet. Copy the Lovable project into apps/site and run npm install.' && exit 1",
+    "build": "echo 'Site app not imported yet. Copy the Lovable project into apps/site and run npm install.' && exit 1",
+    "preview": "echo 'Site app not imported yet. Copy the Lovable project into apps/site and run npm install.' && exit 1"
+  }
+}

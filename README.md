@@ -1,8 +1,9 @@
-# B-Side Admin - Architecture definitive
+# B-Side Monorepo - Site + Admin
 
-Juste un commit pour l'avant refont site principal.
+Ce repository est prepare pour une architecture a 2 apps React distinctes:
 
-Ce repository est maintenant organise autour d un admin React connecte directement a Supabase.
+- site public: `apps/site` (refonte en cours)
+- admin: `apps/admin` (deja en production)
 
 ## Stack
 
@@ -12,29 +13,56 @@ Ce repository est maintenant organise autour d un admin React connecte directeme
 
 ## Structure
 
-- `apps/admin/` : application admin React (source principal)
+- `apps/site/` : application publique React (import depuis Lovable)
+- `apps/admin/` : application admin React (connectee a Supabase)
 - `.github/workflows/deploy.yml` : build + deploy OVH
 - `supabase/` : schema SQL, migrations et seeds
 - `assets/` : assets historiques du site public
 - `config/` : configs PHP historiques (conservees temporairement)
 
-## Lancer l admin en local
+## Commandes racine
+
+Admin:
 
 ```bash
 npm run admin:install
-cp apps/admin/.env.example apps/admin/.env
-# Renseigner:
-# VITE_SUPABASE_URL
-# VITE_SUPABASE_ANON_KEY
-npm run dev
+npm run admin:dev
+npm run admin:build
+npm run admin:preview
 ```
 
-## Build production
+Site (apres import):
 
 ```bash
-npm run admin:ci
+npm run site:install
+npm run site:dev
+npm run site:build
+npm run site:preview
+```
+
+Raccourcis actuels (pointent vers admin):
+
+```bash
+npm run dev
 npm run build
 npm run preview
+```
+
+## Import de la refonte site (Lovable)
+
+```bash
+git checkout -b feat/site-refonte-import
+# copier le contenu du repo bside-groove-hub dans apps/site
+# ne pas copier .git, node_modules, dist
+npm run site:install
+npm run site:dev
+```
+
+Puis commit d import initial:
+
+```bash
+git add apps/site
+git commit -m "chore: import lovable site into apps/site"
 ```
 
 ## Variables d environnement
@@ -63,6 +91,8 @@ Pipeline:
 3. preflight ecriture/suppression sur le dossier distant
 4. mirror du dossier `apps/admin/dist/`
 5. smoke test URL
+
+Le deploy du site React sera ajoute apres import et validation de `apps/site`.
 
 ## Supabase
 
