@@ -1,9 +1,9 @@
 # B-Side Monorepo - Site + Admin
 
-Ce repository est prepare pour une architecture a 2 apps React distinctes:
+Ce repository est organise autour de 2 apps React distinctes:
 
-- site public: `apps/site` (refonte en cours)
-- admin: `apps/admin` (deja en production)
+- site public principal: `apps/site`
+- admin: `apps/admin` (accessible via `/admin` en ligne)
 
 ## Stack
 
@@ -22,6 +22,14 @@ Ce repository est prepare pour une architecture a 2 apps React distinctes:
 
 ## Commandes racine
 
+Par defaut (site principal):
+
+```bash
+npm run dev
+npm run build
+npm run preview
+```
+
 Admin:
 
 ```bash
@@ -38,14 +46,6 @@ npm run site:install
 npm run site:dev
 npm run site:build
 npm run site:preview
-```
-
-Raccourcis actuels (pointent vers admin):
-
-```bash
-npm run dev
-npm run build
-npm run preview
 ```
 
 ## Import de la refonte site (Lovable)

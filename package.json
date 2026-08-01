@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "npm run admin:dev",
-    "build": "npm run admin:build",
-    "preview": "npm run admin:preview",
+    "dev": "npm run site:dev",
+    "build": "npm run site:build",
+    "preview": "npm run site:preview",
     "admin:install": "npm --prefix apps/admin install",
     "admin:ci": "npm --prefix apps/admin ci",
     "admin:dev": "npm --prefix apps/admin run dev",
