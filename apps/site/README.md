@@ -48,7 +48,7 @@ Le site a aujourd'hui une architecture courte:
 
 Le site public est surtout pilote par ces fichiers:
 
-- `src/components/bside/top.tsx`
+- `src/components/bside/nav.tsx`, `src/components/bside/hero.tsx`, `src/components/bside/on-air.tsx`, `src/components/bside/about.tsx`
 	header, hero, bloc on-air, bloc about
 - `src/components/bside/vinyls.tsx`
 	section vinyls
@@ -224,6 +224,6 @@ Le site a ete simplifie pour rester proche de l'admin:
 Si tu cherches ou modifier quelque chose, commence presque toujours par un de ces 4 fichiers:
 
 1. `src/App.tsx`
-2. `src/components/bside/top.tsx`
+2. `src/components/bside/nav.tsx` (puis `hero.tsx`, `on-air.tsx`, `about.tsx`)
 3. `src/components/bside/programme.tsx` (et les autres sections bside du meme dossier)
 4. `src/lib/siteContent.ts`
