@@ -9,4 +9,4 @@ if (!hasSupabaseConfig) {
 const data = await fetchPublicContent();
 const mapped = mapSupabaseContentToSiteModel(data);
 
-console.log(data.videos);
+console.log(data);

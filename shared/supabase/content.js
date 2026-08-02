@@ -33,9 +33,29 @@ export async function fetchPublicContent() {
     readTable('comments', 'id,author_name,body,created_at', { column: 'created_at', ascending: false }),
   ]);
 
+  const activeShowsById = new Map(
+    shows
+      .filter((show) => show.is_active !== false)
+      .map((show) => [Number(show.id), show])
+  );
+
+  const shows_slots = slots
+    .filter((slot) => slot.is_active !== false)
+    .map((slot) => ({
+      ...slot,
+      show: activeShowsById.get(Number(slot.show_id)) || null,
+    }))
+    .filter((item) => item.show)
+    .sort((a, b) => {
+      const dayDiff = Number(a.day_of_week || 0) - Number(b.day_of_week || 0);
+      if (dayDiff !== 0) return dayDiff;
+      return String(a.start_time || '').localeCompare(String(b.start_time || ''));
+    });
+
   return {
     shows,
     slots,
+    shows_slots,
     covers,
     tracks,
     videos,
@@ -43,7 +63,7 @@ export async function fetchPublicContent() {
   };
 }
 
-export function mapSupabaseContentToSiteModel({ shows = [], slots = [], covers = [], tracks = [], videos: videosData = [] }) {
+export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_slots = [], covers = [], tracks = [], videos: videosData = [] }) {
   const activeShows = shows.filter((show) => show.is_active !== false);
   const sortedSlots = [...slots].filter((slot) => slot.is_active !== false).sort((a, b) => {
     const dayDiff = Number(a.day_of_week || 0) - Number(b.day_of_week || 0);
@@ -51,15 +71,49 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], covers =
     return String(a.start_time || '').localeCompare(String(b.start_time || ''));
   });
 
-  const schedule = activeShows.map((show) => {
-    const matchingSlot = sortedSlots.find((slot) => Number(slot.show_id) === Number(show.id));
+  const normalizedShowsSlots = Array.isArray(shows_slots) && shows_slots.length
+    ? shows_slots.filter((item) => item?.show)
+    : sortedSlots
+        .map((slot) => ({
+          ...slot,
+          show: activeShows.find((show) => Number(show.id) === Number(slot.show_id)) || null,
+        }))
+        .filter((item) => item.show);
+
+  const toScheduleItem = (item) => {
+    const show = item?.show || {};
     return {
       name: show.name || 'Show',
       host: show.slug || 'B Side Radio',
-      start: matchingSlot?.start_time ? String(matchingSlot.start_time).slice(0, 5) : '00:00',
-      end: matchingSlot?.end_time ? String(matchingSlot.end_time).slice(0, 5) : '23:59',
+      start: item?.start_time ? String(item.start_time).slice(0, 5) : '00:00',
+      end: item?.end_time ? String(item.end_time).slice(0, 5) : '23:59',
       blurb: show.description || 'Programme à venir',
       blurbEn: show.description || 'More details soon',
+    };
+  };
+
+  const schedule = normalizedShowsSlots.map(toScheduleItem);
+
+  const dayLabels = [
+    { day: 'Lundi', dayEn: 'Monday' },
+    { day: 'Mardi', dayEn: 'Tuesday' },
+    { day: 'Mercredi', dayEn: 'Wednesday' },
+    { day: 'Jeudi', dayEn: 'Thursday' },
+    { day: 'Vendredi', dayEn: 'Friday' },
+    { day: 'Samedi', dayEn: 'Saturday' },
+    { day: 'Dimanche', dayEn: 'Sunday' },
+  ];
+
+  const weekSchedule = dayLabels.map((labels, index) => {
+    const dayOfWeek = index + 1;
+    const dayShows = normalizedShowsSlots
+      .filter((item) => Number(item.day_of_week || 0) === dayOfWeek)
+      .map(toScheduleItem);
+
+    return {
+      day: labels.day,
+      dayEn: labels.dayEn,
+      shows: dayShows,
     };
   });
 
@@ -97,9 +151,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], covers =
   return {
     shows: activeShows,
     schedule,
-    weekSchedule: [
-      { day: 'Aujourd\'hui', dayEn: 'Today', shows: schedule.slice(0, 4) },
-    ],
+    weekSchedule,
     vinyls,
     weeklyTracks,
     mixSessions: weeklyTracks.slice(0, 3).map((track, index) => ({

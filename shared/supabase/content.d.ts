@@ -1,6 +1,7 @@
 export function fetchPublicContent(): Promise<{
   shows: any[];
   slots: any[];
+  shows_slots: any[];
   covers: any[];
   tracks: any[];
   videos: any[];
