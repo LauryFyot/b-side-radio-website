@@ -12,6 +12,10 @@ export type NowPlaying = {
   artist: string;
   original: string;
   buyUrl: string;
+  imageUrl?: string;
+  text?: string;
+  traxsourceId?: string | number;
+  stationId?: number;
 };
 
 export const nowPlaying: NowPlaying = {
@@ -85,6 +89,7 @@ export type Vinyl = {
   year: string;
   labelColor: string;
   remixedBy: string;
+  imageUrl?: string;
 };
 
 export type DaySchedule = { day: string; dayEn: string; shows: Show[] };

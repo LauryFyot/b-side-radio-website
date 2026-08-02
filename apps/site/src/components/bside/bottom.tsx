@@ -240,6 +240,23 @@ type Comment = {
   replies?: Reply[];
 };
 
+function formatCommentDate(value: string, lang: Lang) {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat(lang === 'en' ? 'en-US' : 'fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+
 const seedComments: Comment[] = [
   {
     name: "Sandrine",
@@ -327,13 +344,22 @@ const seedComments: Comment[] = [
 ];
 
 export function Comments() {
-  const [comments] = useState<Comment[]>(seedComments);
+  const { comments: liveComments } = useSiteContent();
+  const [seededComments] = useState<Comment[]>(seedComments);
   const [pending, setPending] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const { t, lang } = useI18n();
   const en = lang === "en";
+  const comments = liveComments.length > 0 ? liveComments.map((comment, index) => ({
+    name: comment.name,
+    message: comment.message,
+    messageEn: comment.message,
+    at: formatCommentDate(comment.at, lang),
+    atEn: formatCommentDate(comment.at, lang),
+    replies: index === 0 ? seededComments[0]?.replies : undefined,
+  })) : seededComments;
 
   const submit = (e: FormEvent) => {
     e.preventDefault();

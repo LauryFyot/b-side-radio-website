@@ -35,6 +35,7 @@ export function PlayerBar() {
   const isLive = source.kind === "live";
   const title = isLive ? nowPlaying.title : source.title;
   const artist = isLive ? nowPlaying.artist : source.artist;
+  const liveText = isLive ? nowPlaying.text || nowPlaying.original : '';
 
   return (
     <>
@@ -66,7 +67,8 @@ export function PlayerBar() {
             <p className="truncate font-display text-lg leading-tight tracking-wide sm:text-xl">{title}</p>
             <p className="truncate text-xs text-muted-foreground">
               {artist}
-              {isLive && <span className="hidden sm:inline"> — {t("player.next")} : {nextUp.title}</span>}
+              {isLive && liveText && <span className="hidden sm:inline"> — {liveText}</span>}
+              {isLive && <span className="hidden sm:inline"> · {t("player.next")} : {nextUp.title}</span>}
             </p>
           </div>
 

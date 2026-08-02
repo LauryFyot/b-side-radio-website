@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useRef, useState, type ReactNode } from "react";
-import { STREAM_URL } from "@/lib/bside-data";
+import { getWebRadioStreamUrl } from '../../../../../shared/webradio/index.js';
 
 type Source = { kind: "live" } | { kind: "track"; id: string; title: string; artist: string; src: string };
 
@@ -41,7 +41,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (!el) return;
         if (source.kind !== "live") {
           setSource({ kind: "live" });
-          el.src = STREAM_URL;
+          el.src = getWebRadioStreamUrl();
           el.load();
           void play();
           return;
@@ -50,7 +50,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           el.pause();
           setPlaying(false);
         } else {
-          el.src = STREAM_URL;
+          el.src = getWebRadioStreamUrl();
           el.load();
           void play();
         }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlayerProvider } from "@/components/bside/player-context";
 import { LanguageProvider } from "@/lib/i18n";
+import { SiteContentProvider } from "@/lib/siteContent";
 import { PlayerBar } from "@/components/bside/player-bar";
 import { About, Hero, Nav, OnAir } from "@/components/bside/top";
 import { Vinyls } from "@/components/bside/vinyls";
@@ -37,23 +38,25 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <LanguageProvider>
-      <PlayerProvider>
-        <Nav />
-        <main>
-          <Hero />
-          <OnAir />
-          <About />
-          <Vinyls />
-          <Programme />
-          <Tracks />
-          <Sessions />
-          <Team />
-          <Videos />
-          <Comments />
-        </main>
-        <SocialsFooter />
-        <PlayerBar />
-      </PlayerProvider>
+      <SiteContentProvider>
+        <PlayerProvider>
+          <Nav />
+          <main>
+            <Hero />
+            <OnAir />
+            <About />
+            <Vinyls />
+            <Programme />
+            <Tracks />
+            <Sessions />
+            <Team />
+            <Videos />
+            <Comments />
+          </main>
+          <SocialsFooter />
+          <PlayerBar />
+        </PlayerProvider>
+      </SiteContentProvider>
     </LanguageProvider>
   );
 }
