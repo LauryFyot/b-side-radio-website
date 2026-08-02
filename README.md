@@ -48,6 +48,14 @@ npm run site:build
 npm run site:preview
 ```
 
+Build statique OVH (site public):
+
+```bash
+npm run site:build:static
+```
+
+Cela genere `apps/site/dist-ftp/` (contenu FTP pret a uploader).
+
 ## Import de la refonte site (Lovable)
 
 ```bash
@@ -93,6 +101,26 @@ Pipeline:
 5. smoke test URL
 
 Le deploy du site React sera ajoute apres import et validation de `apps/site`.
+
+### Deploy simple OVH mutualise (sans Node)
+
+1. Build du site public:
+
+```bash
+npm run site:build:static
+```
+
+2. Build de l admin:
+
+```bash
+npm run admin:build
+```
+
+3. Uploader sur OVH:
+- contenu de `apps/site/dist-ftp/` vers `www/`
+- contenu de `apps/admin/dist/` vers `www/admin/`
+
+Le fichier `.htaccess` du site est deja genere dans `dist-ftp/` pour gerer les routes SPA.
 
 ## Supabase
 

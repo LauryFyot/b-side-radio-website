@@ -9,3 +9,5 @@ config/*.php
 !.env.example
 node_modules/
 **/node_modules/
+apps/site/.output/
+apps/site/.wrangler/

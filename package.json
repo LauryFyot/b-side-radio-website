@@ -15,6 +15,10 @@
     "site:ci": "npm --prefix apps/site ci",
     "site:dev": "npm --prefix apps/site run dev",
     "site:build": "npm --prefix apps/site run build",
+    "site:build:static": "npm --prefix apps/site run build:static",
     "site:preview": "npm --prefix apps/site run preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.111.0"
   }
 }
