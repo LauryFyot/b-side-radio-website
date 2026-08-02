@@ -396,6 +396,13 @@ button,
   color: rgba(255, 255, 255, 0.82);
 }
 
+.cover-preview{
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1d171f 0%, #fd3838 100%);
+}
+
 .tone-1 {
   background: linear-gradient(135deg, #fc3737, #ea2121);
 }

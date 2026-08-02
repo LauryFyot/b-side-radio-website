@@ -35,6 +35,8 @@ export function Programme() {
   const [day, setDay] = useState(todayIndex);
   const { t, lang } = useI18n();
   const { schedule, weekSchedule } = useSiteContent();
+  const todayShows = weekSchedule[todayIndex]?.shows ?? [];
+  const visibleShows = view === "day" ? todayShows : (weekSchedule[day]?.shows ?? schedule);
 
   return (
     <SectionManager
@@ -77,7 +79,7 @@ export function Programme() {
         </div>
       )}
 
-      <ShowList shows={view === "day" ? schedule : (weekSchedule[day]?.shows ?? schedule)} lang={lang} />
+      <ShowList shows={visibleShows} lang={lang} />
     </SectionManager>
   );
 }

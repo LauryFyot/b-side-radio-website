@@ -130,6 +130,8 @@ En particulier:
 - `supabase/schema.sql`
 - `supabase/admin-content-migration.sql`
 
+`node --env-file=.env notebooks/test_shared_supabase.mjs`
+
 ## Statut PHP legacy
 
 Les fichiers PHP historiques sont encore presents dans le repo a titre de reference technique, mais l architecture cible de l admin est React + Supabase.
