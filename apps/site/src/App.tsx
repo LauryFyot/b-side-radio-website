@@ -1,19 +1,17 @@
 import { useEffect } from "react";
-import { PlayerProvider } from "@/components/bside/player-context";
+import { PlayerProvider } from "@/components/player/player-context";
 import { LanguageProvider } from "@/lib/i18n";
 import { SiteContentProvider } from "@/lib/siteContent";
-import { PlayerBar } from "@/components/bside/player-bar";
+import { PlayerBar } from "@/components/player/player-bar";
 import { About, Hero, Nav, OnAir } from "@/components/bside/top";
 import { Vinyls } from "@/components/bside/vinyls";
-import {
-  Comments,
-  Programme,
-  Sessions,
-  SocialsFooter,
-  Team,
-  Tracks,
-  Videos,
-} from "@/components/bside/bottom";
+import { Programme } from "@/components/bside/programme";
+import { Tracks } from "@/components/bside/tracks";
+import { Sessions } from "@/components/bside/sessions";
+import { Team } from "@/components/bside/team";
+import { Videos } from "@/components/bside/videos";
+import { Comments } from "@/components/bside/comments";
+import { Footer } from "@/components/bside/footer";
 import { getAdminUrl } from "@/lib/admin-url";
 
 // The public site only has two states:
@@ -65,7 +63,7 @@ function SiteHomePage() {
             <Videos />
             <Comments />
           </main>
-          <SocialsFooter />
+          <Footer />
           <PlayerBar />
         </PlayerProvider>
       </SiteContentProvider>

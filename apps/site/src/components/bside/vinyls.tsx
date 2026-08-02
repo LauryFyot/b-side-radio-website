@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Section } from "./section";
+import { SectionManager } from "./section-manager";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 
@@ -16,7 +16,7 @@ export function Vinyls() {
   };
 
   return (
-    <Section id="vinyls" index="01" title={t("vinyls.title")} kicker={t("vinyls.kicker")} tone="surface">
+    <SectionManager id="vinyls" index="01" title={t("vinyls.title")} kicker={t("vinyls.kicker")} tone="surface">
       <div className="relative">
         <div className="mb-4 flex justify-end gap-2">
           <button
@@ -69,6 +69,6 @@ export function Vinyls() {
           ))}
         </ul>
       </div>
-    </Section>
+    </SectionManager>
   );
 }
