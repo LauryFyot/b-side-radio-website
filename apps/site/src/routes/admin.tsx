@@ -10,7 +10,10 @@ function AdminRedirect() {
   const adminUrl = getAdminUrl();
 
   useEffect(() => {
-    window.location.replace(adminUrl);
+    const target = new URL(adminUrl, window.location.href).href;
+    if (window.location.href !== target) {
+      window.location.replace(target);
+    }
   }, [adminUrl]);
 
   return (

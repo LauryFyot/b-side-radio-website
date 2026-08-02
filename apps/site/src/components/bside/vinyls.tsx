@@ -1,12 +1,13 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { vinyls } from "@/lib/bside-data";
 import { Section } from "./section";
 import { useI18n } from "@/lib/i18n";
+import { useSiteContent } from "@/lib/siteContent";
 
 export function Vinyls() {
   const trackRef = useRef<HTMLUListElement>(null);
   const { t } = useI18n();
+  const { vinyls } = useSiteContent();
 
   const scrollBy = (dir: 1 | -1) => {
     const el = trackRef.current;

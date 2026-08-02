@@ -3,16 +3,8 @@ import { Pause, Play, ShoppingBag } from "lucide-react";
 import { Section } from "./section";
 import { usePlayer } from "./player-context";
 import { useI18n, type Lang } from "@/lib/i18n";
-import {
-  mixSessions,
-  schedule,
-  socials,
-  team,
-  videos,
-  weekSchedule,
-  weeklyTracks,
-  type Show,
-} from "@/lib/bside-data";
+import { socials, team, type Show } from "@/lib/bside-data";
+import { useSiteContent } from "@/lib/siteContent";
 
 function ShowList({ shows, lang }: { shows: Show[]; lang: Lang }) {
   return (
@@ -43,6 +35,7 @@ export function Programme() {
   const todayIndex = (new Date().getDay() + 6) % 7;
   const [day, setDay] = useState(todayIndex);
   const { t, lang } = useI18n();
+  const { schedule, weekSchedule } = useSiteContent();
 
   return (
     <Section
@@ -93,6 +86,7 @@ export function Programme() {
 export function Tracks() {
   const { playTrack, isCurrent, playing } = usePlayer();
   const { t } = useI18n();
+  const { weeklyTracks } = useSiteContent();
 
   return (
     <Section id="tracks" index="03" title={t("tracks.title")} kicker={t("tracks.kicker")} tone="surface">
@@ -142,6 +136,7 @@ export function Tracks() {
 export function Sessions() {
   const { playTrack, isCurrent, playing } = usePlayer();
   const { t } = useI18n();
+  const { mixSessions } = useSiteContent();
 
   return (
     <Section id="sessions" index="04" title={t("sessions.title")} kicker={t("sessions.kicker")}>
@@ -208,6 +203,7 @@ export function Team() {
 
 export function Videos() {
   const { t, lang } = useI18n();
+  const { videos } = useSiteContent();
   return (
     <Section id="videos" index="06" title={t("videos.title")} tone="surface">
       <div className="grid gap-6 md:grid-cols-3">

@@ -1,8 +1,8 @@
 import { Pause, Play, ShoppingBag, Radio, Volume2 } from "lucide-react";
 import { usePlayer } from "./player-context";
-import { nextUp, nowPlaying } from "@/lib/bside-data";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useSiteContent } from "@/lib/siteContent";
 
 function Equalizer({ active }: { active: boolean }) {
   return (
@@ -26,6 +26,7 @@ export function PlayerBar() {
   const { audioRef, playing, source, toggleLive, setPlaying } = usePlayer();
   const [volume, setVolume] = useState(0.8);
   const { t } = useI18n();
+  const { nowPlaying, nextUp } = useSiteContent();
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
