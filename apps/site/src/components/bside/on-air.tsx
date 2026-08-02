@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { schedule, socials } from "@/lib/bside-data";
 import { useI18n } from "@/lib/i18n";
+import { SectionManager } from "./section-manager";
 
 function currentShowIndex(hour: number) {
   const idx = schedule.findIndex((s) => {
@@ -25,8 +26,13 @@ export function OnAir() {
   const next = schedule[(idx + 1) % schedule.length]!;
 
   return (
-    <section id="antenne" className="px-2 pb-4 sm:px-4">
-      <div className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] bg-paper px-5 py-12 text-paper-foreground sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+    <SectionManager
+      id="antenne"
+      tone="paper"
+      noHeader
+      sectionClassName="pb-4"
+      panelClassName="grid gap-8 px-5 py-12 sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+    >
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-primary">
             <span className="inline-block size-2 animate-pulse rounded-full bg-primary" />
@@ -62,7 +68,6 @@ export function OnAir() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+    </SectionManager>
   );
 }
