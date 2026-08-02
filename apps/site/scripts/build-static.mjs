@@ -1,7 +1,7 @@
 // Post-traitement du build statique pour produire ./dist-ftp pret pour OVH.
 import { access, cp, rename, rm, writeFile } from "node:fs/promises";
 
-const SRC = "dist-static/client";
+const SRC = "dist-static";
 const OUT = "dist-ftp";
 
 await access(SRC).catch(() => {
@@ -10,7 +10,8 @@ await access(SRC).catch(() => {
 
 await rm(OUT, { recursive: true, force: true });
 await cp(SRC, OUT, { recursive: true });
-await rename(`${OUT}/_shell.html`, `${OUT}/index.html`);
+
+await rm(`${OUT}/.DS_Store`, { force: true });
 
 await writeFile(
   `${OUT}/.htaccess`,

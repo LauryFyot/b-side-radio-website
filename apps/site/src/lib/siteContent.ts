@@ -1,6 +1,7 @@
+// Central content store for the public site.
+// This file keeps all site-facing data flow in one place:
+// fallback content, Supabase fetch, radio now playing, then React context.
 import { createContext, createElement, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { fetchPublicContent, mapSupabaseContentToSiteModel } from '../../../../shared/supabase/content.js';
-import { buildTraxsourceText, fetchWebRadioNowPlaying } from '../../../../shared/webradio/index.js';
 import {
   mixSessions as fallbackMixSessions,
   nextUp as fallbackNextUp,
@@ -11,15 +12,23 @@ import {
   weeklyTracks as fallbackWeeklyTracks,
   videos as fallbackVideos,
 } from '@/lib/bside-data';
+import { fetchPublicContent, mapSupabaseContentToSiteModel } from '@shared/supabase/content.js';
+import { buildRadioText, fetchRadioNowPlaying, type LiveNowPlaying } from '@/lib/radio';
 
-type SiteComment = {
+type SupabaseCommentRow = {
+  author_name?: string | null;
+  body?: string | null;
+  created_at?: string | null;
+};
+
+export type SiteComment = {
   name: string;
   message: string;
   at: string;
   atEn: string;
 };
 
-const fallbackContent = {
+export const fallbackContent = {
   schedule: fallbackSchedule,
   weekSchedule: fallbackWeekSchedule,
   vinyls: fallbackVinyls,
@@ -31,10 +40,90 @@ const fallbackContent = {
   nextUp: fallbackNextUp,
 };
 
-type SiteContent = typeof fallbackContent;
+export type SiteContent = typeof fallbackContent;
+
+function mapComments(comments: unknown): SiteComment[] {
+  if (!Array.isArray(comments)) {
+    return [];
+  }
+
+  return comments.map((comment) => {
+    const row: SupabaseCommentRow = (comment ?? {}) as SupabaseCommentRow;
+
+    return {
+      name: String(row.author_name || 'Anonymous'),
+      message: String(row.body || ''),
+      at: String(row.created_at || ''),
+      atEn: String(row.created_at || ''),
+    };
+  });
+}
+
+function mergeNowPlaying(baseNowPlaying: SiteContent['nowPlaying'], liveNowPlaying: LiveNowPlaying | null) {
+  if (!liveNowPlaying) {
+    return baseNowPlaying;
+  }
+
+  const liveText = liveNowPlaying.text || buildRadioText(liveNowPlaying);
+
+  return {
+    ...baseNowPlaying,
+    title: liveNowPlaying.title || baseNowPlaying.title,
+    artist: liveNowPlaying.artist || baseNowPlaying.artist,
+    original: liveText || baseNowPlaying.original,
+    buyUrl: baseNowPlaying.buyUrl,
+    imageUrl: liveNowPlaying.imageUrl || baseNowPlaying.imageUrl,
+    text: liveText,
+    traxsourceId: liveNowPlaying.traxsourceId ?? undefined,
+    stationId: liveNowPlaying.stationId,
+  };
+}
+
+function hasLiveDatabaseContent(mapped: ReturnType<typeof mapSupabaseContentToSiteModel>, comments: unknown) {
+  return [
+    mapped.schedule.length,
+    mapped.vinyls.length,
+    mapped.weeklyTracks.length,
+    mapped.mixSessions.length,
+    mapped.videos.length,
+    Array.isArray(comments) ? comments.length : 0,
+  ].some((count) => count > 0);
+}
+
+async function loadSiteContent() {
+  const [publicContent, liveNowPlaying] = await Promise.all([
+    fetchPublicContent(),
+    fetchRadioNowPlaying().catch((error) => {
+      console.warn('Unable to load live nowplaying from the radio API.', error);
+      return null;
+    }),
+  ]);
+
+  const mappedContent = mapSupabaseContentToSiteModel(publicContent);
+
+  if (!hasLiveDatabaseContent(mappedContent, publicContent.comments)) {
+    return {
+      ...fallbackContent,
+      nowPlaying: mergeNowPlaying(fallbackContent.nowPlaying, liveNowPlaying),
+    };
+  }
+
+  return {
+    schedule: mappedContent.schedule.length ? mappedContent.schedule : fallbackContent.schedule,
+    weekSchedule: mappedContent.weekSchedule.length ? mappedContent.weekSchedule : fallbackContent.weekSchedule,
+    vinyls: mappedContent.vinyls.length ? mappedContent.vinyls : fallbackContent.vinyls,
+    weeklyTracks: mappedContent.weeklyTracks.length ? mappedContent.weeklyTracks : fallbackContent.weeklyTracks,
+    mixSessions: mappedContent.mixSessions.length ? mappedContent.mixSessions : fallbackContent.mixSessions,
+    videos: mappedContent.videos.length ? mappedContent.videos : fallbackContent.videos,
+    comments: mapComments(publicContent.comments),
+    nowPlaying: mergeNowPlaying(mappedContent.nowPlaying, liveNowPlaying),
+    nextUp: fallbackContent.nextUp,
+  };
+}
 
 const SiteContentContext = createContext<SiteContent>(fallbackContent);
 
+// Load site content once, then expose it to all sections through React context.
 export function SiteContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>(fallbackContent);
 
@@ -43,75 +132,9 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
 
     async function load() {
       try {
-        const [result, liveNowPlaying] = await Promise.all([
-          fetchPublicContent(),
-          fetchWebRadioNowPlaying().catch((error) => {
-            console.warn('Unable to load live nowplaying from the web radio API.', error);
-            return null;
-          }),
-        ]);
+        const nextContent = await loadSiteContent();
         if (cancelled) return;
-
-        const mapped = mapSupabaseContentToSiteModel(result);
-        const hasSupabaseContent = [
-          mapped.schedule.length,
-          mapped.vinyls.length,
-          mapped.weeklyTracks.length,
-          mapped.mixSessions.length,
-          mapped.videos.length,
-          result.comments?.length ?? 0,
-        ].some((count) => count > 0);
-
-        if (!hasSupabaseContent) {
-          setContent((current) => ({
-            ...current,
-            nowPlaying: liveNowPlaying
-              ? {
-                  ...fallbackNowPlaying,
-                  title: liveNowPlaying.title || fallbackNowPlaying.title,
-                  artist: liveNowPlaying.artist || fallbackNowPlaying.artist,
-                  original: liveNowPlaying.text || buildTraxsourceText(liveNowPlaying) || fallbackNowPlaying.original,
-                  buyUrl: fallbackNowPlaying.buyUrl,
-                  imageUrl: liveNowPlaying.imageUrl || fallbackNowPlaying.imageUrl,
-                  text: liveNowPlaying.text || buildTraxsourceText(liveNowPlaying),
-                  traxsourceId: liveNowPlaying.traxsourceId,
-                  stationId: liveNowPlaying.stationId,
-                }
-              : current.nowPlaying,
-          }));
-          return;
-        }
-
-        setContent({
-          schedule: mapped.schedule.length ? mapped.schedule : fallbackSchedule,
-          weekSchedule: mapped.weekSchedule.length ? mapped.weekSchedule : fallbackWeekSchedule,
-          vinyls: mapped.vinyls.length ? mapped.vinyls : fallbackVinyls,
-          weeklyTracks: mapped.weeklyTracks.length ? mapped.weeklyTracks : fallbackWeeklyTracks,
-          mixSessions: mapped.mixSessions.length ? mapped.mixSessions : fallbackMixSessions,
-          videos: mapped.videos.length ? mapped.videos : fallbackVideos,
-          comments: Array.isArray(result.comments)
-            ? result.comments.map((comment) => ({
-                name: String(comment.author_name || 'Anonymous'),
-                message: String(comment.body || ''),
-                at: String(comment.created_at || ''),
-                atEn: String(comment.created_at || ''),
-              }))
-            : [],
-          nowPlaying: liveNowPlaying
-            ? {
-                ...mapped.nowPlaying,
-                title: liveNowPlaying.title || mapped.nowPlaying.title,
-                artist: liveNowPlaying.artist || mapped.nowPlaying.artist,
-                original: liveNowPlaying.text || buildTraxsourceText(liveNowPlaying) || mapped.nowPlaying.original,
-                buyUrl: mapped.nowPlaying.buyUrl,
-                imageUrl: liveNowPlaying.imageUrl || mapped.nowPlaying.imageUrl,
-                text: liveNowPlaying.text || buildTraxsourceText(liveNowPlaying),
-                traxsourceId: liveNowPlaying.traxsourceId,
-                stationId: liveNowPlaying.stationId,
-              }
-            : mapped.nowPlaying,
-          nextUp: fallbackNextUp,
-        });
+        setContent(nextContent);
       } catch (error) {
         console.warn('Unable to load site content from Supabase.', error);
       }

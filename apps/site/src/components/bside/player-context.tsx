@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useRef, useState, type ReactNode } from "react";
-import { getWebRadioStreamUrl } from '../../../../../shared/webradio/index.js';
+import { getRadioStreamUrl } from '@/lib/radio';
 
 type Source = { kind: "live" } | { kind: "track"; id: string; title: string; artist: string; src: string };
 
@@ -15,6 +15,7 @@ type PlayerState = {
 
 const Ctx = createContext<PlayerState | null>(null);
 
+// Controls the persistent audio element used by the live stream and track previews.
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [source, setSource] = useState<Source>({ kind: "live" });
@@ -41,7 +42,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (!el) return;
         if (source.kind !== "live") {
           setSource({ kind: "live" });
-          el.src = getWebRadioStreamUrl();
+          el.src = getRadioStreamUrl();
           el.load();
           void play();
           return;
@@ -50,7 +51,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           el.pause();
           setPlaying(false);
         } else {
-          el.src = getWebRadioStreamUrl();
+          el.src = getRadioStreamUrl();
           el.load();
           void play();
         }

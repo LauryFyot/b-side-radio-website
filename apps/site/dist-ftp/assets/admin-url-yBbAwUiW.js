@@ -1,1 +1,0 @@
-function e(){return`/admin/`}export{e as t};

@@ -1,6 +1,7 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts", "eslint.config.js"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "vite.config.ts", "eslint.config.js"],
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
@@ -21,7 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@shared/*": ["../../shared/*"]
     }
   }
 }
