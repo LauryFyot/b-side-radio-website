@@ -31,7 +31,7 @@ export function OnAir() {
       tone="paper"
       noHeader
       sectionClassName="pb-4"
-      panelClassName="grid gap-8 px-5 py-12 sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+      panelClassName="grid gap-8 px-5 pt-12 py-12 sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
     >
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-primary">

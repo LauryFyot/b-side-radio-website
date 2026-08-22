@@ -1,9 +1,22 @@
 // Content editing state manager for the admin app.
 // Holds local drafts for shows, schedule, media, videos, and comments.
 // Exposes CRUD helpers and publish action to sync changes to Supabase.
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { fetchBootstrapData, publishAdminData, uploadAdminFile } from '../lib/adminRepository';
 import { isDbId, toSlug } from '../utils/adminHelpers';
+
+function buildSnapshot(data, deletedIds) {
+  return JSON.stringify({
+    shows: data.shows || [],
+    slots: data.slots || [],
+    covers: data.covers || [],
+    tracks: data.tracks || [],
+    videos: data.videos || [],
+    comments: data.comments || [],
+    deletedIds: deletedIds || { shows: [], slots: [], covers: [], tracks: [], videos: [] }
+  });
+}
+
 function useAdminEditor() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [message, setMessage] = useState('');
@@ -22,16 +35,43 @@ function useAdminEditor() {
     tracks: [],
     videos: []
   });
+  const [publishedSnapshot, setPublishedSnapshot] = useState(
+    buildSnapshot(
+      { shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [] },
+      { shows: [], slots: [], covers: [], tracks: [], videos: [] }
+    )
+  );
 
   function hydrateState(data) {
+    const nextShows = data.shows || [];
+    const nextSlots = data.slots || [];
+    const nextCovers = data.covers || [];
+    const nextTracks = data.tracks || [];
+    const nextVideos = data.videos || [];
+    const nextComments = data.comments || [];
+    const emptyDeleted = { shows: [], slots: [], covers: [], tracks: [], videos: [] };
+
     // Replace full local draft from a server snapshot.
-    setShows(data.shows || []);
-    setSlots(data.slots || []);
-    setCovers(data.covers || []);
-    setTracks(data.tracks || []);
-    setVideos(data.videos || []);
-    setComments(data.comments || []);
-    setDeletedIds({ shows: [], slots: [], covers: [], tracks: [], videos: [] });
+    setShows(nextShows);
+    setSlots(nextSlots);
+    setCovers(nextCovers);
+    setTracks(nextTracks);
+    setVideos(nextVideos);
+    setComments(nextComments);
+    setDeletedIds(emptyDeleted);
+    setPublishedSnapshot(
+      buildSnapshot(
+        {
+          shows: nextShows,
+          slots: nextSlots,
+          covers: nextCovers,
+          tracks: nextTracks,
+          videos: nextVideos,
+          comments: nextComments
+        },
+        emptyDeleted
+      )
+    );
   }
 
   async function loadData() {
@@ -41,7 +81,8 @@ function useAdminEditor() {
   }
 
   function clearData() {
-    hydrateState({ shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [] });
+    const emptyState = { shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [] };
+    hydrateState(emptyState);
     setMessage('');
   }
 
@@ -80,9 +121,20 @@ function useAdminEditor() {
     setShows((prev) => [...prev, { id: null, name: '', slug: '', description: '', cover_url: '', is_active: true }]);
   }
 
-  function addSlot() {
+  function addSlot(dayOfWeek = 1) {
     const firstShowId = shows.find((show) => isDbId(show.id))?.id || null;
-    setSlots((prev) => [...prev, { id: null, show_id: firstShowId, day_of_week: 1, start_time: '08:00', end_time: '09:00', priority: 0, is_active: true }]);
+    setSlots((prev) => [
+      ...prev,
+      {
+        id: null,
+        show_id: firstShowId,
+        day_of_week: Number(dayOfWeek) || 1,
+        start_time: '08:00',
+        end_time: '09:00',
+        priority: 0,
+        is_active: true
+      }
+    ]);
   }
 
   function addCover() {
@@ -163,8 +215,25 @@ function useAdminEditor() {
     }
   }
 
+  const hasPendingChanges = useMemo(
+    () =>
+      buildSnapshot(
+        {
+          shows,
+          slots,
+          covers,
+          tracks,
+          videos,
+          comments
+        },
+        deletedIds
+      ) !== publishedSnapshot,
+    [shows, slots, covers, tracks, videos, comments, deletedIds, publishedSnapshot]
+  );
+
   return {
     isPublishing,
+    hasPendingChanges,
     message,
     shows,
     slots,

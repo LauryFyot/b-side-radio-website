@@ -1,45 +1,61 @@
 // Editor for featured YouTube spotlight videos.
 // Accepts slot/title/url and validates links through embed preview.
 // Keeps content changes local until publish is triggered.
-import { getYouTubeEmbedUrl, extractYouTubeId } from '../../utils/adminHelpers';
+import { extractYouTubeId } from '../../utils/adminHelpers';
 
-function YoutubeSection({ videos, onAddVideo, onUpdateVideo, onRemoveVideo }) {
+function getYouTubeThumb(url) {
+  const id = extractYouTubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+}
+
+function YoutubeSection({ videos, onUpdateVideo }) {
   return (
-    <section>
-      <div className="section-head">
-        <h2>YouTube spotlight</h2>
-        <button className="chip" onClick={onAddVideo}>+ Add</button>
-      </div>
-      <div className="video-grid">
+    <section className="youtube-section">
+      <div className="youtube-stage">
+        <p className="youtube-kicker">Featured this week</p>
+        <h3 className="youtube-stage-title">{videos.length} YouTube videos</h3>
+
+        <div className="youtube-grid">
         {videos.map((video, index) => (
-          <article key={`video-${video.id ?? index}`} className="video-card">
-            <input className="editor-input" type="number" min="1" max="3" value={video.slot || ''} onChange={(event) => onUpdateVideo(index, 'slot', Number(event.target.value))} />
-            <input className="editor-input" placeholder="Video title" value={video.title || ''} onChange={(event) => onUpdateVideo(index, 'title', event.target.value)} />
-            <input
-              className="editor-input"
-              placeholder="YouTube URL"
-              value={video.youtube_url || ''}
-              onChange={(event) => onUpdateVideo(index, 'youtube_url', event.target.value)}
-            />
-            {getYouTubeEmbedUrl(video.youtube_url) ? (
-              <div className="video-preview">
-                <iframe
-                  title={video.title || `YouTube preview ${video.slot || index + 1}`}
-                  src={getYouTubeEmbedUrl(video.youtube_url)}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-                <p className="hint">Preview video ID: {extractYouTubeId(video.youtube_url)}</p>
-              </div>
-            ) : (
-              <p className="hint">Paste a standard YouTube link or short link to see a preview.</p>
-            )}
-            <button className="upload-btn" onClick={() => onRemoveVideo(index)}>
-              Delete video
-            </button>
+          <article key={`video-${video.id ?? index}`} className="youtube-card">
+            <div className="youtube-thumb-shell">
+              {getYouTubeThumb(video.youtube_url) ? (
+                <img className="youtube-thumb" src={getYouTubeThumb(video.youtube_url)} alt={video.title || `Video ${index + 1}`} loading="lazy" />
+              ) : (
+                <div className="youtube-thumb youtube-thumb-fallback">Paste a YouTube URL</div>
+              )}
+
+              <label className="youtube-slot-pill">
+                Slot
+                <select
+                  className="youtube-slot-select"
+                  value={video.slot || ''}
+                  onChange={(event) => onUpdateVideo(index, 'slot', Number(event.target.value))}
+                >
+                  {[1, 2, 3, 4, 5, 6].map((slotNumber) => (
+                    <option key={`slot-opt-${slotNumber}`} value={slotNumber}>
+                      {slotNumber}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+            </div>
+
+            <div className="youtube-card-body">
+              <input className="youtube-title-input" placeholder="Video title" value={video.title || ''} onChange={(event) => onUpdateVideo(index, 'title', event.target.value)} />
+              <input
+                className="youtube-url-input"
+                placeholder="YouTube URL"
+                value={video.youtube_url || ''}
+                onChange={(event) => onUpdateVideo(index, 'youtube_url', event.target.value)}
+              />
+
+              {!extractYouTubeId(video.youtube_url) && <p className="youtube-hint">Use a regular YouTube URL or youtu.be short link.</p>}
+            </div>
           </article>
         ))}
+        </div>
       </div>
     </section>
   );

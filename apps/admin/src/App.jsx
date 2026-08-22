@@ -66,6 +66,7 @@ function App() {
             onTabChange={setActiveTab}
             tabs={tabs}
             isPublishing={editor.isPublishing}
+            hasPendingChanges={editor.hasPendingChanges}
             onPublish={editor.publish}
             message={editor.message}
             editor={editor}

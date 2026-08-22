@@ -2,6 +2,7 @@
 // Also displays now-playing radio metadata fetched from the stream API.
 // Polls periodically to keep song title, artist, and live state updated.
 import { useEffect, useState } from 'react';
+import { BarChart3, LayoutDashboard, LogOut, Music2, Radio, Settings } from 'lucide-react';
 import { fetchNowPlayingInfo } from '../lib/radioStreamApi';
 
 function AdminSidebar({ onLogout }) {
@@ -47,18 +48,36 @@ function AdminSidebar({ onLogout }) {
 
   return (
     <aside className="sidebar">
-      <div className="brand">b-side</div>
+      <div className="brand">
+        <span className="brand-icon" aria-hidden="true">
+          <Music2 size={22} strokeWidth={2.4} />
+        </span>
+        <span>B-Side</span>
+      </div>
       <div className="side-group">
         <p className="side-label">GENERAL</p>
-        <button className="side-link">Dashboard</button>
-        <button className="side-link active">Website edition</button>
-        <button className="side-link">Radio stats</button>
+        <button className="side-link">
+          <LayoutDashboard aria-hidden="true" size={20} />
+          <span>Dashboard</span>
+        </button>
+        <button className="side-link active">
+          <Radio aria-hidden="true" size={20} />
+          <span>Website edition</span>
+        </button>
+        <button className="side-link">
+          <BarChart3 aria-hidden="true" size={20} />
+          <span>Radio stats</span>
+        </button>
       </div>
       <div className="side-group">
         <p className="side-label">TOOLS</p>
-        <button className="side-link">Settings</button>
+        <button className="side-link">
+          <Settings aria-hidden="true" size={20} />
+          <span>Settings</span>
+        </button>
         <button className="side-link" onClick={onLogout}>
-          Log out
+          <LogOut aria-hidden="true" size={20} />
+          <span>Log out</span>
         </button>
       </div>
       <div className="onair-card">

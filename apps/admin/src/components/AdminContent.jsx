@@ -8,7 +8,28 @@ import MixesSection from './sections/MixesSection';
 import VinylSection from './sections/VinylSection';
 import CommentsSection from './sections/CommentsSection';
 
-function AdminContent({ activeTab, onTabChange, tabs, isPublishing, onPublish, message, editor }) {
+function PublishIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 3h11l3 3v15H5z" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M8 3v6h8V3" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M8 17h8" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SpinnerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="spin-icon">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+      <path d="M12 4a8 8 0 0 1 8 8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, message, editor }) {
+  const hasInternalFrame = activeTab === 'shows' || activeTab === 'mixes' || activeTab === 'vinyl';
+
   return (
     <section className="content-scroll">
       <div className="title-row">
@@ -16,8 +37,14 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, onPublish, m
           <h1>Website edition</h1>
           <p>Curate what plays on b-side-radio.com this week.</p>
         </div>
-        <button className="publish-btn" onClick={onPublish} disabled={isPublishing}>
-          {isPublishing ? 'Publishing...' : 'Publish'}
+        <button
+          className={`publish-btn ${hasPendingChanges ? 'has-pending' : 'is-clean'} ${isPublishing ? 'is-publishing' : ''}`}
+          onClick={onPublish}
+          disabled={isPublishing || !hasPendingChanges}
+          type="button"
+        >
+          {isPublishing ? <SpinnerIcon /> : <PublishIcon />}
+          {isPublishing ? 'Publishing...' : hasPendingChanges ? 'Publish changes' : 'Published'}
         </button>
       </div>
 
@@ -25,7 +52,7 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, onPublish, m
 
       <AdminTabs tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
 
-      <div className="panel">
+      <div className={`panel ${hasInternalFrame ? 'panel-frame-off' : ''}`}>
         {activeTab === 'shows' && (
           <ShowsScheduleSection
             shows={editor.shows}

@@ -17,7 +17,7 @@ export function Hero() {
         className="absolute inset-0 size-full object-cover opacity-20"
       />
       <div className="absolute inset-0 bg-linear-to-t from-background via-background/75 to-background/40" />
-      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-20 sm:px-6 sm:pb-24 sm:pt-28">
+      <div className="relative mx-auto max-w-7xl px-4 pb-8 pt-20 sm:px-6 sm:pt-28">
         <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-primary">
           {t("hero.kicker")}
         </p>
@@ -45,7 +45,7 @@ export function Hero() {
           </a>
         </div>
       </div>
-      <div className="relative mx-2 mb-2 overflow-hidden rounded-2xl border border-border bg-surface py-3 sm:mx-4">
+      <div className="relative mx-2 mb-2 overflow-hidden rounded-2xl border border-border bg-surface py-3 sm:my-8">
         <div className="flex w-max animate-none gap-10" style={{ animation: "marquee 24s linear infinite" }}>
           {Array.from({ length: 2 }).map((_, k) => (
             <div key={k} className="flex shrink-0 gap-10">
