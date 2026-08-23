@@ -47,44 +47,44 @@ function AdminSidebar({ onLogout }) {
   }, []);
 
   return (
-    <aside className="sidebar">
-      <div className="brand">
-        <span className="brand-icon" aria-hidden="true">
+    <aside className="m-3 flex flex-col gap-5 rounded-[var(--admin-shell-radius)] bg-admin-sidebar p-[22px_16px] text-white max-[1080px]:border-b max-[1080px]:border-[#2e2830]">
+      <div className="flex items-center gap-2.5 font-['Space_Grotesk'] text-[34px] font-bold tracking-[-0.03em]">
+        <span className="inline-grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full bg-admin-red" aria-hidden="true">
           <Music2 size={22} strokeWidth={2.4} />
         </span>
         <span>B-Side</span>
       </div>
-      <div className="side-group">
-        <p className="side-label">GENERAL</p>
-        <button className="side-link">
+      <div className="flex flex-col gap-2">
+        <p className="m-0 text-[11px] tracking-[0.12em] text-[#8f8990]">GENERAL</p>
+        <button className="flex items-center gap-3 rounded-full border-0 bg-transparent px-3 py-2 text-left text-sm text-[#d6d1d7] hover:bg-[#221c20] hover:text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]">
           <LayoutDashboard aria-hidden="true" size={20} />
           <span>Dashboard</span>
         </button>
-        <button className="side-link active">
+        <button className="flex items-center gap-3 rounded-full border-0 bg-[#221c20] px-3 py-2 text-left text-sm text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]">
           <Radio aria-hidden="true" size={20} />
           <span>Website edition</span>
         </button>
-        <button className="side-link">
+        <button className="flex items-center gap-3 rounded-full border-0 bg-transparent px-3 py-2 text-left text-sm text-[#d6d1d7] hover:bg-[#221c20] hover:text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]">
           <BarChart3 aria-hidden="true" size={20} />
           <span>Radio stats</span>
         </button>
       </div>
-      <div className="side-group">
-        <p className="side-label">TOOLS</p>
-        <button className="side-link">
+      <div className="flex flex-col gap-2">
+        <p className="m-0 text-[11px] tracking-[0.12em] text-[#8f8990]">TOOLS</p>
+        <button className="flex items-center gap-3 rounded-full border-0 bg-transparent px-3 py-2 text-left text-sm text-[#d6d1d7] hover:bg-[#221c20] hover:text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]">
           <Settings aria-hidden="true" size={20} />
           <span>Settings</span>
         </button>
-        <button className="side-link" onClick={onLogout}>
+        <button className="flex items-center gap-3 rounded-full border-0 bg-transparent px-3 py-2 text-left text-sm text-[#d6d1d7] hover:bg-[#221c20] hover:text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]" onClick={onLogout}>
           <LogOut aria-hidden="true" size={20} />
           <span>Log out</span>
         </button>
       </div>
-      <div className="onair-card">
-        <p className="onair-label">ON AIR</p>
-        <p className="onair-title">{nowPlaying.title}</p>
-        {nowPlaying.artist && <p className="onair-artist">{nowPlaying.artist}</p>}
-        <p className="onair-live">{nowPlaying.isLive ? 'Live now' : 'Auto DJ'}</p>
+      <div className="mt-auto rounded-2xl border border-[#2f2830] bg-[#171317] p-3.5">
+        <p className="m-0 text-[11px] text-[#8f8990]">ON AIR</p>
+        <p className="mb-0 mt-2 font-bold">{nowPlaying.title}</p>
+        {nowPlaying.artist && <p className="mb-1 mt-0 text-xs text-[#ada6b2]">{nowPlaying.artist}</p>}
+        <p className="m-0 text-[13px] text-[#ff625f]">{nowPlaying.isLive ? 'Live now' : 'Auto DJ'}</p>
       </div>
     </aside>
   );

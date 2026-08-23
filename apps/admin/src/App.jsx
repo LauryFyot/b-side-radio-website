@@ -37,8 +37,8 @@ function App() {
 
   if (auth.isLoading) {
     return (
-      <div className="app-bg">
-        <div className="loading-card">Loading admin data...</div>
+      <div className="min-h-screen p-[18px]">
+        <div className="mx-auto mt-20 max-w-[440px] rounded-[18px] border border-admin-line bg-white p-6">Loading admin data...</div>
       </div>
     );
   }
@@ -55,11 +55,11 @@ function App() {
   }
 
   return (
-    <div className="app-bg">
-      <div className="admin-shell">
+    <div className="min-h-screen p-[18px]">
+      <div className="grid h-[calc(100vh-36px)] grid-cols-[250px_1fr] overflow-hidden rounded-[var(--admin-shell-radius)] border border-[#272028] bg-admin-shell max-[1080px]:h-auto max-[1080px]:grid-cols-1">
         <AdminSidebar onLogout={handleLogout} />
 
-        <main className="content-wrap">
+        <main className="flex min-w-0 flex-col">
           <AdminHeader adminUser={auth.adminUser} />
           <AdminContent
             activeTab={activeTab}
@@ -73,7 +73,7 @@ function App() {
           />
         </main>
       </div>
-      <div className="mobile-title">{title}</div>
+      <div className="mt-2.5 hidden text-center text-[#f5f1f5] max-[1080px]:block">{title}</div>
     </div>
   );
 }

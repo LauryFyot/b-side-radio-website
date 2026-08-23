@@ -13,12 +13,12 @@ const tabIcons = {
 
 function AdminTabs({ tabs, activeTab, onTabChange }) {
   return (
-    <div className="tabs-row">
+    <div className="mt-[18px] flex min-w-0 flex-nowrap gap-2 overflow-x-auto pb-1">
       {tabs.map((tab) => (
-        <button key={tab.id} className={`tab-pill ${activeTab === tab.id ? 'is-active' : ''}`} onClick={() => onTabChange(tab.id)}>
+        <button key={tab.id} className={`inline-flex shrink-0 cursor-pointer items-center gap-2.5 rounded-full border border-admin-line bg-white px-[13px] py-2 font-medium text-sm ${activeTab === tab.id ? '!border-admin-red !bg-admin-red !text-white' : ''}`} onClick={() => onTabChange(tab.id)}>
           {(() => {
             const Icon = tabIcons[tab.id];
-            return Icon ? <Icon aria-hidden="true" size={20} strokeWidth={2} /> : null;
+            return Icon ? <Icon aria-hidden="true" size={16} strokeWidth={2} /> : null;
           })()}
           {tab.label}
         </button>

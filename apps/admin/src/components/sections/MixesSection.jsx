@@ -2,19 +2,12 @@
 // Supports MP3 URL/file input, live audio preview, and duration hints.
 // Writes updates back through track handlers from the editor hook.
 import { useEffect, useState } from 'react';
+import { AudioLines } from 'lucide-react';
 import { formatDuration } from '../../utils/adminHelpers';
-
-function MusicIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M16 5v9.5a2.5 2.5 0 1 1-1.5-2.28V8.6l-5 1.2v7.2a2.5 2.5 0 1 1-1.5-2.28V7.9z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 function UploadIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <svg className="size-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M12 15V6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       <path d="M8.5 9.5 12 6l3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M5.5 17.5v1.2A1.3 1.3 0 0 0 6.8 20h10.4a1.3 1.3 0 0 0 1.3-1.3v-1.2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -66,46 +59,69 @@ function MixesSection({ tracks, onUpdateTrack, onUploadTrackMp3 }) {
   }, [tracks]);
 
   return (
-    <section className="mixes-section">
-      <div className="mixes-head">
+    <section className="rounded-[var(--admin-radius)] bg-admin-subsection p-[var(--admin-panel-padding)] max-md:p-[var(--admin-panel-padding-mobile)]">
+
+      {/* Header */}
+      <div className="mb-[var(--admin-section-content-gap)] flex items-end justify-between gap-3 max-md:items-start max-md:flex-col">
         <div>
-          <p className="mixes-kicker">Curated selection</p>
-          <h2>6 favorite mixes</h2>
+          <p className="m-0 text-[length:var(--admin-section-kicker-size)] font-bold uppercase tracking-[0.12em] text-[#736c78]">Curated selection</p>
+          <h2 className="m-0 font-['Space_Grotesk'] text-[length:var(--admin-section-title-size)] [font-weight:var(--admin-section-title-weight)] tracking-[var(--admin-subsection-title-spacing)]">Favorite mixes</h2>
         </div>
-        <p className="mixes-note">MP3 · duration detected automatically</p>
+        <p className="m-[var(--admin-section-support-gap)] mb-0 text-[length:var(--admin-section-support-size)] leading-[var(--admin-section-support-line-height)] text-[#68616d] max-md:text-base">MP3 · duration detected automatically</p>
       </div>
 
-      <div className="mixes-grid">
+      {/* Grid */}
+      <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-3">
         {tracks.map((track, i) => (
-          <article className={`mix-card tone-${(i % 4) + 1} mix-curated-card`} key={`track-${track.id ?? i}`}>
-            <div className="mix-card-head">
-              <span className="mix-slot-badge">#{i + 1}</span>
-              <span className="mix-duration">{formatDuration(durations[track.id ?? i]) || '--:--'}</span>
+          // Card
+          <article className={`tone-${(i % 4) + 1} flex min-h-[248px] flex-col gap-2 rounded-[var(--admin-radius)] p-[18px] text-white`} key={`track-${track.id ?? i}`}>
+            <div className="mb-0.5 flex items-center justify-between">
+              {/* ID */}
+              <span className={`inline-flex min-h-2 items-center justify-center rounded-full px-2 py-0.5 font-bold text-xs ${i % 4 === 1 || i % 4 === 3 ? 'bg-[rgba(49,29,35,0.18)]' : 'bg-[rgba(0,0,0,0.16)]'}`}>#{i + 1}</span>
+              {/* Time */}
+              <span className="text-xs font-base opacity-90">{formatDuration(durations[track.id ?? i]) || '--:--'}</span>
             </div>
 
-            <input
-              className="mix-title-input"
-              placeholder="Mix title"
-              value={track.title || ''}
-              onChange={(event) => onUpdateTrack(i, 'title', event.target.value)}
-            />
+            {/* Header */}
+            <div className={`flex items-center gap-2.5 center`}>
+              {/* Upload */}
+              <label className={`cursor-pointer items-center justify-center gap-2 rounded-full border p-1.5 font-bold text-sm ${i % 4 === 1 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428]' : 'border-[rgba(255,255,255,0.42)]'}`} htmlFor={`mix-file-${track.id ?? i}`}>
+                <UploadIcon />
+              </label>
 
-            <p className="mix-artist">DJ set</p>
-
-            <div className="mix-upload-panel">
-              <p className="mix-file-status">
-                <MusicIcon />
-                {track.mp3_url ? 'MP3 ready' : 'No MP3 file yet'}
+              <div>
+                {/* Title */}
+                <input
+                  className={`w-full border-0 bg-transparent font-['Space_Grotesk'] text-sm font-bold leading-[1.15] outline-0 ${i % 4 === 1 ? 'text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'placeholder:text-[rgba(255,255,255,0.86)]'}`}
+                  placeholder="Mix title"
+                  value={track.title || ''}
+                  onChange={(event) => onUpdateTrack(i, 'title', event.target.value)}
+                />
+                {/* DJ Name */}
+                <p className={`text-xs opacity-50 ${i % 4 === 1 ? 'text-[#2f2428]' : 'text-[rgba(255,255,255,0.84)]'}`}>DJ set</p>
+              </div>
+            </div>
+            <div className={`rounded-[var(--admin-radius)] p-3 ${i % 4 === 1 || i % 4 === 3 ? 'bg-[rgba(70,45,51,0.16)]' : 'bg-[rgba(255,255,255,0.16)]'}`}>
+              <p className={`inline-flex items-center gap-2 text-xs ${i % 4 === 1 ? 'text-[#2f2428]' : ''}`}>
+                <AudioLines aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.2} />
+                {track.mp3_url ? 'MP3 loaded' : 'No MP3 file yet'}
               </p>
 
-              <label className="mix-upload-btn" htmlFor={`mix-file-${track.id ?? i}`}>
-                <UploadIcon />
-                Upload MP3
-              </label>
+              <div className="flex items-center gap-2 max-md:flex-col">
+                {track.mp3_url && (
+                  <audio
+                    className="h-8 max-w-full shrink-0 bg-opacity-10"
+                    controls
+                    preload="metadata"
+                    src={track.mp3_url}
+                    aria-label={`Preview ${track.title || 'MP3 mix'}`}
+                  />
+                )}
+              </div>
 
               <input
                 id={`mix-file-${track.id ?? i}`}
-                className="mix-file-input"
+                className="pointer-events-none absolute h-0 w-0 opacity-0"
                 type="file"
                 accept="audio/mpeg,.mp3"
                 onChange={async (event) => {
@@ -124,7 +140,7 @@ function MixesSection({ tracks, onUpdateTrack, onUploadTrackMp3 }) {
               />
             </div>
 
-            <input className="mix-url-input" placeholder="https://...mp3" value={track.mp3_url || ''} onChange={(event) => onUpdateTrack(i, 'mp3_url', event.target.value)} />
+            <input className={`w-full rounded-full border bg-transparent px-3.5 py-2 text-[length:var(--admin-field-text-size)] outline-0 ${i % 4 === 1 || i % 4 === 3 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'border-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.86)] placeholder:text-[rgba(255,255,255,0.75)]'}`} placeholder="https://...mp3" value={track.mp3_url || ''} onChange={(event) => onUpdateTrack(i, 'mp3_url', event.target.value)} />
           </article>
         ))}
       </div>
