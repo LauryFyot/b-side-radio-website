@@ -143,7 +143,7 @@ function useAdminEditor() {
   }
 
   function addTrack() {
-    setTracks((prev) => [...prev, { id: null, title: '', cover_url: '', mp3_url: '', sort_order: prev.length, is_active: true }]);
+    setTracks((prev) => [...prev, { id: null, title: '', dj_name: '', cover_url: '', mp3_url: '', sort_order: prev.length, is_active: true }]);
   }
 
   function addVideo() {

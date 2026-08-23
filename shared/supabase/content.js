@@ -28,7 +28,7 @@ export async function fetchPublicContent() {
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
     readTable('show_slots', 'id,show_id,day_of_week,start_time,end_time,priority,is_active', { column: 'day_of_week', ascending: true }),
     readTable('featured_covers', 'id,image_url,title,sort_order,is_active', { column: 'sort_order', ascending: true }),
-    readTable('favorite_tracks', 'id,title,cover_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
+    readTable('favorite_tracks', 'id,title,dj_name,cover_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
     readTable('featured_videos', 'id,slot,title,youtube_url,is_active', { column: 'slot', ascending: true }),
     readTable('comments', 'id,author_name,body,created_at', { column: 'created_at', ascending: false }),
   ]);
@@ -135,7 +135,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
       title: track.title || 'Track',
       artist: 'B Side Radio',
       duration: '—',
-      dj: 'Supabase',
+      dj: track.dj_name || 'B Side Radio',
       src: track.mp3_url || '',
       buyUrl: track.cover_url || '#',
     }));

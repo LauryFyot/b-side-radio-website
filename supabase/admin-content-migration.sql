@@ -45,6 +45,7 @@ create table if not exists public.featured_covers (
 create table if not exists public.favorite_tracks (
   id bigserial primary key,
   title text not null,
+  dj_name text not null default '',
   cover_url text,
   mp3_url text not null,
   sort_order integer not null default 0,
@@ -52,6 +53,9 @@ create table if not exists public.favorite_tracks (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table if exists public.favorite_tracks
+  add column if not exists dj_name text not null default '';
 
 create table if not exists public.featured_videos (
   id bigserial primary key,

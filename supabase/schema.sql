@@ -261,6 +261,7 @@ execute function public.handle_profile_updated_at();
 create table if not exists public.favorite_tracks (
 	id bigserial primary key,
 	title text not null,
+	dj_name text not null default '',
 	cover_url text,
 	mp3_url text not null,
 	sort_order integer not null default 0,

@@ -98,7 +98,12 @@ function MixesSection({ tracks, onUpdateTrack, onUploadTrackMp3 }) {
                   onChange={(event) => onUpdateTrack(i, 'title', event.target.value)}
                 />
                 {/* DJ Name */}
-                <p className={`text-xs opacity-50 ${i % 4 === 1 ? 'text-[#2f2428]' : 'text-[rgba(255,255,255,0.84)]'}`}>DJ set</p>
+                <input
+                  className={`w-full border-0 bg-transparent text-xs opacity-50 outline-0 ${i % 4 === 1 ? 'text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'text-[rgba(255,255,255,0.84)] placeholder:text-[rgba(255,255,255,0.84)]'}`}
+                  placeholder="DJ name"
+                  value={track.dj_name || ''}
+                  onChange={(event) => onUpdateTrack(i, 'dj_name', event.target.value)}
+                />
               </div>
             </div>
             <div className={`rounded-[var(--admin-radius)] p-3 ${i % 4 === 1 || i % 4 === 3 ? 'bg-[rgba(70,45,51,0.16)]' : 'bg-[rgba(255,255,255,0.16)]'}`}>
