@@ -20,6 +20,7 @@ function buildSnapshot(data, deletedIds) {
 function useAdminEditor() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('success');
 
   const [shows, setShows] = useState([]);
   const [slots, setSlots] = useState([]);
@@ -207,12 +208,18 @@ function useAdminEditor() {
     try {
       await publishAdminData({ shows, slots, covers, tracks, videos, comments }, deletedIds);
       await loadData();
+      setMessageType('success');
       setMessage('Publish done. Supabase is updated.');
     } catch (error) {
+      setMessageType('error');
       setMessage(error.message || 'Publish failed.');
     } finally {
       setIsPublishing(false);
     }
+  }
+
+  function clearMessage() {
+    setMessage('');
   }
 
   const hasPendingChanges = useMemo(
@@ -235,6 +242,8 @@ function useAdminEditor() {
     isPublishing,
     hasPendingChanges,
     message,
+    messageType,
+    clearMessage,
     shows,
     slots,
     covers,

@@ -1,7 +1,10 @@
 // Main content area of the admin page.
 // Renders tabs, publish controls, and the active editable section.
 // Delegates all mutations to handlers provided by the editor hook.
+import { useState } from 'react';
 import AdminTabs from './AdminTabs';
+import PublishConfirmPopup from './popups/PublishConfirmPopup';
+import InfoPopup from './popups/InfoPopup';
 import ShowsScheduleSection from './sections/ShowsScheduleSection';
 import YoutubeSection from './sections/YoutubeSection';
 import MixesSection from './sections/MixesSection';
@@ -27,7 +30,18 @@ function SpinnerIcon() {
   );
 }
 
-function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, message, editor }) {
+function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, editor }) {
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+
+  function handleConfirmPublish() {
+    setShowPublishConfirm(false);
+    onPublish();
+  }
+
+  function handleCancelPublish() {
+    // Discard the local draft entirely by reloading the page.
+    window.location.reload();
+  }
 
   return (
     <section className="h-[calc(100vh-36px-74px)] overflow-auto p-5 max-[1080px]:h-auto max-[1080px]:max-h-none">
@@ -38,7 +52,7 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
         </div>
         <button
           className={`inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border px-4 py-[10px] font-['Space_Grotesk'] text-sm font-bold leading-none transition ${hasPendingChanges ? 'border-admin-red bg-admin-red text-white shadow-[0_0_0_4px_rgba(234,35,40,0.16)] hover:bg-[#d81f25] hover:border-[#d81f25]' : 'cursor-not-allowed border-[#ddd6df] bg-[#f2eef3] text-[#6b6573]'} ${isPublishing ? 'cursor-progress border-[#d72026] bg-[#d72026] text-white shadow-[0_0_0_4px_rgba(234,35,40,0.22)]' : ''}`}
-          onClick={onPublish}
+          onClick={() => setShowPublishConfirm(true)}
           disabled={isPublishing || !hasPendingChanges}
           type="button"
         >
@@ -47,7 +61,15 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
         </button>
       </div>
 
-      {message && <p className="mb-0 mt-2.5 text-[#3f3a45]">{message}</p>}
+      <PublishConfirmPopup open={showPublishConfirm} onCancel={handleCancelPublish} onConfirm={handleConfirmPublish} />
+
+      <InfoPopup
+        open={Boolean(editor.message)}
+        variant={editor.messageType}
+        title={editor.messageType === 'error' ? 'Publish failed' : 'Publish successful'}
+        description={editor.message}
+        onClose={editor.clearMessage}
+      />
 
       <AdminTabs tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
 

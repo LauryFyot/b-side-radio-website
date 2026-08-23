@@ -68,7 +68,6 @@ function App() {
             isPublishing={editor.isPublishing}
             hasPendingChanges={editor.hasPendingChanges}
             onPublish={editor.publish}
-            message={editor.message}
             editor={editor}
           />
         </main>
