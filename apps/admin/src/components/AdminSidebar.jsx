@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { BarChart3, LayoutDashboard, LogOut, Music2, Radio, Settings } from 'lucide-react';
 import { fetchNowPlayingInfo } from '../lib/radioStreamApi';
+import ConfirmPopup from './popups/ConfirmPopup';
 
 function AdminSidebar({ onLogout }) {
   const [nowPlaying, setNowPlaying] = useState({
@@ -11,6 +12,7 @@ function AdminSidebar({ onLogout }) {
     artist: '',
     isLive: false
   });
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,7 +77,7 @@ function AdminSidebar({ onLogout }) {
           <Settings aria-hidden="true" size={20} />
           <span>Settings</span>
         </button>
-        <button className="flex items-center gap-3 rounded-full border-0 bg-transparent px-3 py-2 text-left text-sm text-[#d6d1d7] hover:bg-[#221c20] hover:text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]" onClick={onLogout}>
+        <button className="flex items-center gap-3 rounded-full border-0 bg-transparent px-3 py-2 text-left text-sm text-[#d6d1d7] hover:bg-[#221c20] hover:text-white [&>svg]:shrink-0 [&>svg]:text-[#aaa3ad]" onClick={() => setShowLogoutConfirm(true)}>
           <LogOut aria-hidden="true" size={20} />
           <span>Log out</span>
         </button>
@@ -86,6 +88,20 @@ function AdminSidebar({ onLogout }) {
         {nowPlaying.artist && <p className="mb-1 mt-0 text-xs text-[#ada6b2]">{nowPlaying.artist}</p>}
         <p className="m-0 text-[13px] text-[#ff625f]">{nowPlaying.isLive ? 'Live now' : 'Auto DJ'}</p>
       </div>
+
+      <ConfirmPopup
+        open={showLogoutConfirm}
+        title="Log out?"
+        description="You will be signed out of the admin workspace."
+        cancelLabel="Cancel"
+        confirmLabel="Log out"
+        variant="neutral"
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          onLogout();
+        }}
+      />
     </aside>
   );
 }
