@@ -79,7 +79,7 @@ export async function fetchPublicContent() {
   const [shows, slots, covers, tracks, videos, comments] = await Promise.all([
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
     readTable('show_slots', 'id,show_id,day_of_week,start_time,end_time,priority,is_active', { column: 'day_of_week', ascending: true }),
-    readTable('featured_covers', 'id,image_url,title,sort_order,is_active', { column: 'sort_order', ascending: true }),
+    readTable('featured_covers', 'id,image_url,title,artist,release_year,remixed_by,sort_order,is_active', { column: 'sort_order', ascending: true }),
     readTable('favorite_tracks', 'id,title,dj_name,cover_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
     readTable('featured_videos', 'id,slot,title,youtube_url,is_active', { column: 'slot', ascending: true }),
     readTable('comments', 'id,author_name,body,created_at,likes_count', { column: 'created_at', ascending: false }),
@@ -174,10 +174,10 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
     .map((cover) => ({
       side: String(cover.id || '').slice(0, 3).toUpperCase(),
       title: cover.title || 'Featured cover',
-      artist: 'B Side Radio',
-      year: '2026',
+      artist: cover.artist || '',
+      year: cover.release_year || '',
       labelColor: '#B65151',
-      remixedBy: 'Supabase',
+      remixedBy: cover.remixed_by || '',
       imageUrl: cover.image_url || '',
     }));
 

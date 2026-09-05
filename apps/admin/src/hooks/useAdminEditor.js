@@ -139,7 +139,7 @@ function useAdminEditor() {
   }
 
   function addCover() {
-    setCovers((prev) => [...prev, { id: null, image_url: '', title: '', sort_order: prev.length, is_active: true }]);
+    setCovers((prev) => [...prev, { id: null, image_url: '', title: '', artist: '', release_year: '', remixed_by: '', sort_order: prev.length, is_active: true }]);
   }
 
   function addTrack() {

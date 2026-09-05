@@ -76,6 +76,30 @@ function VinylSection({ covers, onAddCover, onUpdateCover, onUploadCoverImage, o
               </button>
             </div>
 
+            {/* Metadata */}
+            <div className="grid grid-cols-1 gap-2">
+              <input
+                className="w-full rounded-full border border-[#ddd8df] bg-white px-3.5 py-2 text-[length:var(--admin-field-text-size)] text-[#1e1a22] outline-0 placeholder:text-[#8a8392]"
+                placeholder="Artist"
+                value={cover.artist || ''}
+                onChange={(event) => onUpdateCover(index, 'artist', event.target.value)}
+              />
+              <div className="grid grid-cols-[0.8fr_1.2fr] gap-2">
+                <input
+                  className="w-full rounded-full border border-[#ddd8df] bg-white px-3.5 py-2 text-[length:var(--admin-field-text-size)] text-[#1e1a22] outline-0 placeholder:text-[#8a8392]"
+                  placeholder="Year"
+                  value={cover.release_year || ''}
+                  onChange={(event) => onUpdateCover(index, 'release_year', event.target.value)}
+                />
+                <input
+                  className="w-full rounded-full border border-[#ddd8df] bg-white px-3.5 py-2 text-[length:var(--admin-field-text-size)] text-[#1e1a22] outline-0 placeholder:text-[#8a8392]"
+                  placeholder="Remixer"
+                  value={cover.remixed_by || ''}
+                  onChange={(event) => onUpdateCover(index, 'remixed_by', event.target.value)}
+                />
+              </div>
+            </div>
+
             <input
               id={`vinyl-file-${cover.id ?? index}`}
               className="pointer-events-none absolute h-0 w-0 opacity-0"

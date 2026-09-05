@@ -113,7 +113,7 @@ export async function fetchBootstrapData() {
       'Unable to load show slots.'
     ),
     throwOnError(
-      await supabase.from('featured_covers').select('id,image_url,title,sort_order,is_active').order('sort_order', { ascending: true }).order('id', { ascending: true }),
+      await supabase.from('featured_covers').select('id,image_url,title,artist,release_year,remixed_by,sort_order,is_active').order('sort_order', { ascending: true }).order('id', { ascending: true }),
       'Unable to load featured covers.'
     ),
     throwOnError(
@@ -274,6 +274,9 @@ export async function publishAdminData(data, deletedIds) {
       id: cover.id,
       image_url: imageUrl,
       title: String(cover.title || '').trim(),
+      artist: String(cover.artist || '').trim(),
+      release_year: String(cover.release_year || '').trim(),
+      remixed_by: String(cover.remixed_by || '').trim(),
       sort_order: Number(cover.sort_order) || 0,
       is_active: cover.is_active !== false
     };
@@ -288,6 +291,9 @@ export async function publishAdminData(data, deletedIds) {
     return {
       image_url: imageUrl,
       title: String(cover.title || '').trim(),
+      artist: String(cover.artist || '').trim(),
+      release_year: String(cover.release_year || '').trim(),
+      remixed_by: String(cover.remixed_by || '').trim(),
       sort_order: Number(cover.sort_order) || 0,
       is_active: cover.is_active !== false
     };
