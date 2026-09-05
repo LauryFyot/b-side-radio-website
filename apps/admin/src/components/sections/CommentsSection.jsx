@@ -131,6 +131,11 @@ function CommentsSection({ comments, onSetCommentStatus }) {
                 <div>
                   <h3 className="m-0 text-[length:var(--admin-card-title-size)] font-bold text-sm">{authorLabel}</h3>
                   <p className="m-0 text-[#8b8792] text-xs">{formatCommentDate(comment.created_at)}</p>
+                  {comment.author_email && (
+                    <a className="m-0 text-xs text-admin-red underline" href={`mailto:${comment.author_email}`}>
+                      {comment.author_email}
+                    </a>
+                  )}
                 </div>
               </div>
               <span className={`rounded-full px-3 py-1.5 text-xs font-bold ${

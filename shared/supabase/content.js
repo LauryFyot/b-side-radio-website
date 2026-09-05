@@ -23,6 +23,58 @@ async function readTable(table, select, orderBy) {
   return normalizeRows(data);
 }
 
+// Insert a visitor comment; the DB trigger auto-approves it (see comment_insert_guard).
+export async function submitComment({ authorName, body, email } = {}) {
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const trimmedName = String(authorName || '').trim();
+  const trimmedBody = String(body || '').trim();
+  const trimmedEmail = String(email || '').trim();
+  if (!trimmedName || !trimmedBody) {
+    throw new Error('Name and message are required.');
+  }
+
+  const { error } = await supabase.from('comments').insert({
+    author_name: trimmedName,
+    author_email: trimmedEmail || null,
+    body: trimmedBody,
+  });
+
+  if (error) {
+    throw new Error(error.message || 'Unable to submit comment.');
+  }
+}
+
+// Increment a comment's like counter through the security-definer RPC.
+export async function likeComment(commentId) {
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const { data, error } = await supabase.rpc('increment_comment_likes', { target_comment_id: commentId });
+  if (error) {
+    throw new Error(error.message || 'Unable to like this comment.');
+  }
+
+  return typeof data === 'number' ? data : null;
+}
+
+// Undo a previous like through the matching decrement RPC.
+export async function unlikeComment(commentId) {
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const { data, error } = await supabase.rpc('decrement_comment_likes', { target_comment_id: commentId });
+  if (error) {
+    throw new Error(error.message || 'Unable to unlike this comment.');
+  }
+
+  return typeof data === 'number' ? data : null;
+}
+
 export async function fetchPublicContent() {
   const [shows, slots, covers, tracks, videos, comments] = await Promise.all([
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
@@ -30,7 +82,7 @@ export async function fetchPublicContent() {
     readTable('featured_covers', 'id,image_url,title,sort_order,is_active', { column: 'sort_order', ascending: true }),
     readTable('favorite_tracks', 'id,title,dj_name,cover_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
     readTable('featured_videos', 'id,slot,title,youtube_url,is_active', { column: 'slot', ascending: true }),
-    readTable('comments', 'id,author_name,body,created_at', { column: 'created_at', ascending: false }),
+    readTable('comments', 'id,author_name,body,created_at,likes_count', { column: 'created_at', ascending: false }),
   ]);
 
   const activeShowsById = new Map(

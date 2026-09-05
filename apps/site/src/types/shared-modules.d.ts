@@ -1,4 +1,8 @@
 declare module '@shared/supabase/content.js' {
+  export function submitComment(input: { authorName: string; body: string; email?: string }): Promise<void>;
+  export function likeComment(commentId: number | string): Promise<number | null>;
+  export function unlikeComment(commentId: number | string): Promise<number | null>;
+
   export function fetchPublicContent(): Promise<{
     shows: any[];
     slots: any[];

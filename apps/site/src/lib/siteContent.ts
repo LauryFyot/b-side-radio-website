@@ -16,16 +16,20 @@ import { fetchPublicContent, mapSupabaseContentToSiteModel } from '@shared/supab
 import { buildRadioText, fetchRadioNowPlaying, type LiveNowPlaying } from '@/lib/radio';
 
 type SupabaseCommentRow = {
+  id?: number | string | null;
   author_name?: string | null;
   body?: string | null;
   created_at?: string | null;
+  likes_count?: number | null;
 };
 
 export type SiteComment = {
+  id: string;
   name: string;
   message: string;
   at: string;
   atEn: string;
+  likes: number;
 };
 
 export const fallbackContent = {
@@ -51,10 +55,12 @@ function mapComments(comments: unknown): SiteComment[] {
     const row: SupabaseCommentRow = (comment ?? {}) as SupabaseCommentRow;
 
     return {
+      id: String(row.id ?? ''),
       name: String(row.author_name || 'Anonymous'),
       message: String(row.body || ''),
       at: String(row.created_at || ''),
       atEn: String(row.created_at || ''),
+      likes: Number(row.likes_count) || 0,
     };
   });
 }

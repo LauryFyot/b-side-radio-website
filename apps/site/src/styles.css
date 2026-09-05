@@ -124,6 +124,8 @@
 :root {
   --radius: 1rem;
   --panel-radius: var(--radius-2xl);
+  /* Width cap for the comments list/form; adjust freely, "none" removes the cap. */
+  --comments-max-width: 60rem;
   /* Light base #F3F3F3, anthracite ink #222222, pure red accent, brick #B65151 */
   --background: oklch(0.9646 0 0);
   --foreground: oklch(0.2409 0 0);

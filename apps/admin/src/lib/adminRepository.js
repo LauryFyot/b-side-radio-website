@@ -125,7 +125,7 @@ export async function fetchBootstrapData() {
       'Unable to load featured videos.'
     ),
     throwOnError(
-      await supabase.from('comments').select('id,author_name,body,status,created_at').order('created_at', { ascending: false }).limit(200),
+      await supabase.from('comments').select('id,author_name,author_email,body,status,created_at').order('created_at', { ascending: false }).limit(200),
       'Unable to load comments.'
     )
   ]);
