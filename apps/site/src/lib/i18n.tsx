@@ -69,7 +69,7 @@ const dict = {
     "tracks.title": "6 titres de la semaine",
     "tracks.kicker":
       "La selection MP3 des residents. Un clic pour ecouter, un lien pour acheter le titre.",
-    "tracks.reco": "reco.",
+    "tracks.reco": "recommandé par:",
     "tracks.buy": "Acheter",
     "tracks.listen": "Ecouter",
 

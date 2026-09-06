@@ -270,13 +270,19 @@ create table if not exists public.favorite_tracks (
 	id bigserial primary key,
 	title text not null,
 	dj_name text not null default '',
+	recommended_by text not null default '',
 	cover_url text,
+	buy_url text not null default '',
 	mp3_url text not null,
 	sort_order integer not null default 0,
 	is_active boolean not null default true,
 	created_at timestamptz not null default now(),
 	updated_at timestamptz not null default now()
 );
+
+alter table if exists public.favorite_tracks
+	add column if not exists recommended_by text not null default '',
+	add column if not exists buy_url text not null default '';
 
 create index if not exists idx_favorite_tracks_sort on public.favorite_tracks(sort_order, id);
 

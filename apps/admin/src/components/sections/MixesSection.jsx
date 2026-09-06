@@ -106,6 +106,8 @@ function MixesSection({ tracks, onUpdateTrack, onUploadTrackMp3 }) {
                 />
               </div>
             </div>
+
+
             <div className={`rounded-[var(--admin-radius)] p-3 ${i % 4 === 1 || i % 4 === 3 ? 'bg-[rgba(70,45,51,0.16)]' : 'bg-[rgba(255,255,255,0.16)]'}`}>
               <p className={`inline-flex items-center gap-2 text-xs ${i % 4 === 1 ? 'text-[#2f2428]' : ''}`}>
                 <AudioLines aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.2} />
@@ -146,6 +148,22 @@ function MixesSection({ tracks, onUpdateTrack, onUploadTrackMp3 }) {
             </div>
 
             <input className={`w-full rounded-full border bg-transparent px-3.5 py-2 text-[length:var(--admin-field-text-size)] outline-0 ${i % 4 === 1 || i % 4 === 3 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'border-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.86)] placeholder:text-[rgba(255,255,255,0.75)]'}`} placeholder="https://...mp3" value={track.mp3_url || ''} onChange={(event) => onUpdateTrack(i, 'mp3_url', event.target.value)} />
+          
+          {/* Metadata */}
+            <div className="grid grid-cols-1 gap-2">
+              <input
+                className={`w-full border-0 bg-transparent text-xs opacity-50 outline-0 ${i % 4 === 1 || i % 4 === 3 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'border-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.86)] placeholder:text-[rgba(255,255,255,0.75)]'}`}
+                placeholder="Recommended by"
+                value={track.recommended_by || ''}
+                onChange={(event) => onUpdateTrack(i, 'recommended_by', event.target.value)}
+              />
+              <input
+                className={`w-full rounded-full border bg-transparent px-3.5 py-2 text-[length:var(--admin-field-text-size)] outline-0 ${i % 4 === 1 || i % 4 === 3 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'border-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.86)] placeholder:text-[rgba(255,255,255,0.75)]'}`}
+                placeholder="Purchase link"
+                value={track.buy_url || ''}
+                onChange={(event) => onUpdateTrack(i, 'buy_url', event.target.value)}
+              />
+            </div>
           </article>
         ))}
       </div>

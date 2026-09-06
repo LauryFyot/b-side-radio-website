@@ -117,7 +117,7 @@ export async function fetchBootstrapData() {
       'Unable to load featured covers.'
     ),
     throwOnError(
-      await supabase.from('favorite_tracks').select('id,title,dj_name,cover_url,mp3_url,sort_order,is_active').order('sort_order', { ascending: true }).order('id', { ascending: true }),
+      await supabase.from('favorite_tracks').select('id,title,dj_name,recommended_by,cover_url,buy_url,mp3_url,sort_order,is_active').order('sort_order', { ascending: true }).order('id', { ascending: true }),
       'Unable to load favorite tracks.'
     ),
     throwOnError(
@@ -314,7 +314,9 @@ export async function publishAdminData(data, deletedIds) {
       id: track.id,
       title,
       dj_name: String(track.dj_name || '').trim(),
+      recommended_by: String(track.recommended_by || track.dj_name || '').trim(),
       cover_url: String(track.cover_url || '').trim(),
+      buy_url: String(track.buy_url || '').trim(),
       mp3_url: mp3Url,
       sort_order: Number(track.sort_order) || 0,
       is_active: track.is_active !== false
@@ -331,7 +333,9 @@ export async function publishAdminData(data, deletedIds) {
     return {
       title,
       dj_name: String(track.dj_name || '').trim(),
+      recommended_by: String(track.recommended_by || track.dj_name || '').trim(),
       cover_url: String(track.cover_url || '').trim(),
+      buy_url: String(track.buy_url || '').trim(),
       mp3_url: mp3Url,
       sort_order: Number(track.sort_order) || 0,
       is_active: track.is_active !== false

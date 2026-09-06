@@ -84,14 +84,14 @@ values
 -- 4) Replay session favorite tracks (top 6 shown on frontend)
 truncate table public.favorite_tracks restart identity;
 
-insert into public.favorite_tracks (title, dj_name, cover_url, mp3_url, sort_order, is_active)
+insert into public.favorite_tracks (title, dj_name, recommended_by, cover_url, buy_url, mp3_url, sort_order, is_active)
 values
-  ('Mix ByEddy', 'DJ Eddy', 'http://byeddy.free.fr/POCHETTES/7.jpg', 'http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3', 1, true),
-  ('Mix ByEddy', 'DJ Eddy', 'http://byeddy.free.fr/POCHETTES/8.jpg', 'http://byeddy.free.fr/MIXES/BSR_byeddy_2.mp3', 2, true),
-  ('Mix DJ Bart', 'DJ Bart', 'http://byeddy.free.fr/POCHETTES/9.jpg', 'http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3', 3, true),
-  ('Mix DJ Bart', 'DJ Bart', 'http://byeddy.free.fr/POCHETTES/10.jpg', 'http://byeddy.free.fr/MIXES/BSR_djbart_2.mp3', 4, true),
-  ('Mix DJ LeCyr', 'DJ LeCyr', 'http://byeddy.free.fr/POCHETTES/11.jpg', 'http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3', 5, true),
-  ('Mix DJ LeCyr', 'DJ LeCyr', 'http://byeddy.free.fr/POCHETTES/12.jpg', 'http://byeddy.free.fr/MIXES/BSR_djlecyr_2.mp3', 6, true);
+  ('Mix ByEddy', 'DJ Eddy', 'DJ Eddy', '', 'http://byeddy.free.fr/POCHETTES/7.jpg', 'http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3', 1, true),
+  ('Mix ByEddy', 'DJ Eddy', 'DJ Eddy', '', 'http://byeddy.free.fr/POCHETTES/8.jpg', 'http://byeddy.free.fr/MIXES/BSR_byeddy_2.mp3', 2, true),
+  ('Mix DJ Bart', 'DJ Bart', 'DJ Bart', '', 'http://byeddy.free.fr/POCHETTES/9.jpg', 'http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3', 3, true),
+  ('Mix DJ Bart', 'DJ Bart', 'DJ Bart', '', 'http://byeddy.free.fr/POCHETTES/10.jpg', 'http://byeddy.free.fr/MIXES/BSR_djbart_2.mp3', 4, true),
+  ('Mix DJ LeCyr', 'DJ LeCyr', 'DJ LeCyr', '', 'http://byeddy.free.fr/POCHETTES/11.jpg', 'http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3', 5, true),
+  ('Mix DJ LeCyr', 'DJ LeCyr', 'DJ LeCyr', '', 'http://byeddy.free.fr/POCHETTES/12.jpg', 'http://byeddy.free.fr/MIXES/BSR_djlecyr_2.mp3', 6, true);
 
 -- 5) Featured videos
 truncate table public.featured_videos restart identity;

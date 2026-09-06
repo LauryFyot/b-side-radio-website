@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pause, Play, ShoppingBag } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { usePlayer } from "@/components/player/player-context";
@@ -27,10 +27,13 @@ function readAudioDuration(src: string) {
 
 // Tracks section: playable weekly picks with a buy link.
 export function Tracks() {
-  const { playTrack, isCurrent, playing } = usePlayer();
+  const { playTrack } = usePlayer();
   const { t } = useI18n();
   const { weeklyTracks } = useSiteContent();
   const [durations, setDurations] = useState<Record<string, number>>({});
+  const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
+  const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
+  const trackAudioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -52,13 +55,34 @@ export function Tracks() {
     };
   }, [weeklyTracks]);
 
+  function playLocalTrack(id: string, track: (typeof weeklyTracks)[number]) {
+    const currentAudio = trackAudioRefs.current[id];
+
+    if (playingTrackId === id) {
+      currentAudio?.pause();
+      return;
+    }
+
+    playTrack({ id, title: track.title, artist: track.artist, src: track.src });
+    setActiveTrackId(id);
+
+    Object.entries(trackAudioRefs.current).forEach(([audioId, audio]) => {
+      if (audioId !== id) audio?.pause();
+    });
+
+    requestAnimationFrame(() => {
+      void trackAudioRefs.current[id]?.play();
+    });
+  }
+
   return (
     <SectionManager id="tracks" index="03" title={t("tracks.title")} kicker={t("tracks.kicker")} tone="surface">
       {/* Tracks grid */}
       <ul className="grid gap-3 md:grid-cols-2">
         {weeklyTracks.map((track, index) => {
           const id = `track-${index}`;
-          const active = isCurrent(id) && playing;
+          const active = playingTrackId === id;
+          const hasBuyLink = track.buyUrl.trim() !== "";
           return (
             /* Track card */
             <li
@@ -68,7 +92,7 @@ export function Tracks() {
               {/* Play button */}
               <button
                 type="button"
-                onClick={() => playTrack({ id, title: track.title, artist: track.artist, src: track.src })}
+                onClick={() => playLocalTrack(id, track)}
                 aria-label={`${active ? t("player.pause") : t("tracks.listen")} ${track.title}`}
                 className="grid size-11 shrink-0 place-items-center rounded-full border border-primary text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
               >
@@ -84,18 +108,44 @@ export function Tracks() {
                 <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.15em] text-primary">
                   {t("tracks.reco")} {track.dj}
                 </p>
+                {activeTrackId === id && track.src && (
+                  <audio
+                    ref={(audio) => {
+                      trackAudioRefs.current[id] = audio;
+                    }}
+                    className="mt-3 h-8 w-full max-w-sm"
+                    controls
+                    preload="metadata"
+                    src={track.src}
+                    onPlay={() => setPlayingTrackId(id)}
+                    onPause={() => setPlayingTrackId((current) => (current === id ? null : current))}
+                    onEnded={() => setPlayingTrackId(null)}
+                    aria-label={`${t("tracks.listen")} ${track.title}`}
+                  />
+                )}
               </div>
 
               {/* Buy link */}
-              <a
-                href={track.buyUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`${t("tracks.buy")} ${track.title}`}
-                className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-              >
-                <ShoppingBag className="size-4" />
-              </a>
+              {hasBuyLink ? (
+                <a
+                  href={track.buyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${t("tracks.buy")} ${track.title}`}
+                  className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                >
+                  <ShoppingBag className="size-4" />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  aria-label={`${t("tracks.buy")} ${track.title}`}
+                  className="grid size-10 shrink-0 cursor-not-allowed place-items-center rounded-full border border-border/60 text-muted-foreground/35"
+                >
+                  <ShoppingBag className="size-4" />
+                </button>
+              )}
             </li>
           );
         })}

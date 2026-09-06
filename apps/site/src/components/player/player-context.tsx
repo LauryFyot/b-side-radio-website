@@ -59,19 +59,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       playTrack: (t) => {
         const el = audioRef.current;
         if (!el) return;
-        if (source.kind === "track" && source.id === t.id) {
-          if (playing) {
-            el.pause();
-            setPlaying(false);
-          } else {
-            void play();
-          }
-          return;
-        }
-        setSource({ kind: "track", ...t });
-        el.src = t.src;
-        el.load();
-        void play();
+        el.pause();
+        setSource({ kind: "live" });
+        setPlaying(false);
       },
     };
   }, [source, playing]);
