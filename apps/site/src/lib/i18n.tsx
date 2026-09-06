@@ -29,6 +29,9 @@ const dict = {
     "onair.now": "A l'antenne maintenant",
     "onair.with": "avec",
     "onair.next": "Ensuite",
+    "onair.fallbackName": "B Side Radio",
+    "onair.fallbackHost": "Auto DJ",
+    "onair.fallbackBlurb": "Aucune emission n'est declaree pour ce creneau. La radio continue en rotation automatique.",
 
     "about.kicker": "La webradio",
     "about.title.1": "La face B",
@@ -137,6 +140,9 @@ const dict = {
     "onair.now": "On air right now",
     "onair.with": "with",
     "onair.next": "Up next",
+    "onair.fallbackName": "B Side Radio",
+    "onair.fallbackHost": "Auto DJ",
+    "onair.fallbackBlurb": "No show is scheduled for this slot. The radio keeps running on automatic rotation.",
 
     "about.kicker": "The web radio",
     "about.title.1": "The B side",

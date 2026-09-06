@@ -141,6 +141,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
       end: item?.end_time ? String(item.end_time).slice(0, 5) : '23:59',
       blurb: show.description || 'Programme à venir',
       blurbEn: show.description || 'More details soon',
+      dayOfWeek: Number(item?.day_of_week || 0) || undefined,
     };
   };
 

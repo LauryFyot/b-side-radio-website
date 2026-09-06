@@ -37,6 +37,7 @@ export type Show = {
   end: string;
   blurb: string;
   blurbEn: string;
+  dayOfWeek?: number;
 };
 
 export const schedule: Show[] = [
