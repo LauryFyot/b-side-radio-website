@@ -4,11 +4,13 @@ import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 import { SectionManager } from "./section-manager";
 
+// Time helpers
 function parseTimeToMinutes(value: string) {
   const [hours = "0", minutes = "0"] = value.split(":");
   return Number(hours) * 60 + Number(minutes);
 }
 
+// Paris timezone resolver
 function getParisTimeParts(date: Date) {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/Paris",
@@ -29,6 +31,7 @@ function getParisTimeParts(date: Date) {
   };
 }
 
+// Current show matcher
 function showMatchesParisTime(show: Show, dayOfWeek: number, minutes: number) {
   const start = parseTimeToMinutes(show.start);
   const end = parseTimeToMinutes(show.end);
@@ -44,6 +47,7 @@ function showMatchesParisTime(show: Show, dayOfWeek: number, minutes: number) {
   );
 }
 
+// Schedule lookup
 function findCurrentShow(shows: Show[], date: Date) {
   const { dayOfWeek, minutes } = getParisTimeParts(date);
 
@@ -92,8 +96,9 @@ export function OnAir() {
       tone="paper"
       noHeader
       sectionClassName="pb-4"
-      panelClassName="grid gap-8 px-5 pt-12 py-12 sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+      panelClassName="grid gap-8 px-5 pt-12 py-12 sm:px-10 sm:py-14 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
     >
+        {/* Current show */}
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-primary">
             <span className="inline-block size-2 animate-pulse rounded-full bg-primary" />
@@ -101,12 +106,15 @@ export function OnAir() {
           </p>
           <h2 className="mt-3 text-6xl leading-[0.9] sm:text-8xl">{show.name}</h2>
           <p className="mt-3 font-mono text-sm tracking-widest">
-            {show.start} - {show.end} · {t("onair.with")} {show.host}
+            {show.start} - {show.end} 
+            {/* · {t("onair.with")} {show.host} */}
           </p>
           <p className="mt-4 max-w-xl text-base opacity-75">
             {lang === "en" ? show.blurbEn : show.blurb}
           </p>
         </div>
+
+        {/* Next show and socials */}
         <div className="self-end border-l-2 border-primary pl-5">
           <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">
             {t("onair.next")}
@@ -114,11 +122,11 @@ export function OnAir() {
           <p className="mt-2 font-display text-4xl leading-none">{next?.name ?? t("onair.fallbackName")}</p>
           {next && (
             <p className="mt-1 font-mono text-xs tracking-widest opacity-70">
-              {next.start} · {next.host}
+              {next.start} · {next.end}
             </p>
           )}
           <div className="mt-6 flex flex-wrap gap-2">
-            {socials.slice(0, 3).map((s) => (
+            {socials.slice(0, 2).map((s) => (
               <a
                 key={s.name}
                 href={s.url}

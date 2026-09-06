@@ -4,7 +4,7 @@ export function About() {
   const { t } = useI18n();
   return (
     <section id="about" className="border-b border-border/60">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 sm:py-18 lg:grid-cols-2">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-primary">
             {t("about.kicker")}
