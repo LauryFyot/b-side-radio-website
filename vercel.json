@@ -1,6 +1,0 @@
-{
-  "framework": "vite",
-  "installCommand": "npm install && npm --prefix apps/site install",
-  "buildCommand": "npm run site:build",
-  "outputDirectory": "apps/site/dist"
-}
