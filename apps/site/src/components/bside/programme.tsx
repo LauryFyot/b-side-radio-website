@@ -30,7 +30,8 @@ function getShowEndMinutes(show: Show) {
 }
 
 function getTimelineBounds(weekSchedule: { shows: Show[] }[]): TimelineBounds {
-  return { start: 0, end: 24 * 60 };
+  // Grid hidden between 1h and 7h: no shows air overnight, so the timeline runs 7h -> 01h.
+  return { start: 7 * 60, end: 24 * 60 + 60 };
 }
 
 // Desktop week timeline
@@ -38,11 +39,15 @@ function WeekTimeline({ weekSchedule, lang }: { weekSchedule: { day: string; day
   const bounds = getTimelineBounds(weekSchedule);
   const total = Math.max(bounds.end - bounds.start, 60);
   const hourMarks = Array.from({ length: Math.floor(total / 240) + 1 }, (_, index) => bounds.start + index * 240);
+  if (hourMarks[hourMarks.length - 1] !== bounds.end) {
+    hourMarks.push(bounds.end);
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-surface">
       <div className="overflow-x-auto [scrollbar-width:thin]">
-        <div className="min-w-[980px]">
+        {/* Wider than 980px so 1h shows get enough room for their title */}
+        <div style={{ minWidth: `${Math.max((total / 60) * 130, 980)}px` }}>
           {/* Timeline hours */}
           <div className="grid grid-cols-[7rem_minmax(0,1fr)] border-b border-border px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:grid-cols-[9rem_minmax(0,1fr)] sm:px-6">
             <span>Jour</span>
@@ -68,7 +73,7 @@ function WeekTimeline({ weekSchedule, lang }: { weekSchedule: { day: string; day
               </div>
 
               {/* Day slots */}
-              <div className="relative min-h-14 rounded-xl bg-muted/40">
+              <div className="relative min-h-16 rounded-xl bg-muted/40">
                 {hourMarks.map((minutes) => (
                   <span
                     key={`${day.day}-${minutes}`}
@@ -76,29 +81,32 @@ function WeekTimeline({ weekSchedule, lang }: { weekSchedule: { day: string; day
                     style={{ left: `${((minutes - bounds.start) / total) * 100}%` }}
                   />
                 ))}
-                {day.shows.map((show) => {
-                  const start = parseTimeToMinutes(show.start);
-                  const rawEnd = getShowEndMinutes(show);
-                  const end = Math.min(rawEnd, bounds.end);
-                  const left = ((start - bounds.start) / total) * 100;
-                  const width = Math.min(((end - start) / total) * 100, 100 - left);
-                  const boundedWidth = Math.min(Math.max(width, 5), 100 - left);
-                  const displayEnd = rawEnd > bounds.end ? "00:00" : show.end;
+                {day.shows
+                  .filter((show) => getShowEndMinutes(show) > bounds.start && parseTimeToMinutes(show.start) < bounds.end)
+                  .map((show) => {
+                    const start = Math.max(parseTimeToMinutes(show.start), bounds.start);
+                    const rawEnd = getShowEndMinutes(show);
+                    const end = Math.min(rawEnd, bounds.end);
+                    const left = ((start - bounds.start) / total) * 100;
+                    const width = Math.min(((end - start) / total) * 100, 100 - left);
+                    const boundedWidth = Math.min(Math.max(width, 5), 100 - left);
+                    const displayEnd = rawEnd > bounds.end ? "01:00" : show.end;
 
-                  return (
-                    /* Show block */
-                    <article
-                      key={`${day.day}-${show.name}-${show.start}`}
-                      className="absolute overflow-hidden rounded-sm border border-primary/25 bg-background px-3 py-2 shadow-[0_10px_24px_-20px_var(--foreground)]"
-                      style={{ left: `${left}%`, width: `${boundedWidth}%` }}
-                    >
-                      <p className="truncate font-display text-xl leading-none">{show.name}</p>
-                      <p className="truncate font-mono text-[10px] tracking-[0.12em] text-primary">
-                        {show.start}-{displayEnd}
-                      </p>
-                    </article>
-                  );
-                })}
+                    return (
+                      /* Show block: name wraps on 2 lines, full name available via title on hover */
+                      <article
+                        key={`${day.day}-${show.name}-${show.start}`}
+                        title={show.name}
+                        className="absolute overflow-hidden rounded-sm border border-primary/25 bg-background px-2 py-1.5 shadow-[0_10px_24px_-20px_var(--foreground)]"
+                        style={{ left: `${left}%`, width: `${boundedWidth}%` }}
+                      >
+                        <p className="line-clamp-2 font-display text-base leading-[1.05] break-words">{show.name}</p>
+                        <p className="truncate font-mono text-[10px] tracking-[0.12em] text-primary">
+                          {show.start}-{displayEnd}
+                        </p>
+                      </article>
+                    );
+                  })}
               </div>
             </div>
           ))}
