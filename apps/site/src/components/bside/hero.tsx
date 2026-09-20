@@ -9,7 +9,7 @@ export function Hero() {
   const { t } = useI18n();
 
   return (
-    <section id="top" className="relative grain min-h-[70vh] overflow-hidden sm:min-h-[85vh]">
+    <section id="top" className="relative grain overflow-hidden">
       {/* Hero background image, fixed so the page scrolls over it */}
       <div
         aria-hidden
@@ -21,7 +21,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-linear-to-t from-background via-background/75 to-background/40" />
 
       {/* Hero main content */}
-      <div className="relative mx-auto flex min-h-[70vh] max-w-7xl flex-col justify-end px-4 pt-8 py-6 sm:px-6 sm:min-h-[85vh] 2xl:py-12">
+      <div className="relative mx-auto flex min-h-[50vh] max-w-7xl flex-col justify-end px-4 pt-8 py-6 sm:px-6 2xl:py-12">
         {/* Hero content container */}
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
 
@@ -30,34 +30,35 @@ export function Hero() {
             <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-primary">
               {t("hero.kicker")}
             </p>
-            <h1 className="mt-4 text-[15vw] leading-[0.82] sm:text-[8rem] lg:text-[10rem] 2xl:text-[16rem]">
+            <h1 className="mt-4 text-[20vw] leading-[0.82] sm:text-[8rem] lg:text-[10rem] 2xl:text-[16rem]">
               ONLY
-              <br />
+              <br/>
               <span className="text-primary">MASHUPS</span>
-              <span className="my-2 block h-px w-1/3 bg-white/70" />
+              <br/>
               & REMIXES
             </h1>
-            <div className="mt-2 flex max-w-xl items-center gap-3">
-              <img src={bsideIcon} alt="" width={50} height={50} className="size-14 shrink-0" />
-              <p className="whitespace-pre-line text-base text-muted-foreground sm:text-lg">{t("hero.desc")}</p>
+            <span className="my-5 block h-px w-3/5 bg-white/70" />
+            <div className="mt-2 flex max-w-xl items-center gap-2 sm:gap-3">
+              <img src={bsideIcon} alt="" width={50} height={50} className="size-9 shrink-0 sm:size-14" />
+              <p className="whitespace-pre-line text-sm text-muted-foreground sm:text-lg">{t("hero.desc")}</p>
             </div>
           </div>
 
           {/* Right */}
           <div className="w-full sm:w-auto sm:max-w-[275px]">
             {/* Hero actions */}
-            <div className="flex flex-wrap items-center gap-8 sm:justify-end">
+            <div className="flex flex-wrap items-center gap-4 sm:justify-end sm:gap-8">
               <button
                 type="button"
                 onClick={toggleLive}
-                className="inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 font-display text-2xl tracking-widest text-primary-foreground shadow-[0_14px_34px_-18px_var(--primary)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-display text-lg tracking-widest text-primary-foreground shadow-[0_14px_34px_-18px_var(--primary)] transition-transform hover:scale-[1.02] active:scale-[0.98] sm:gap-3 sm:px-7 sm:py-4 sm:text-2xl"
               >
-                {playing ? <Pause className="size-5 fill-current" /> : <Play className="size-5 fill-current" />}
+                {playing ? <Pause className="size-4 fill-current sm:size-5" /> : <Play className="size-4 fill-current sm:size-5" />}
                 {playing ? t("hero.listening") : t("hero.listen")}
               </button>
               <a
                 href="#comments"
-                className="inline-flex items-center rounded-full border border-border px-6 py-4 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary"
+                className="inline-flex items-center rounded-full border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary sm:px-6 sm:py-4 sm:text-[11px]"
               >
                 {t("hero.which")}
               </a>

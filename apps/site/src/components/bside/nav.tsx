@@ -19,7 +19,7 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const { t } = useI18n();
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur relative">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6">
         <a href="#top" className="flex min-w-0 items-center gap-2 font-display text-2xl tracking-[0.15em]">
           <img src={bsideIcon} alt="" width={28} height={28} className="size-8 shrink-0 mr-2" />
@@ -50,18 +50,26 @@ export function Nav() {
         </div>
       </div>
       {open && (
-        <nav className="grid gap-1 border-t border-border/60 px-4 pb-4 pt-3 lg:hidden">
-          {nav.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              className="py-2 font-display text-xl tracking-wide"
-            >
-              {t(n.key)}
-            </a>
-          ))}
-        </nav>
+        <>
+          {/* Backdrop: dims the page behind the overlay menu; header stays on top via z-index */}
+          <div
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-30 animate-in fade-in duration-200 bg-background/60 backdrop-blur-sm lg:hidden"
+          />
+          <nav className="absolute inset-x-0 top-full z-40 grid origin-top animate-in fade-in slide-in-from-top-4 gap-1 border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.45)] backdrop-blur duration-300 ease-out lg:hidden">
+            {nav.map((n, index) => (
+              <a
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                style={{ animationDelay: `${index * 35}ms` }}
+                className="animate-in fade-in slide-in-from-top-2 fill-mode-backwards py-2 font-display text-xl tracking-wide transition-colors hover:text-primary"
+              >
+                {t(n.key)}
+              </a>
+            ))}
+          </nav>
+        </>
       )}
     </header>
   );
