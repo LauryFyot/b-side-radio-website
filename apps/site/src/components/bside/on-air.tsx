@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { socials, type Show } from "@/lib/bside-data";
+import { type Show } from "@/lib/bside-data";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 import { SectionManager } from "./section-manager";
+import { Equalizer } from "@/components/player/player-bar";
 
 // Time helpers
 function parseTimeToMinutes(value: string) {
@@ -95,16 +96,19 @@ export function OnAir() {
       id="antenne"
       tone="paper"
       noHeader
-      sectionClassName="pb-4"
-      panelClassName="grid gap-8 px-5 pt-12 py-12 sm:px-10 sm:py-14 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+      sectionClassName=""
+      panelClassName="grid gap-8 px-5 pt-8 py-8 sm:px-10 sm:py-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
     >
         {/* Current show */}
         <div className="min-w-0">
-          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-primary">
-            <span className="inline-block size-2 animate-pulse rounded-full bg-primary" />
+          <p className="flex items-center gap-2 font-mono text-[14px] uppercase tracking-[0.3em] text-primary">
+            <span className="inline-block size-3 mr-3 animate-pulse rounded-full bg-primary" />
             {t("onair.now")}
           </p>
-          <h2 className="mt-3 text-6xl leading-[0.9] sm:text-8xl">{show.name}</h2>
+          <div className="mt-3 flex items-center gap-4">
+            <Equalizer active className="h-10 shrink-0" />
+            <h2 className="text-4xl leading-[0.9] sm:text-6xl">{show.name}</h2>
+          </div>
           <p className="mt-3 font-mono text-sm tracking-widest">
             {show.start} - {show.end} 
             {/* · {t("onair.with")} {show.host} */}
@@ -114,7 +118,7 @@ export function OnAir() {
           </p>
         </div>
 
-        {/* Next show and socials */}
+        {/* Next show */}
         <div className="self-end border-l-2 border-primary pl-5">
           <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">
             {t("onair.next")}
@@ -125,19 +129,6 @@ export function OnAir() {
               {next.start} · {next.end}
             </p>
           )}
-          <div className="mt-6 flex flex-wrap gap-2">
-            {socials.slice(0, 2).map((s) => (
-              <a
-                key={s.name}
-                href={s.url}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-paper-foreground/25 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors hover:border-primary hover:text-primary"
-              >
-                {s.name}
-              </a>
-            ))}
-          </div>
         </div>
     </SectionManager>
   );

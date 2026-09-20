@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 
-function Equalizer({ active }: { active: boolean }) {
+export function Equalizer({ active, className = "h-5" }: { active: boolean; className?: string }) {
   return (
-    <div className="flex h-5 items-end gap-[3px]" aria-hidden>
+    <div className={`flex items-end gap-[3px] ${className}`} aria-hidden>
       {[0, 1, 2, 3].map((i) => (
         <span
           key={i}

@@ -45,20 +45,20 @@ export function Hero() {
           </div>
 
           {/* Right */}
-          <div className="w-full sm:w-auto sm:max-w-[275px]">
+          <div className="w-full sm:w-auto">
             {/* Hero actions */}
-            <div className="flex flex-wrap items-center gap-4 sm:justify-end sm:gap-8">
+            <div className="flex flex-wrap items-center gap-4 sm:justify-end sm:gap-6 lg:gap-8">
               <button
                 type="button"
                 onClick={toggleLive}
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-display text-lg tracking-widest text-primary-foreground shadow-[0_14px_34px_-18px_var(--primary)] transition-transform hover:scale-[1.02] active:scale-[0.98] sm:gap-3 sm:px-7 sm:py-4 sm:text-2xl"
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-primary px-5 py-3 font-display text-lg tracking-widest text-primary-foreground shadow-[0_14px_34px_-18px_var(--primary)] transition-transform hover:scale-[1.02] active:scale-[0.98] lg:gap-3 lg:px-7 lg:py-4 lg:text-2xl"
               >
-                {playing ? <Pause className="size-4 fill-current sm:size-5" /> : <Play className="size-4 fill-current sm:size-5" />}
+                {playing ? <Pause className="size-4 fill-current lg:size-5" /> : <Play className="size-4 fill-current lg:size-5" />}
                 {playing ? t("hero.listening") : t("hero.listen")}
               </button>
               <a
                 href="#comments"
-                className="inline-flex items-center rounded-full border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary sm:px-6 sm:py-4 sm:text-[11px]"
+                className="inline-flex items-center whitespace-nowrap rounded-full border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary sm:px-6 sm:py-4 sm:text-[11px]"
               >
                 {t("hero.which")}
               </a>
