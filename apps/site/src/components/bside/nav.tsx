@@ -51,10 +51,10 @@ export function Nav() {
       </div>
       {open && (
         <>
-          {/* Backdrop: dims the page behind the overlay menu; header stays on top via z-index */}
+          {/* Backdrop starts below the nav bar, so its blur doesn't show through the header itself */}
           <div
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-30 animate-in fade-in duration-200 bg-background/60 backdrop-blur-sm lg:hidden"
+            className="absolute inset-x-0 top-full z-30 h-[100dvh] animate-in fade-in duration-200 bg-background/60 backdrop-blur-sm lg:hidden"
           />
           <nav className="absolute inset-x-0 top-full z-40 grid origin-top animate-in fade-in slide-in-from-top-4 gap-1 border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.45)] backdrop-blur duration-300 ease-out lg:hidden">
             {nav.map((n, index) => (

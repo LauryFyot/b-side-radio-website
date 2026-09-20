@@ -70,7 +70,7 @@ export function Hero() {
       </div>
 
       {/* Scrolling marquee */}
-      <div className="relative mx-2 mb-4 overflow-hidden rounded-2xl border border-border bg-surface py-3">
+      <div className="relative mx-2 mb-6 overflow-hidden rounded-2xl border border-border bg-surface py-3">
         <div className="flex w-max animate-none gap-10" style={{ animation: "marquee 24s linear infinite" }}>
           {Array.from({ length: 4 }).map((_, k) => (
             <div key={k} className="flex min-w-max shrink-0 gap-10">
