@@ -12,6 +12,7 @@ const dict = {
     "nav.equipe": "Equipe",
     "nav.videos": "Videos",
     "nav.comments": "Commentaires",
+    "nav.contact": "Nous contacter",
     "nav.menu": "Menu",
     "nav.close": "Fermer",
 
@@ -123,6 +124,7 @@ const dict = {
     "nav.equipe": "Team",
     "nav.videos": "Videos",
     "nav.comments": "Comments",
+    "nav.contact": "Contact us",
     "nav.menu": "Menu",
     "nav.close": "Close",
 

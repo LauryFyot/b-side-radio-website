@@ -135,7 +135,7 @@ function ShowList({ shows, lang }: { shows: Show[]; lang: Lang }) {
 
 // Programme section: day/week switch and the current schedule list.
 export function Programme() {
-  const [view, setView] = useState<"day" | "week">("day");
+  const [view, setView] = useState<"day" | "week">("week");
   const todayIndex = (new Date().getDay() + 6) % 7;
   const [day, setDay] = useState(todayIndex);
   const { t, lang } = useI18n();
@@ -153,7 +153,7 @@ export function Programme() {
     >
       {/* View switch */}
       <div className="mb-6 inline-flex rounded-full border border-border bg-surface p-1">
-        {(["day", "week"] as const).map((value) => (
+        {(["week", "day"] as const).map((value) => (
           <button
             key={value}
             type="button"

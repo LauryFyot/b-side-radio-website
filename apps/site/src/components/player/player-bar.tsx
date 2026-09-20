@@ -58,11 +58,11 @@ export function PlayerBar() {
 
           <div className="min-w-0">
             <div className="flex min-w-0 items-center gap-2">
+              <Equalizer active={playing} />
               <span className="flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
                 <Radio className="size-3" />
                 {isLive ? t("player.onair") : t("player.replay")}
               </span>
-              <Equalizer active={playing} />
             </div>
             <p className="truncate font-display text-lg leading-tight tracking-wide sm:text-xl">{title}</p>
             <p className="truncate text-xs text-muted-foreground">

@@ -268,17 +268,17 @@ export const mixSessions = [
 
 export const team = [
   {
-    name: "DJ Eddy",
-    role: "Fondateur / Wake Up",
-    roleEn: "Founder / Wake Up",
+    name: "Eddy",
+    role: "Fondateur b-sideradio.com / beatmatch mix/ digger de news/ des heures chaque jour de recherches",
+    roleEn: "Founder of b-sideradio.com / beatmatch mixer / news digger / spends hours every day researching",
     image: eddy,
     bio: "A l'origine de B Side Radio. Digger de disco, de soul et de tout ce qui se remixe bien.",
     bioEn: "The founder of B Side Radio. A digger of disco, soul and anything that remixes well.",
   },
   {
     name: "DJ Bart",
-    role: "Drive Time",
-    roleEn: "Drive Time",
+    role: "La funkyhouse en vibe !",
+    roleEn: "Funkyhouse vibing !",
     image: bart,
     bio: "Le specialiste des mashups qui ne devraient pas marcher, et qui marchent quand meme.",
     bioEn: "The specialist of mashups that shouldn't work, and somehow always do.",
@@ -291,6 +291,14 @@ export const team = [
     bio: "House, tech-house et sessions live du vendredi et samedi soir.",
     bioEn: "House, tech-house and the live sessions on Friday and Saturday nights.",
   },
+  {
+    name: "DJ LeCyr",
+    role: "Klub Time",
+    roleEn: "Klub Time",
+    image: lecyr,
+    bio: "House, tech-house et sessions live du vendredi et samedi soir.",
+    bioEn: "House, tech-house and the live sessions on Friday and Saturday nights.",
+  }
 ];
 
 export const videos = [

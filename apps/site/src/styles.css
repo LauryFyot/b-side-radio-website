@@ -17,7 +17,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.35;
+    opacity: 0.75;
     background-image: radial-gradient(
       circle at 1px 1px,
       color-mix(in oklab, var(--foreground) 12%, transparent) 1px,

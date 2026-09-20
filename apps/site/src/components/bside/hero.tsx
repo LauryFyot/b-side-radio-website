@@ -1,5 +1,5 @@
 import { Play, Pause } from "lucide-react";
-import heroImg from "@/assets/hero-dj.jpg";
+import heroImg from "@/assets/mixbannerbw.jpeg";
 import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
 
@@ -15,7 +15,7 @@ export function Hero() {
         alt="DJ aux platines dans le studio B Side Radio"
         width={1920}
         height={1080}
-        className="absolute inset-0 size-full object-cover opacity-20"
+        className="absolute inset-0 size-full object-cover opacity-70"
       />
 
       {/* Hero readability overlay */}
@@ -53,7 +53,7 @@ export function Hero() {
                 {playing ? t("hero.listening") : t("hero.listen")}
               </button>
               <a
-                href="#antenne"
+                href="#comments"
                 className="inline-flex items-center rounded-full border border-border px-6 py-4 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary"
               >
                 {t("hero.which")}
