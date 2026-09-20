@@ -292,7 +292,7 @@ export const team = [
     bioEn: "House, tech-house and the live sessions on Friday and Saturday nights.",
   },
   {
-    name: "DJ LeCyr",
+    name: "The knocxx",
     role: "Klub Time",
     roleEn: "Klub Time",
     image: lecyr,

@@ -1,5 +1,6 @@
 import { Play, Pause } from "lucide-react";
 import heroImg from "@/assets/mixbannerbw.jpeg";
+import bsideIcon from "@/assets/bside_icon.png";
 import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
 
@@ -8,21 +9,19 @@ export function Hero() {
   const { t } = useI18n();
 
   return (
-    <section id="top" className="relative grain overflow-hidden">
-      {/* Hero background image */}
-      <img
-        src={heroImg}
-        alt="DJ aux platines dans le studio B Side Radio"
-        width={1920}
-        height={1080}
-        className="absolute inset-0 size-full object-cover opacity-70"
+    <section id="top" className="relative grain min-h-[70vh] overflow-hidden sm:min-h-[85vh]">
+      {/* Hero background image, fixed so the page scrolls over it */}
+      <div
+        aria-hidden
+        className="absolute inset-0 size-full bg-fixed bg-cover bg-center opacity-70"
+        style={{ backgroundImage: `url(${heroImg})` }}
       />
 
       {/* Hero readability overlay */}
       <div className="absolute inset-0 bg-linear-to-t from-background via-background/75 to-background/40" />
 
       {/* Hero main content */}
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-8 py-6 2xl:py-12">
+      <div className="relative mx-auto flex min-h-[70vh] max-w-7xl flex-col justify-end px-4 pt-8 py-6 sm:px-6 sm:min-h-[85vh] 2xl:py-12">
         {/* Hero content container */}
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
 
@@ -35,9 +34,13 @@ export function Hero() {
               ONLY
               <br />
               <span className="text-primary">MASHUPS</span>
-              <br />& REMIXES
+              <span className="my-2 block h-px w-1/3 bg-white/70" />
+              & REMIXES
             </h1>
-            <p className="mt-2 max-w-xl text-base text-muted-foreground sm:text-lg">{t("hero.desc")}</p>
+            <div className="mt-2 flex max-w-xl items-center gap-3">
+              <img src={bsideIcon} alt="" width={50} height={50} className="size-14 shrink-0" />
+              <p className="whitespace-pre-line text-base text-muted-foreground sm:text-lg">{t("hero.desc")}</p>
+            </div>
           </div>
 
           {/* Right */}

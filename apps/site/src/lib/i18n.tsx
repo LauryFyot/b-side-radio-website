@@ -18,7 +18,7 @@ const dict = {
 
     "hero.kicker": "Paris — 24/7 — Sans publicite",
     "hero.desc":
-      "B Side Radio, c'est la face B des tubes que vous connaissez par coeur : edits, remixes et mashups des annees 80 a aujourd'hui, selectionnes par trois DJs.",
+      "B Side Radio, des nouveautés tous les jours \n 7j/7 de 7h à 23h",
     "hero.listen": "Ecouter le direct",
     "hero.listening": "En ecoute",
     "hero.which": "Quelle emission ?",
@@ -39,9 +39,9 @@ const dict = {
     "about.title.2": "des morceaux",
     "about.title.3": "que vous aimez",
     "about.p1":
-      "Vous ecoutez B Side Radio tous les jours et sans publicite, toute la journee. Notre programmation est faite uniquement de mashups, d'edits et de remixes : les meilleurs titres des annees 80 a aujourd'hui, mais jamais dans leur version d'origine.",
+      "Vous écoutez b side radio.com tous les jours et sans pub. B side radio.com, ce sont chaques jours, les nouveautés en Funkyhouse, nu-disco, soulfull, techhouse & house, mais surtout en versions remixes et mashups.",
     "about.p2":
-      "Chaque semaine, l'equipe met en avant dix vinyls remixes, six selections MP3 et trois mix sessions enregistrees. Les mixes lives passent tous les vendredis et samedis soirs en mode Funky House & House.",
+      "Les vendredis et samedis, 7h de mixes lives avec 5djs sans oublier les replays du dimanche après midi. La nouveauté klub, c’est ici ! \n Dès 6h, vous êtes bien, sur b side radio.com",
     "about.stat1": "En direct",
     "about.stat2": "Publicite",
     "about.stat3": "DJs residents",
