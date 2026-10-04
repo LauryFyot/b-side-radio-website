@@ -44,7 +44,10 @@ export function Tracks() {
       );
 
       if (!cancelled) {
-        setDurations(Object.fromEntries(entries.filter(([, duration]) => duration !== null)));
+        const validEntries = entries.filter(
+          (entry): entry is readonly [`track-${number}`, number] => entry[1] !== null,
+        );
+        setDurations(Object.fromEntries(validEntries));
       }
     }
 
