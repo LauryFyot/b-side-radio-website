@@ -211,7 +211,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
     weekSchedule,
     vinyls,
     weeklyTracks,
-    mixSessions: weeklyTracks.slice(0, 3).map((track, index) => ({
+    replays: weeklyTracks.slice(0, 3).map((track, index) => ({
       name: track.title,
       dj: track.dj,
       length: '—',

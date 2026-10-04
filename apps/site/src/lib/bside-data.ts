@@ -243,7 +243,7 @@ export const weeklyTracks: Track[] = [
   },
 ];
 
-export const mixSessions = [
+export const replays = [
   {
     name: "Friday Funky Session",
     dj: "DJ Eddy",

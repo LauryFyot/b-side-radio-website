@@ -75,7 +75,7 @@ function persistLikedIds(ids: Set<string>) {
   }
 }
 
-// seedComments and mixSessions share the same order the site already ships with, newest first.
+// seedComments and replays share the same order the site already ships with, newest first.
 const seedComments: Comment[] = [
   {
     id: "seed-0",

@@ -19,7 +19,7 @@ declare module '@shared/supabase/content.js' {
     weekSchedule: any[];
     vinyls: any[];
     weeklyTracks: any[];
-    mixSessions: any[];
+    replays: any[];
     videos: any[];
     nowPlaying: any;
   };

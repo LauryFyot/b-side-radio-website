@@ -14,7 +14,7 @@ export function mapSupabaseContentToSiteModel(input: any): {
   weekSchedule: any[];
   vinyls: any[];
   weeklyTracks: any[];
-  mixSessions: any[];
+  replays: any[];
   videos: any[];
   nowPlaying: any;
 };

@@ -3,7 +3,7 @@
 // fallback content, Supabase fetch, radio now playing, then React context.
 import { createContext, createElement, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
-  mixSessions as fallbackMixSessions,
+  replays as fallbackReplays,
   nextUp as fallbackNextUp,
   nowPlaying as fallbackNowPlaying,
   schedule as fallbackSchedule,
@@ -37,7 +37,7 @@ export const fallbackContent = {
   weekSchedule: fallbackWeekSchedule,
   vinyls: fallbackVinyls,
   weeklyTracks: fallbackWeeklyTracks,
-  mixSessions: fallbackMixSessions,
+  replays: fallbackReplays,
   videos: fallbackVideos,
   comments: [] as SiteComment[],
   nowPlaying: fallbackNowPlaying,
@@ -90,7 +90,7 @@ function hasLiveDatabaseContent(mapped: ReturnType<typeof mapSupabaseContentToSi
     mapped.schedule.length,
     mapped.vinyls.length,
     mapped.weeklyTracks.length,
-    mapped.mixSessions.length,
+    mapped.replays.length,
     mapped.videos.length,
     Array.isArray(comments) ? comments.length : 0,
   ].some((count) => count > 0);
@@ -119,7 +119,7 @@ async function loadSiteContent() {
     weekSchedule: mappedContent.weekSchedule.length ? mappedContent.weekSchedule : fallbackContent.weekSchedule,
     vinyls: mappedContent.vinyls.length ? mappedContent.vinyls : fallbackContent.vinyls,
     weeklyTracks: mappedContent.weeklyTracks.length ? mappedContent.weeklyTracks : fallbackContent.weeklyTracks,
-    mixSessions: mappedContent.mixSessions.length ? mappedContent.mixSessions : fallbackContent.mixSessions,
+    replays: mappedContent.replays.length ? mappedContent.replays : fallbackContent.replays,
     videos: mappedContent.videos.length ? mappedContent.videos : fallbackContent.videos,
     comments: mapComments(publicContent.comments),
     nowPlaying: mergeNowPlaying(mappedContent.nowPlaying, liveNowPlaying),

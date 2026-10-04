@@ -8,7 +8,7 @@ const nav: { href: string; key: TKey }[] = [
   { href: "#vinyls", key: "nav.vinyls" },
   { href: "#programme", key: "nav.programme" },
   { href: "#tracks", key: "nav.tracks" },
-  { href: "#sessions", key: "nav.sessions" },
+  { href: "#replays", key: "nav.replays" },
   { href: "#equipe", key: "nav.equipe" },
   { href: "#videos", key: "nav.videos" },
   { href: "#comments", key: "nav.comments" },

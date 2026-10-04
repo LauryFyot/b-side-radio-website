@@ -10,7 +10,7 @@ import { About } from "@/components/bside/about";
 import { Vinyls } from "@/components/bside/vinyls";
 import { Programme } from "@/components/bside/programme";
 import { Tracks } from "@/components/bside/tracks";
-import { Sessions } from "@/components/bside/sessions";
+import { Replays } from "@/components/bside/replays";
 import { Team } from "@/components/bside/team";
 import { Videos } from "@/components/bside/videos";
 import { Comments } from "@/components/bside/comments";
@@ -61,7 +61,7 @@ function SiteHomePage() {
             <Vinyls />
             <Programme />
             <Tracks />
-            <Sessions />
+            <Replays />
             <Team />
             <Videos />
             <Comments />
