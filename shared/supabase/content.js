@@ -79,7 +79,7 @@ export async function fetchPublicContent() {
   const [shows, slots, covers, tracks, videos, comments] = await Promise.all([
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
     readTable('show_slots', 'id,show_id,day_of_week,start_time,end_time,priority,is_active', { column: 'day_of_week', ascending: true }),
-    readTable('featured_covers', 'id,image_url,title,artist,release_year,remixed_by,sort_order,is_active', { column: 'sort_order', ascending: true }),
+    readTable('featured_covers', 'id,image_url,title,artist,release_year,remixed_by,buy_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
     readTable('favorite_tracks', 'id,title,dj_name,recommended_by,cover_url,buy_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true }).then(async (rows) => {
       if (rows.length > 0) return rows;
       return readTable('favorite_tracks', 'id,title,dj_name,cover_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true });
@@ -183,6 +183,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
       labelColor: '#B65151',
       remixedBy: cover.remixed_by || '',
       imageUrl: cover.image_url || '',
+      buyUrl: cover.buy_url || '',
     }));
 
   const weeklyTracks = tracks

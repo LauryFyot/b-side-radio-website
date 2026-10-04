@@ -98,6 +98,12 @@ function VinylSection({ covers, onAddCover, onUpdateCover, onUploadCoverImage, o
                   onChange={(event) => onUpdateCover(index, 'remixed_by', event.target.value)}
                 />
               </div>
+              <input
+                className="w-full rounded-full border border-[#ddd8df] bg-white px-3.5 py-2 text-[length:var(--admin-field-text-size)] text-[#1e1a22] outline-0 placeholder:text-[#8a8392]"
+                placeholder="Purchase link"
+                value={cover.buy_url || ''}
+                onChange={(event) => onUpdateCover(index, 'buy_url', event.target.value)}
+              />
             </div>
 
             <input

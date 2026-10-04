@@ -54,7 +54,7 @@ const dict = {
     "player.play": "Ecouter le direct",
     "player.volume": "Volume",
 
-    "vinyls.title": "Vinyls de la semaine",
+    "vinyls.title": "Tops de la semaine",
     "vinyls.kicker":
       "Dix faces B remixees, choisies par l'equipe. Le titre d'origine, et qui s'est charge du remix.",
     "vinyls.prev": "Vinyls precedents",
@@ -166,7 +166,7 @@ const dict = {
     "player.play": "Listen live",
     "player.volume": "Volume",
 
-    "vinyls.title": "Vinyls of the week",
+    "vinyls.title": "Tops of the week",
     "vinyls.kicker":
       "Ten remixed B sides picked by the crew. The original track, and who handled the remix.",
     "vinyls.prev": "Previous vinyls",

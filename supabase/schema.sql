@@ -247,6 +247,7 @@ create table if not exists public.featured_covers (
 	artist text not null default '',
 	release_year text not null default '',
 	remixed_by text not null default '',
+	buy_url text not null default '',
 	sort_order integer not null default 0,
 	is_active boolean not null default true,
 	created_at timestamptz not null default now(),
@@ -256,7 +257,8 @@ create table if not exists public.featured_covers (
 alter table if exists public.featured_covers
 	add column if not exists artist text not null default '',
 	add column if not exists release_year text not null default '',
-	add column if not exists remixed_by text not null default '';
+	add column if not exists remixed_by text not null default '',
+	add column if not exists buy_url text not null default '';
 
 create index if not exists idx_featured_covers_sort on public.featured_covers(sort_order, id);
 

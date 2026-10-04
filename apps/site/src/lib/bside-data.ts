@@ -91,6 +91,7 @@ export type Vinyl = {
   labelColor: string;
   remixedBy: string;
   imageUrl?: string;
+  buyUrl?: string;
 };
 
 export type DaySchedule = { day: string; dayEn: string; shows: Show[] };
@@ -170,16 +171,16 @@ export const weekSchedule: DaySchedule[] = [
 ];
 
 export const vinyls: Vinyl[] = [
-  { side: "A1", title: "Le Freak", artist: "Chic", year: "1978", labelColor: "#FF0000", remixedBy: "Dimitri From Paris" },
-  { side: "A2", title: "Blue Monday", artist: "New Order", year: "1983", labelColor: "#B65151", remixedBy: "Vitalic" },
-  { side: "A3", title: "Around The World", artist: "Daft Punk", year: "1997", labelColor: "#F2F2F2", remixedBy: "Folamour" },
-  { side: "A4", title: "Show Me Love", artist: "Robin S", year: "1993", labelColor: "#FF0000", remixedBy: "DJ Eddy" },
-  { side: "A5", title: "Groove Is In The Heart", artist: "Deee-Lite", year: "1990", labelColor: "#B65151", remixedBy: "Purple Disco Machine" },
-  { side: "B1", title: "Music Sounds Better", artist: "Stardust", year: "1998", labelColor: "#F2F2F2", remixedBy: "DJ Bart" },
-  { side: "B2", title: "I Feel Love", artist: "Donna Summer", year: "1977", labelColor: "#FF0000", remixedBy: "Roisin Murphy" },
-  { side: "B3", title: "Give Me The Night", artist: "George Benson", year: "1980", labelColor: "#B65151", remixedBy: "Yuksek" },
-  { side: "B4", title: "Ain't Nobody", artist: "Chaka Khan", year: "1983", labelColor: "#F2F2F2", remixedBy: "DJ LeCyr" },
-  { side: "B5", title: "Insomnia", artist: "Faithless", year: "1995", labelColor: "#FF0000", remixedBy: "Mount Kimbie" },
+  { side: "A1", title: "Le Freak", artist: "Chic", year: "1978", labelColor: "#FF0000", remixedBy: "Dimitri From Paris", buyUrl: "https://www.beatport.com/search?q=le%20freak%20dimitri%20from%20paris" },
+  { side: "A2", title: "Blue Monday", artist: "New Order", year: "1983", labelColor: "#B65151", remixedBy: "Vitalic", buyUrl: "https://www.beatport.com/search?q=blue%20monday%20vitalic" },
+  { side: "A3", title: "Around The World", artist: "Daft Punk", year: "1997", labelColor: "#F2F2F2", remixedBy: "Folamour", buyUrl: "https://www.beatport.com/search?q=around%20the%20world%20folamour" },
+  { side: "A4", title: "Show Me Love", artist: "Robin S", year: "1993", labelColor: "#FF0000", remixedBy: "DJ Eddy", buyUrl: "https://www.beatport.com/search?q=show%20me%20love%20dj%20eddy" },
+  { side: "A5", title: "Groove Is In The Heart", artist: "Deee-Lite", year: "1990", labelColor: "#B65151", remixedBy: "Purple Disco Machine", buyUrl: "https://www.beatport.com/search?q=groove%20is%20in%20the%20heart%20purple%20disco%20machine" },
+  { side: "B1", title: "Music Sounds Better", artist: "Stardust", year: "1998", labelColor: "#F2F2F2", remixedBy: "DJ Bart", buyUrl: "https://www.beatport.com/search?q=music%20sounds%20better%20dj%20bart" },
+  { side: "B2", title: "I Feel Love", artist: "Donna Summer", year: "1977", labelColor: "#FF0000", remixedBy: "Roisin Murphy", buyUrl: "https://www.beatport.com/search?q=i%20feel%20love%20roisin%20murphy" },
+  { side: "B3", title: "Give Me The Night", artist: "George Benson", year: "1980", labelColor: "#B65151", remixedBy: "Yuksek", buyUrl: "https://www.beatport.com/search?q=give%20me%20the%20night%20yuksek" },
+  { side: "B4", title: "Ain't Nobody", artist: "Chaka Khan", year: "1983", labelColor: "#F2F2F2", remixedBy: "DJ LeCyr", buyUrl: "https://www.beatport.com/search?q=ain%27t%20nobody%20dj%20lecyr" },
+  { side: "B5", title: "Insomnia", artist: "Faithless", year: "1995", labelColor: "#FF0000", remixedBy: "Mount Kimbie", buyUrl: "https://www.beatport.com/search?q=insomnia%20mount%20kimbie" },
 ];
 
 export type Track = {
