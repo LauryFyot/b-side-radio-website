@@ -56,7 +56,7 @@ const dict = {
 
     "vinyls.title": "Tops de la semaine",
     "vinyls.kicker":
-      "Dix faces B remixees, choisies par l'equipe. Le titre d'origine, et qui s'est charge du remix.",
+      "Les titres mis en avant cette semaine. En lien avec notre partenaire TRAXSOURCE",
     "vinyls.prev": "Vinyls precedents",
     "vinyls.next": "Vinyls suivants",
 
@@ -67,9 +67,9 @@ const dict = {
     "programme.kicker":
       "La grille quotidienne. Les mixes lives arrivent le vendredi et le samedi soir.",
 
-    "tracks.title": "6 titres de la semaine",
+    "tracks.title": "Mix Sessions",
     "tracks.kicker":
-      "La selection MP3 des residents. Un clic pour ecouter, un lien pour acheter le titre.",
+      "XXX",
     "tracks.reco": "recommandé par:",
     "tracks.buy": "Acheter",
     "tracks.listen": "Ecouter",
@@ -168,7 +168,7 @@ const dict = {
 
     "vinyls.title": "Tops of the week",
     "vinyls.kicker":
-      "Ten remixed B sides picked by the crew. The original track, and who handled the remix.",
+      "This week's featured tracks. In collaboration with our partner TRAXSOURCE.",
     "vinyls.prev": "Previous vinyls",
     "vinyls.next": "Next vinyls",
 
@@ -178,8 +178,8 @@ const dict = {
     "programme.title.week": "Weekly schedule",
     "programme.kicker": "The daily grid. Live mixes land on Friday and Saturday night.",
 
-    "tracks.title": "6 tracks of the week",
-    "tracks.kicker": "The residents' MP3 picks. One click to listen, one link to buy the track.",
+    "tracks.title": "Mix Sessions",
+    "tracks.kicker": "XXX",
     "tracks.reco": "picked by",
     "tracks.buy": "Buy",
     "tracks.listen": "Play",

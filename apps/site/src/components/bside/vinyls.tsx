@@ -3,11 +3,15 @@ import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
+import traxsourceLogo from "../../../../../assets/images/traxsource-logo-blue.png";
+
+const TRAXSOURCE_URL = "https://www.traxsource.com/";
 
 export function Vinyls() {
   const trackRef = useRef<HTMLUListElement>(null);
   const { t } = useI18n();
   const { vinyls } = useSiteContent();
+  const [kickerPrefix = "", kickerSuffix = ""] = t("vinyls.kicker").split("TRAXSOURCE");
 
   const scrollBy = (dir: 1 | -1) => {
     const el = trackRef.current;
@@ -16,7 +20,31 @@ export function Vinyls() {
   };
 
   return (
-    <SectionManager id="vinyls" index="01" title={t("vinyls.title")} kicker={t("vinyls.kicker")} tone="surface">
+    <SectionManager id="vinyls" index="01" title={t("vinyls.title")} kicker={(
+      <>
+        {kickerPrefix}
+        <a
+          href={TRAXSOURCE_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary"
+        >
+          TRAXSOURCE
+        </a>
+        {kickerSuffix}
+      </>
+    )} tone="surface"
+      headerAction={(
+        <a
+          href={TRAXSOURCE_URL}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Traxsource"
+          className="grid size-14 shrink-0 place-items-center rounded-full border border-border p-4 transition-colors hover:border-primary"
+        >
+          <img src={traxsourceLogo} alt="Traxsource" className="size-full object-contain" />
+        </a>
+      )}>
       <div className="relative">
         {/* Carousel controls */}
         <div className="flex justify-end gap-2 -mt-18">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, ShoppingBag } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
@@ -76,7 +76,13 @@ export function Tracks() {
   }
 
   return (
-    <SectionManager id="tracks" index="03" title={t("tracks.title")} kicker={t("tracks.kicker")} tone="surface">
+    <SectionManager
+      id="tracks"
+      index="03"
+      title={t("tracks.title")}
+      kicker={t("tracks.kicker")}
+      tone="surface"
+    >
       {/* Tracks grid */}
       <ul className="grid gap-3 md:grid-cols-2">
         {weeklyTracks.map((track, index) => {
@@ -126,7 +132,7 @@ export function Tracks() {
               </div>
 
               {/* Buy link */}
-              {hasBuyLink ? (
+              {/* {hasBuyLink ? (
                 <a
                   href={track.buyUrl}
                   target="_blank"
@@ -145,7 +151,7 @@ export function Tracks() {
                 >
                   <ShoppingBag className="size-4" />
                 </button>
-              )}
+              )} */}
             </li>
           );
         })}
