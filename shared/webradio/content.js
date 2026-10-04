@@ -1,7 +1,17 @@
-const RADIO_API_BASE = 'http://51.91.124.240';
+const RADIO_PROVIDER = import.meta.env?.VITE_RADIO_PROVIDER === 'azuracast' ? 'azuracast' : 'legacy';
+const RADIO_ENDPOINTS = {
+  legacy: {
+    stream: '/api/radio/legacy/stream',
+    nowPlaying: '/api/radio/legacy/status-json.xsl?mount=/stream',
+  },
+  azuracast: {
+    stream: '/api/radio/azuracast/listen/bside_radio/radio.mp3',
+    nowPlaying: '/api/radio/azuracast/api/nowplaying',
+  },
+};
 
-export const STREAM_URL = `${RADIO_API_BASE}/listen/bside_radio/radio.mp3`;
-export const NOW_PLAYING_URL = `${RADIO_API_BASE}/api/nowplaying`;
+export const STREAM_URL = RADIO_ENDPOINTS[RADIO_PROVIDER].stream;
+export const NOW_PLAYING_URL = RADIO_ENDPOINTS[RADIO_PROVIDER].nowPlaying;
 
 export function cleanSongText(value) {
   return String(value || '').replace(/\.[a-z0-9]{2,4}$/i, '').trim();
@@ -62,6 +72,30 @@ export function extractStation(nowPlayingResponse, fallbackStationId = 1) {
 }
 
 export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
+  const icecastSource = payload?.icestats?.source;
+  if (icecastSource) {
+    const source = Array.isArray(icecastSource)
+      ? icecastSource.find((item) => String(item?.listenurl || '').endsWith('/stream')) || icecastSource[0]
+      : icecastSource;
+    const rawText = cleanSongText(source?.title);
+    const trackText = rawText.split(/\s+-\s+-\s+/)[0] || rawText;
+    const parts = splitSongText(trackText);
+    const hasProgramPrefix = parts.length >= 3;
+    const artist = hasProgramPrefix ? parts[1] : parts[0] || '';
+    const title = hasProgramPrefix ? parts.slice(2).join(' - ') : parts.slice(1).join(' - ');
+
+    return {
+      stationId: fallbackStationId,
+      stationName: source?.server_name || 'B Side Radio',
+      artist,
+      title: title || rawText,
+      text: [artist, title].filter(Boolean).join(' - ') || rawText,
+      imageUrl: '',
+      traxsourceId: findTraxsourceId(parts, rawText),
+      raw: payload,
+    };
+  }
+
   const station = extractStation(payload, fallbackStationId);
   const nowPlaying = station?.now_playing || station?.nowplaying || station?.live || payload?.now_playing || payload?.nowplaying || payload?.live || null;
   const track = nowPlaying?.song || nowPlaying?.track || nowPlaying || {};

@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/radio/azuracast/(.*)",
+      "destination": "http://51.91.124.240/$1"
+    },
+    {
+      "source": "/api/radio/legacy/(.*)",
+      "destination": "http://91.134.242.174:8000/$1"
+    }
+  ]
+}

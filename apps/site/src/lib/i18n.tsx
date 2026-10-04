@@ -48,7 +48,7 @@ const dict = {
 
     "player.onair": "On Air",
     "player.replay": "Replay",
-    "player.next": "a suivre",
+    "player.next": "à suivre",
     "player.buy": "Acheter",
     "player.pause": "Pause",
     "player.play": "Ecouter le direct",

@@ -147,8 +147,9 @@ Variables utiles:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 - `VITE_ADMIN_URL`
+- `VITE_RADIO_PROVIDER` (`legacy` par defaut, ou `azuracast` pour la nouvelle radio)
 
-En local, elles peuvent vivre dans `apps/site/.env`.
+En local, elles peuvent vivre dans `apps/site/.env`. Pour changer de radio, definir `VITE_RADIO_PROVIDER=azuracast`, puis relancer/redeployer le site.
 
 ## Commandes utiles
 
