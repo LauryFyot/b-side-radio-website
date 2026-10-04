@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { ArrowDown, ArrowUp, Heart, MessageSquarePlus, X } from "lucide-react";
 import { SectionManager } from "./section-manager";
-import { useI18n, type Lang } from "@/lib/i18n";
+import { useI18n, type Lang, type TKey } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 import { likeComment, submitComment, unlikeComment } from "@shared/supabase/content.js";
 
@@ -25,7 +25,7 @@ type CommentSort = {
 
 const LIKED_COMMENTS_STORAGE_KEY = "bside-liked-comments";
 
-const sortOptions: { value: SortKey; labelKey: string }[] = [
+const sortOptions: { value: SortKey; labelKey: TKey }[] = [
   { value: "date", labelKey: "comments.sortDate" },
   { value: "likes", labelKey: "comments.sortLikes" },
 ];
