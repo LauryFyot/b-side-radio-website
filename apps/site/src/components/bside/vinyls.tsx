@@ -61,7 +61,9 @@ export function Vinyls() {
                       className="absolute inset-0 rounded-full opacity-70"
                       style={{ background: "repeating-radial-gradient(circle at center, transparent 0 4px, rgba(0,0,0,0.55) 5px 6px)" }}
                     />
-                    <span className="absolute left-1/2 top-1/2 size-[16%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface" />
+                    <span className="absolute left-1/2 top-1/2 grid size-[22%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/20 shadow-[0_0_8px_rgba(0,0,0,0.15)]">
+                      <span className="size-[16%] rounded-full bg-[#111]/70" />
+                    </span>
                   </div>
 
                   {/* Square cover art */}
