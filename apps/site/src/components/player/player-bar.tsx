@@ -29,7 +29,7 @@ export function PlayerBar() {
   const [volume, setVolume] = useState(0.8);
   const [now, setNow] = useState(() => new Date());
   const { t } = useI18n();
-  const { nowPlaying, nextUp, schedule } = useSiteContent();
+  const { nowPlaying, schedule } = useSiteContent();
   const radioProvider = getRadioProvider();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export function PlayerBar() {
         onPause={() => setPlaying(false)}
       />
       <div className="fixed inset-x-0 bottom-0 z-50 px-2 pb-2 sm:px-4 sm:pb-4">
-        <div className="mx-auto grid max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-3xl border border-border bg-surface/95 px-3 py-2.5 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.35)] backdrop-blur-md sm:gap-5 sm:px-6 sm:py-3">
+        <div className="mx-auto grid max-w-7xl grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-3xl border border-border bg-surface/95 px-3 py-2.5 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.35)] backdrop-blur-md sm:gap-5 sm:px-6 sm:py-3">
           <button
             type="button"
             onClick={toggleLive}
@@ -76,31 +76,30 @@ export function PlayerBar() {
             {playing ? <Pause className="size-5 fill-current" /> : <Play className="size-5 translate-x-[1px] fill-current" />}
           </button>
 
+          <Equalizer active={playing} className="h-6 shrink-0" />
+
           <div className="flex min-w-0 items-center gap-3">
             {imageUrl && (
               <img src={imageUrl} alt="" className="size-10 shrink-0 rounded-md object-cover" />
             )}
             <div className="min-w-0 flex-1">
               <div className="flex min-w-0 items-center gap-2">
-                <Equalizer active={playing} />
-                <span className="flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                <p className="min-w-0 truncate font-display text-lg leading-tight tracking-wide sm:text-xl">{title}</p>
+                <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
                   <Radio className="size-3" />
-                  {isLive ? t("player.onair") : t("player.replay")}
+                  <span className="hidden sm:inline">{isLive ? t("player.onair") : t("player.replay")}</span>
+                  <span className="sr-only sm:hidden">{isLive ? t("player.onair") : t("player.replay")}</span>
                 </span>
               </div>
-              <p className="truncate font-display text-lg leading-tight tracking-wide sm:text-xl">{title}</p>
               <p className="truncate text-xs text-muted-foreground">
                 {artist}
                 {isLive && liveText && <span className="hidden sm:inline"> — {liveText}</span>}
-                {isLive && <span className="hidden sm:inline"></span>}
-                 {/* · {t("player.next")} : {nextUp.title} */}
               </p>
             </div>
           </div>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-4">
             <label className="hidden items-center gap-2 lg:flex">
-              <Volume2 className="size-4 text-muted-foreground" />
               <span className="sr-only">{t("player.volume")}</span>
               <input
                 type="range"
@@ -116,7 +115,7 @@ export function PlayerBar() {
               href={nowPlaying.buyUrl}
               target="_blank"
               rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors hover:border-primary hover:text-primary"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors hover:border-primary hover:text-primary"
             >
               <ShoppingBag className="size-3.5" />
               <span className="hidden sm:inline">{t("player.buy")}</span>
