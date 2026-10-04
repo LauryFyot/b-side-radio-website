@@ -11,6 +11,7 @@ export type LiveNowPlaying = {
 
 export function getWebRadioStreamUrl(): string;
 export function getWebRadioNowPlayingUrl(): string;
+export function getWebRadioProvider(): "legacy" | "azuracast";
 export function buildTraxsourceText(track: unknown): string;
 export function fetchWebRadioNowPlaying(): Promise<LiveNowPlaying>;
 export function normalizeNowPlayingPayload(payload: unknown, fallbackStationId?: number): LiveNowPlaying;

@@ -16,5 +16,6 @@ export type LiveNowPlaying = {
 };
 
 export const getRadioStreamUrl = webRadioModule.getWebRadioStreamUrl as () => string;
+export const getRadioProvider = webRadioModule.getWebRadioProvider as () => "legacy" | "azuracast";
 export const buildRadioText = webRadioModule.buildTraxsourceText as (track: unknown) => string;
 export const fetchRadioNowPlaying = webRadioModule.fetchWebRadioNowPlaying as () => Promise<LiveNowPlaying>;

@@ -44,6 +44,10 @@ export function getWebRadioNowPlayingUrl() {
   return NOW_PLAYING_URL;
 }
 
+export function getWebRadioProvider() {
+  return RADIO_PROVIDER;
+}
+
 export function extractStation(nowPlayingResponse, fallbackStationId = 1) {
   if (!nowPlayingResponse) {
     return null;
@@ -144,6 +148,17 @@ export async function fetchWebRadioNowPlaying(fetchImpl = globalThis.fetch) {
     throw new Error(`Unable to load nowplaying (${response.status}).`);
   }
 
-  const payload = await response.json();
+  const responseText = await response.text();
+  let payload;
+
+  try {
+    payload = JSON.parse(responseText);
+  } catch (error) {
+    if (RADIO_PROVIDER !== 'legacy') {
+      throw error;
+    }
+    payload = JSON.parse(responseText.replace(/,\s*([}\]])/g, '$1'));
+  }
+
   return normalizeNowPlayingPayload(payload, 1);
 }

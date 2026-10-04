@@ -28,6 +28,7 @@ declare module '@shared/supabase/content.js' {
 declare module '@shared/webradio/index.js' {
   export function getWebRadioStreamUrl(): string;
   export function getWebRadioNowPlayingUrl(): string;
+  export function getWebRadioProvider(): "legacy" | "azuracast";
   export function buildTraxsourceText(track: any): string;
   export function fetchWebRadioNowPlaying(): Promise<{
     stationId?: number;

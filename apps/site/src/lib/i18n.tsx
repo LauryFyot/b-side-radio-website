@@ -47,8 +47,9 @@ const dict = {
     "about.stat3": "DJs residents",
 
     "player.onair": "On Air",
+    "player.liveFrom": "Live from BSide Radio",
     "player.replay": "Replay",
-    "player.next": "à suivre",
+    "player.next": "",
     "player.buy": "Acheter",
     "player.pause": "Pause",
     "player.play": "Ecouter le direct",
@@ -159,8 +160,9 @@ const dict = {
     "about.stat3": "Resident DJs",
 
     "player.onair": "On Air",
+    "player.liveFrom": "Live from BSide Radio",
     "player.replay": "Replay",
-    "player.next": "up next",
+    "player.next": "",
     "player.buy": "Buy",
     "player.pause": "Pause",
     "player.play": "Listen live",

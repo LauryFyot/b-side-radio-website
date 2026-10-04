@@ -3,6 +3,8 @@ import { usePlayer } from "./player-context";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
+import { getRadioProvider } from "@/lib/radio";
+import { findCurrentShow } from "@/lib/schedule-utils";
 
 export function Equalizer({ active, className = "h-5" }: { active: boolean; className?: string }) {
   return (
@@ -25,17 +27,30 @@ export function Equalizer({ active, className = "h-5" }: { active: boolean; clas
 export function PlayerBar() {
   const { audioRef, playing, source, toggleLive, setPlaying } = usePlayer();
   const [volume, setVolume] = useState(0.8);
+  const [now, setNow] = useState(() => new Date());
   const { t } = useI18n();
-  const { nowPlaying, nextUp } = useSiteContent();
+  const { nowPlaying, nextUp, schedule } = useSiteContent();
+  const radioProvider = getRadioProvider();
+
+  useEffect(() => {
+    const update = () => setNow(new Date());
+    const timer = setInterval(update, 60_000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume, audioRef]);
 
   const isLive = source.kind === "live";
-  const title = isLive ? nowPlaying.title : source.title;
-  const artist = isLive ? nowPlaying.artist : source.artist;
-  const liveText = isLive ? nowPlaying.text || nowPlaying.original : '';
+  const currentShow = radioProvider === "legacy" ? findCurrentShow(schedule, now) : null;
+  const title = isLive
+    ? radioProvider === "legacy" ? currentShow?.name ?? t("onair.fallbackName") : nowPlaying.title
+    : source.title;
+  const artist = isLive
+    ? radioProvider === "legacy" ? t("player.liveFrom") : nowPlaying.artist
+    : source.artist;
+  const liveText = isLive && radioProvider === "azuracast" ? nowPlaying.text || nowPlaying.original : "";
 
   return (
     <>
@@ -68,7 +83,8 @@ export function PlayerBar() {
             <p className="truncate text-xs text-muted-foreground">
               {artist}
               {isLive && liveText && <span className="hidden sm:inline"> — {liveText}</span>}
-              {isLive && <span className="hidden sm:inline"> · {t("player.next")} : {nextUp.title}</span>}
+              {isLive && <span className="hidden sm:inline"></span>}
+              {/* · {t("player.next")} : {nextUp.title} */}
             </p>
           </div>
 
