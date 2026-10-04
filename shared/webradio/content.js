@@ -17,6 +17,10 @@ export function cleanSongText(value) {
   return String(value || '').replace(/\.[a-z0-9]{2,4}$/i, '').trim();
 }
 
+export function cleanTrackMetadata(value) {
+  return cleanSongText(value).replace(/^(?:BSL|BSK|FZ|HT|ML|SKB|SKE|TOP|TT|WU)/, '').trimStart();
+}
+
 export function splitSongText(value) {
   return cleanSongText(value)
     .split(' - ')
@@ -83,8 +87,8 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
       : icecastSource;
     const metadata = String(source?.title || '').split(' - ').map((part) => part.trim());
     const [artist = '', title = '', comment = '', image = ''] = metadata;
-    const trackTitle = cleanSongText(title);
-    const trackArtist = cleanSongText(artist);
+    const trackTitle = cleanTrackMetadata(title);
+    const trackArtist = cleanTrackMetadata(artist);
     const trackComment = cleanSongText(comment);
     const imageUrl = /^https?:\/\//i.test(image) ? image : '';
     const text = trackComment;
@@ -108,8 +112,8 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
   const track = nowPlaying?.song || nowPlaying?.track || nowPlaying || {};
   const rawText = track?.text || track?.subtitle || track?.title || track?.name || station?.text || nowPlaying?.text || '';
   const parts = splitSongText(rawText);
-  const artistName = parts[0] || track?.artist || track?.artist_name || track?.artiste || track?.artists?.[0]?.name || '';
-  const title = parts[1] || track?.name || track?.title || '';
+  const artistName = cleanTrackMetadata(track?.artist || track?.artist_name || track?.artiste || track?.artists?.[0]?.name || parts[0] || '');
+  const title = cleanTrackMetadata(track?.title || track?.name || parts[1] || '');
   const traxsourceId = track?.traxsource_id || track?.traxsourceId || track?.id_traxsource || track?.idTraxsource || findTraxsourceId(parts, rawText);
   const text = traxsourceId ? [artistName, title, traxsourceId].filter(Boolean).join(' - ') : [artistName, title].filter(Boolean).join(' - ') || cleanSongText(rawText);
   const imageUrl = track?.art || track?.image || track?.cover || track?.album_art || nowPlaying?.art || nowPlaying?.image || station?.art || '';
