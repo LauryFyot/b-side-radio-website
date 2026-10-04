@@ -18,13 +18,13 @@ export function About() {
           </h2>
         </div>
         <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          <p>{t("about.p1")}</p>
-          <p>{t("about.p2")}</p>
+          <p className="whitespace-pre-line">{t("about.p1")}</p>
+          <p className="whitespace-pre-line">{t("about.p2")}</p>
           <div className="grid grid-cols-3 gap-4 border-t border-border pt-6">
             {([
               ["24/7", "about.stat1"],
               ["0", "about.stat2"],
-              ["3", "about.stat3"],
+              ["4", "about.stat3"],
             ] as const).map(([n, key]) => (
               <div key={key}>
                 <p className="font-display text-5xl leading-none text-primary">{n}</p>

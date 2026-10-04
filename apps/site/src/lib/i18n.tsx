@@ -18,7 +18,7 @@ const dict = {
 
     "hero.kicker": "Paris — 24/7  UTC+2 — Sans publicite",
     "hero.desc":
-      "B Side Radio, des nouveautés tous les jours \n 7j/7 de 7h à 23h",
+      "B Side Radio, des nouveautés tous les jours \n La haute couture sonore",
     "hero.listen": "Ecouter le direct",
     "hero.listening": "En ecoute",
     "hero.which": "Tchat",
@@ -29,19 +29,18 @@ const dict = {
 
     "onair.now": "A l'antenne maintenant",
     "onair.with": "avec",
-    "onair.next": "Ensuite",
+    "onair.next": "A suivre",
     "onair.fallbackName": "B Side Radio",
     "onair.fallbackHost": "Auto DJ",
     "onair.fallbackBlurb": "Aucune emission n'est declaree pour ce creneau. La radio continue en rotation automatique.",
 
-    "about.kicker": "La webradio",
-    "about.title.1": "La face B",
-    "about.title.2": "des morceaux",
-    "about.title.3": "que vous aimez",
-    "about.p1":
-      "Vous écoutez b side radio.com tous les jours et sans pub. B side radio.com, ce sont chaques jours, les nouveautés en Funkyhouse, nu-disco, soulfull, techhouse & house, mais surtout en versions remixes et mashups.",
+    "about.kicker": "B.SIDE.RADIO.COM",
+    "about.title.1": "Le son",
+    "about.title.2": "de demain",
+    "about.title.3": "remixé aujourd'hui !",
+    "about.p1": "Vous écoutez 7j/7 BSide Radio dans le monde entier.\n Chaque jour, les nouveautés Funky House, Nu-Disco, Soulful mais aussi Jackin' & Techhouse.\n BSide Radio c'est aussi les 80's / 90's & 00's en versions RemiXes & MasHups exclusivement.",
     "about.p2":
-      "Les vendredis et samedis, 7h de mixes lives avec 5djs sans oublier les replays du dimanche après midi. La nouveauté klub, c’est ici ! \n Dès 6h, vous êtes bien, sur b side radio.com",
+      "B.SIDE.RADIO vous offre des MiXes Lives de 4 djs tous les vendredis et samedis soirs ainsi que le Replay des mixes de samedi, tous les dimanches après midi. \n \n La nouveauté Klub, c'est ici !\nTURN UP THE NEW SOUND",
     "about.stat1": "En direct",
     "about.stat2": "Publicite",
     "about.stat3": "DJs residents",
@@ -57,7 +56,7 @@ const dict = {
 
     "vinyls.title": "Tops de la semaine",
     "vinyls.kicker":
-      "Les titres mis en avant cette semaine. En lien avec notre partenaire {{traxsource}}",
+      "Faites le plein de nouveautés et prenez une longueur d'avance. En lien avec notre partenaire {{traxsource}}",
     "vinyls.prev": "Vinyls precedents",
     "vinyls.next": "Vinyls suivants",
 
@@ -131,7 +130,7 @@ const dict = {
 
     "hero.kicker": "Paris — 24/7  UTC+2 — Ad free",
     "hero.desc":
-      "B Side Radio, new music every day \n 7 days a week from 7 am to 11 pm",
+      "B Side Radio, new music every day \n The sound but haute couture",
     "hero.listen": "Listen live",
     "hero.listening": "Now playing",
     "hero.which": "Let's chat !",
@@ -147,14 +146,14 @@ const dict = {
     "onair.fallbackHost": "Auto DJ",
     "onair.fallbackBlurb": "No show is scheduled for this slot. The radio keeps running on automatic rotation.",
 
-    "about.kicker": "The web radio",
-    "about.title.1": "The B side",
-    "about.title.2": "of the tracks",
-    "about.title.3": "you love",
+    "about.kicker": "B.SIDE.RADIO.COM",
+    "about.title.1": "The sound",
+    "about.title.2": "of tomorrows",
+    "about.title.3": "remixed today!",
     "about.p1":
-      "B Side Radio plays every day, all day, with no advertising. Our programming is made only of mashups, edits and remixes: the best tracks from the 80s to today, but never in their original version.",
+      "You can listen to BSide Radio 7 days a week, anywhere in the world.\n Every day, we feature the latest in Funky House, Nu-Disco, and Soulful, as well as Jackin' and Tech House.\n BSide Radio also plays exclusively remixes and mashups from the '80s, '90s, and '00s.",
     "about.p2":
-      "Every week the crew highlights ten remixed vinyls, six MP3 picks and three recorded mix sessions. Live mixes air every Friday and Saturday night in Funky House & House mode.",
+      "B.SIDE.RADIO brings you live mixes from four DJs every Friday and Saturday night, as well as a replay of Saturday’s mixes every Sunday afternoon. \n \n The latest in club music is right here!\nTURN UP THE NEW SOUND",
     "about.stat1": "Live",
     "about.stat2": "Adverts",
     "about.stat3": "Resident DJs",
@@ -170,7 +169,7 @@ const dict = {
 
     "vinyls.title": "Tops of the week",
     "vinyls.kicker":
-      "This week's featured tracks. In collaboration with our partner {{traxsource}}.",
+      "Check out the latest products and stay one step ahead. In collaboration with our partner {{traxsource}}.",
     "vinyls.prev": "Previous vinyls",
     "vinyls.next": "Next vinyls",
 
