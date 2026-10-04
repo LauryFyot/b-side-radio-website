@@ -16,12 +16,12 @@ const dict = {
     "nav.menu": "Menu",
     "nav.close": "Fermer",
 
-    "hero.kicker": "Paris — 24/7 — Sans publicite",
+    "hero.kicker": "Paris — 24/7  UTC+2 — Sans publicite",
     "hero.desc":
       "B Side Radio, des nouveautés tous les jours \n 7j/7 de 7h à 23h",
     "hero.listen": "Ecouter le direct",
     "hero.listening": "En ecoute",
-    "hero.which": "Quelle emission ?",
+    "hero.which": "Tchat",
     "marquee.1": "Only mashups & remixes",
     "marquee.2": "B Side Radio is LIVE",
     "marquee.3": "Mixes lives vendredi & samedi",
@@ -129,12 +129,12 @@ const dict = {
     "nav.menu": "Menu",
     "nav.close": "Close",
 
-    "hero.kicker": "Paris — 24/7 — Ad free",
+    "hero.kicker": "Paris — 24/7  UTC+2 — Ad free",
     "hero.desc":
-      "B Side Radio is the flip side of the hits you know by heart: edits, remixes and mashups from the 80s to today, hand-picked by three DJs.",
+      "B Side Radio, new music every day \n 7 days a week from 7 am to 11 pm",
     "hero.listen": "Listen live",
     "hero.listening": "Now playing",
-    "hero.which": "What's on?",
+    "hero.which": "Let's chat !",
     "marquee.1": "Only mashups & remixes",
     "marquee.2": "B Side Radio is LIVE",
     "marquee.3": "Live mixes Friday & Saturday",

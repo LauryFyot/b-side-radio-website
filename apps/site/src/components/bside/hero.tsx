@@ -40,7 +40,7 @@ export function Hero() {
             <span className="my-5 block h-px w-3/5 bg-white/70" />
             <div className="mt-2 flex max-w-xl items-center gap-2 sm:gap-3">
               <img src={bsideIcon} alt="" width={50} height={50} className="size-9 shrink-0 sm:size-14" />
-              <p className="whitespace-pre-line text-sm text-muted-foreground sm:text-lg">{t("hero.desc")}</p>
+              <p className="ml-2 whitespace-pre-line font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">{t("hero.desc")}</p>
             </div>
           </div>
 
