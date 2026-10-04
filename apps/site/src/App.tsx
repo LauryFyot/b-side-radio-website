@@ -61,7 +61,7 @@ function SiteHomePage() {
             <Vinyls />
             <Programme />
             <MixSessions />
-            <Replays />
+            {/* <Replays /> */}
             <Team />
             <Videos />
             <Comments />
