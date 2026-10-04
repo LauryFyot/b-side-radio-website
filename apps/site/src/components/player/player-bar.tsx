@@ -53,6 +53,10 @@ export function PlayerBar() {
   const liveText = isLive && nowPlaying.hasLiveTrack
     ? radioProvider === "legacy" ? nowPlaying.comment || "" : nowPlaying.text || nowPlaying.original
     : "";
+  const buySearchTitle = (isLive ? nowPlaying.hasLiveTrack ? nowPlaying.title : "" : source.title).trim();
+  const buyUrl = buySearchTitle
+    ? `https://www.traxsource.com/search?term=${encodeURIComponent(buySearchTitle)}`
+    : "https://www.traxsource.com/";
   const imageUrl = isLive && nowPlaying.hasLiveTrack && nowPlaying.imageUrl?.startsWith("http")
     ? nowPlaying.imageUrl
     : null;
@@ -112,7 +116,7 @@ export function PlayerBar() {
               />
             </label>
             <a
-              href={nowPlaying.buyUrl}
+              href={buyUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors hover:border-primary hover:text-primary"
