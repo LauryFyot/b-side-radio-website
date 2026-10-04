@@ -220,9 +220,11 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
     })),
     videos: mappedVideos,
     nowPlaying: {
-      title: activeShows[0]?.name || 'B Side Radio',
-      artist: 'Live from Supabase',
+      title: '',
+      artist: 'Live from BSide Radio',
+      comment: '',
       original: '',
+      hasLiveTrack: false,
       buyUrl: '#',
     },
   };

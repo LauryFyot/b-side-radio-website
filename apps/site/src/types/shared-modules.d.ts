@@ -35,8 +35,10 @@ declare module '@shared/webradio/index.js' {
     stationName?: string;
     artist?: string;
     title?: string;
+    comment?: string;
     text?: string;
     imageUrl?: string;
+    hasLiveTrack?: boolean;
     traxsourceId?: string | number | null;
     raw?: unknown;
   }>;

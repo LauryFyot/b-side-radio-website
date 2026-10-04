@@ -43,14 +43,19 @@ export function PlayerBar() {
   }, [volume, audioRef]);
 
   const isLive = source.kind === "live";
-  const currentShow = radioProvider === "legacy" ? findCurrentShow(schedule, now) : null;
+  const currentShow = isLive && !nowPlaying.hasLiveTrack ? findCurrentShow(schedule, now) : null;
   const title = isLive
-    ? radioProvider === "legacy" ? currentShow?.name ?? t("onair.fallbackName") : nowPlaying.title
+    ? nowPlaying.hasLiveTrack ? nowPlaying.title : currentShow?.name ?? t("onair.fallbackName")
     : source.title;
   const artist = isLive
-    ? radioProvider === "legacy" ? t("player.liveFrom") : nowPlaying.artist
+    ? nowPlaying.hasLiveTrack ? nowPlaying.artist : t("player.liveFrom")
     : source.artist;
-  const liveText = isLive && radioProvider === "azuracast" ? nowPlaying.text || nowPlaying.original : "";
+  const liveText = isLive && nowPlaying.hasLiveTrack
+    ? radioProvider === "legacy" ? nowPlaying.comment || "" : nowPlaying.text || nowPlaying.original
+    : "";
+  const imageUrl = isLive && nowPlaying.hasLiveTrack && nowPlaying.imageUrl?.startsWith("http")
+    ? nowPlaying.imageUrl
+    : null;
 
   return (
     <>
@@ -71,21 +76,26 @@ export function PlayerBar() {
             {playing ? <Pause className="size-5 fill-current" /> : <Play className="size-5 translate-x-[1px] fill-current" />}
           </button>
 
-          <div className="min-w-0">
-            <div className="flex min-w-0 items-center gap-2">
-              <Equalizer active={playing} />
-              <span className="flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-                <Radio className="size-3" />
-                {isLive ? t("player.onair") : t("player.replay")}
-              </span>
+          <div className="flex min-w-0 items-center gap-3">
+            {imageUrl && (
+              <img src={imageUrl} alt="" className="size-10 shrink-0 rounded-md object-cover" />
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 items-center gap-2">
+                <Equalizer active={playing} />
+                <span className="flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                  <Radio className="size-3" />
+                  {isLive ? t("player.onair") : t("player.replay")}
+                </span>
+              </div>
+              <p className="truncate font-display text-lg leading-tight tracking-wide sm:text-xl">{title}</p>
+              <p className="truncate text-xs text-muted-foreground">
+                {artist}
+                {isLive && liveText && <span className="hidden sm:inline"> — {liveText}</span>}
+                {isLive && <span className="hidden sm:inline"></span>}
+                 {/* · {t("player.next")} : {nextUp.title} */}
+              </p>
             </div>
-            <p className="truncate font-display text-lg leading-tight tracking-wide sm:text-xl">{title}</p>
-            <p className="truncate text-xs text-muted-foreground">
-              {artist}
-              {isLive && liveText && <span className="hidden sm:inline"> — {liveText}</span>}
-              {isLive && <span className="hidden sm:inline"></span>}
-              {/* · {t("player.next")} : {nextUp.title} */}
-            </p>
           </div>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-4">

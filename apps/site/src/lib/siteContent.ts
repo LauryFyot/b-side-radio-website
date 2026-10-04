@@ -15,6 +15,8 @@ import {
 import { fetchPublicContent, mapSupabaseContentToSiteModel } from '@shared/supabase/content.js';
 import { buildRadioText, fetchRadioNowPlaying, type LiveNowPlaying } from '@/lib/radio';
 
+const NOW_PLAYING_REFRESH_INTERVAL_MS = 20_000;
+
 type SupabaseCommentRow = {
   id?: number | string | null;
   author_name?: string | null;
@@ -70,16 +72,19 @@ function mergeNowPlaying(baseNowPlaying: SiteContent['nowPlaying'], liveNowPlayi
     return baseNowPlaying;
   }
 
+  const hasLiveTrack = Boolean(liveNowPlaying.hasLiveTrack);
   const liveText = liveNowPlaying.text || buildRadioText(liveNowPlaying);
 
   return {
     ...baseNowPlaying,
-    title: liveNowPlaying.title || baseNowPlaying.title,
-    artist: liveNowPlaying.artist || baseNowPlaying.artist,
-    original: liveText || baseNowPlaying.original,
+    title: hasLiveTrack ? liveNowPlaying.title || '' : '',
+    artist: hasLiveTrack ? liveNowPlaying.artist || '' : '',
+    comment: hasLiveTrack ? liveNowPlaying.comment || '' : '',
+    original: hasLiveTrack ? liveText : '',
     buyUrl: baseNowPlaying.buyUrl,
-    imageUrl: liveNowPlaying.imageUrl || baseNowPlaying.imageUrl,
-    text: liveText,
+    imageUrl: hasLiveTrack ? liveNowPlaying.imageUrl || '' : '',
+    text: hasLiveTrack ? liveText : '',
+    hasLiveTrack,
     traxsourceId: liveNowPlaying.traxsourceId ?? undefined,
     stationId: liveNowPlaying.stationId,
   };
@@ -146,10 +151,38 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    async function refreshNowPlaying() {
+      try {
+        const liveNowPlaying = await fetchRadioNowPlaying();
+        if (cancelled) return;
+        setContent((current) => ({
+          ...current,
+          nowPlaying: mergeNowPlaying(current.nowPlaying, liveNowPlaying),
+        }));
+      } catch {
+        if (cancelled) return;
+        setContent((current) => ({
+          ...current,
+          nowPlaying: {
+            ...current.nowPlaying,
+            title: '',
+            artist: '',
+            comment: '',
+            original: '',
+            imageUrl: '',
+            text: '',
+            hasLiveTrack: false,
+          },
+        }));
+      }
+    }
+
     load();
+    const timer = window.setInterval(() => void refreshNowPlaying(), NOW_PLAYING_REFRESH_INTERVAL_MS);
 
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, []);
 

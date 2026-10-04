@@ -81,21 +81,24 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
     const source = Array.isArray(icecastSource)
       ? icecastSource.find((item) => String(item?.listenurl || '').endsWith('/stream')) || icecastSource[0]
       : icecastSource;
-    const rawText = cleanSongText(source?.title);
-    const trackText = rawText.split(/\s+-\s+-\s+/)[0] || rawText;
-    const parts = splitSongText(trackText);
-    const hasProgramPrefix = parts.length >= 3;
-    const artist = hasProgramPrefix ? parts[1] : parts[0] || '';
-    const title = hasProgramPrefix ? parts.slice(2).join(' - ') : parts.slice(1).join(' - ');
+    const metadata = String(source?.title || '').split(' - ').map((part) => part.trim());
+    const [artist = '', title = '', comment = '', image = ''] = metadata;
+    const trackTitle = cleanSongText(title);
+    const trackArtist = cleanSongText(artist);
+    const trackComment = cleanSongText(comment);
+    const imageUrl = /^https?:\/\//i.test(image) ? image : '';
+    const text = trackComment;
 
     return {
       stationId: fallbackStationId,
       stationName: source?.server_name || 'B Side Radio',
-      artist,
-      title: title || rawText,
-      text: [artist, title].filter(Boolean).join(' - ') || rawText,
-      imageUrl: '',
-      traxsourceId: findTraxsourceId(parts, rawText),
+      artist: trackArtist,
+      title: trackTitle,
+      comment: trackComment,
+      text,
+      imageUrl,
+      hasLiveTrack: Boolean(trackTitle && trackArtist),
+      traxsourceId: findTraxsourceId([trackArtist, trackTitle, trackComment], source?.title),
       raw: payload,
     };
   }
@@ -116,8 +119,10 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
     stationName: station?.station?.name || station?.name || '',
     artist: artistName,
     title,
+    comment: track?.comment || nowPlaying?.comment || '',
     text,
     imageUrl,
+    hasLiveTrack: Boolean(title && artistName),
     traxsourceId,
     raw: payload,
   };
@@ -131,6 +136,24 @@ export function buildTraxsourceText(track) {
   const parts = [track.artist, track.title, track.text].filter(Boolean);
   const baseText = parts.join(' - ');
   return track.traxsourceId ? `${baseText} [traxsource:${track.traxsourceId}]` : baseText;
+}
+
+function parseLegacyNowPlaying(responseText) {
+  const normalized = responseText.replace(/,\s*([}\]])/g, '$1');
+
+  try {
+    return JSON.parse(normalized);
+  } catch {
+    const openingBraces = (normalized.match(/\{/g) || []).length;
+    const closingBraces = (normalized.match(/\}/g) || []).length;
+    const missingBraces = openingBraces - closingBraces;
+
+    if (missingBraces < 1 || missingBraces > 2) {
+      throw new Error('Legacy nowplaying response is malformed.');
+    }
+
+    return JSON.parse(`${normalized}${'}'.repeat(missingBraces)}`);
+  }
 }
 
 export async function fetchWebRadioNowPlaying(fetchImpl = globalThis.fetch) {
@@ -157,7 +180,7 @@ export async function fetchWebRadioNowPlaying(fetchImpl = globalThis.fetch) {
     if (RADIO_PROVIDER !== 'legacy') {
       throw error;
     }
-    payload = JSON.parse(responseText.replace(/,\s*([}\]])/g, '$1'));
+    payload = parseLegacyNowPlaying(responseText);
   }
 
   return normalizeNowPlayingPayload(payload, 1);

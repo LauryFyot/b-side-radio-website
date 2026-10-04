@@ -12,6 +12,8 @@ export type NowPlaying = {
   artist: string;
   original: string;
   buyUrl: string;
+  comment?: string;
+  hasLiveTrack?: boolean;
   imageUrl?: string;
   text?: string;
   traxsourceId?: string | number;
