@@ -9,7 +9,7 @@ import {
   schedule as fallbackSchedule,
   vinyls as fallbackVinyls,
   weekSchedule as fallbackWeekSchedule,
-  weeklyTracks as fallbackWeeklyTracks,
+  mixSessions as fallbackMixSessions,
   videos as fallbackVideos,
 } from '@/lib/bside-data';
 import { fetchPublicContent, mapSupabaseContentToSiteModel } from '@shared/supabase/content.js';
@@ -36,7 +36,7 @@ export const fallbackContent = {
   schedule: fallbackSchedule,
   weekSchedule: fallbackWeekSchedule,
   vinyls: fallbackVinyls,
-  weeklyTracks: fallbackWeeklyTracks,
+  mixSessions: fallbackMixSessions,
   replays: fallbackReplays,
   videos: fallbackVideos,
   comments: [] as SiteComment[],
@@ -89,7 +89,7 @@ function hasLiveDatabaseContent(mapped: ReturnType<typeof mapSupabaseContentToSi
   return [
     mapped.schedule.length,
     mapped.vinyls.length,
-    mapped.weeklyTracks.length,
+    mapped.mixSessions.length,
     mapped.replays.length,
     mapped.videos.length,
     Array.isArray(comments) ? comments.length : 0,
@@ -118,7 +118,7 @@ async function loadSiteContent() {
     schedule: mappedContent.schedule.length ? mappedContent.schedule : fallbackContent.schedule,
     weekSchedule: mappedContent.weekSchedule.length ? mappedContent.weekSchedule : fallbackContent.weekSchedule,
     vinyls: mappedContent.vinyls.length ? mappedContent.vinyls : fallbackContent.vinyls,
-    weeklyTracks: mappedContent.weeklyTracks.length ? mappedContent.weeklyTracks : fallbackContent.weeklyTracks,
+    mixSessions: mappedContent.mixSessions.length ? mappedContent.mixSessions : fallbackContent.mixSessions,
     replays: mappedContent.replays.length ? mappedContent.replays : fallbackContent.replays,
     videos: mappedContent.videos.length ? mappedContent.videos : fallbackContent.videos,
     comments: mapComments(publicContent.comments),

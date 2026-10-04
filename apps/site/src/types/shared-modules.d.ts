@@ -8,7 +8,7 @@ declare module '@shared/supabase/content.js' {
     slots: any[];
     shows_slots: any[];
     covers: any[];
-    tracks: any[];
+    mixSessions: any[];
     videos: any[];
     comments: any[];
   }>;
@@ -18,7 +18,7 @@ declare module '@shared/supabase/content.js' {
     schedule: any[];
     weekSchedule: any[];
     vinyls: any[];
-    weeklyTracks: any[];
+    mixSessions: any[];
     replays: any[];
     videos: any[];
     nowPlaying: any;

@@ -7,7 +7,7 @@ const dict = {
     "nav.antenne": "Antenne",
     "nav.vinyls": "Vinyls",
     "nav.programme": "Programme",
-    "nav.tracks": "Tracks",
+    "nav.mixSessions": "Mix Sessions",
     "nav.replays": "Replays",
     "nav.equipe": "Equipe",
     "nav.videos": "Videos",
@@ -67,12 +67,12 @@ const dict = {
     "programme.kicker":
       "La grille quotidienne. Les mixes lives arrivent le vendredi et le samedi soir.",
 
-    "tracks.title": "Mix Sessions",
-    "tracks.kicker":
+    "mixSessions.title": "Mix Sessions",
+    "mixSessions.kicker":
       "XXX",
-    "tracks.reco": "recommandé par:",
-    "tracks.buy": "Acheter",
-    "tracks.listen": "Ecouter",
+    "mixSessions.reco": "recommandé par:",
+    "mixSessions.listen": "Ecouter",
+    "common.buy": "Acheter",
 
     "replays.title": "Replays",
     "replays.kicker": "Retrouvez les mixes et emissions a ecouter en replay.",
@@ -119,7 +119,7 @@ const dict = {
     "nav.antenne": "On Air",
     "nav.vinyls": "Vinyls",
     "nav.programme": "Schedule",
-    "nav.tracks": "Tracks",
+    "nav.mixSessions": "Mix Sessions",
     "nav.replays": "Replays",
     "nav.equipe": "Team",
     "nav.videos": "Videos",
@@ -178,11 +178,11 @@ const dict = {
     "programme.title.week": "Weekly schedule",
     "programme.kicker": "The daily grid. Live mixes land on Friday and Saturday night.",
 
-    "tracks.title": "Mix Sessions",
-    "tracks.kicker": "XXX",
-    "tracks.reco": "picked by",
-    "tracks.buy": "Buy",
-    "tracks.listen": "Play",
+    "mixSessions.title": "Mix Sessions",
+    "mixSessions.kicker": "XXX",
+    "mixSessions.reco": "picked by",
+    "mixSessions.listen": "Play",
+    "common.buy": "Buy",
 
     "replays.title": "Replays",
     "replays.kicker": "Listen back to recent mixes and shows in full.",

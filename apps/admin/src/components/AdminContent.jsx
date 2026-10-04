@@ -7,7 +7,7 @@ import PublishConfirmPopup from './popups/PublishConfirmPopup';
 import InfoPopup from './popups/InfoPopup';
 import ShowsScheduleSection from './sections/ShowsScheduleSection';
 import YoutubeSection from './sections/YoutubeSection';
-import MixesSection from './sections/MixesSection';
+import MixSessionsSection from './sections/MixSessionsSection';
 import VinylSection from './sections/VinylSection';
 import CommentsSection from './sections/CommentsSection';
 
@@ -99,7 +99,7 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
         )}
 
         {activeTab === 'mixes' && (
-          <MixesSection
+          <MixSessionsSection
             tracks={editor.tracks}
             onAddTrack={editor.addTrack}
             onUpdateTrack={editor.updateTrack}

@@ -3,7 +3,7 @@ export function fetchPublicContent(): Promise<{
   slots: any[];
   shows_slots: any[];
   covers: any[];
-  tracks: any[];
+  mixSessions: any[];
   videos: any[];
   comments: any[];
 }>;
@@ -13,7 +13,7 @@ export function mapSupabaseContentToSiteModel(input: any): {
   schedule: any[];
   weekSchedule: any[];
   vinyls: any[];
-  weeklyTracks: any[];
+  mixSessions: any[];
   replays: any[];
   videos: any[];
   nowPlaying: any;

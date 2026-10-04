@@ -81,7 +81,7 @@ values
   ('http://byeddy.free.fr/POCHETTES/5.jpg', 'Cover 5', 19, true),
   ('http://byeddy.free.fr/POCHETTES/6.jpg', 'Cover 6', 20, true);
 
--- 4) Replay session favorite tracks (top 6 shown on frontend)
+-- 4) Initial mix sessions (editable in the admin)
 truncate table public.favorite_tracks restart identity;
 
 insert into public.favorite_tracks (title, dj_name, recommended_by, cover_url, buy_url, mp3_url, sort_order, is_active)

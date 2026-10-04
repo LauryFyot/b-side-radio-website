@@ -132,7 +132,7 @@ export function Vinyls() {
                       href={v.buyUrl}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`${t("tracks.buy")} ${v.title}`}
+                      aria-label={`${t("common.buy")} ${v.title}`}
                       className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                     >
                       <ShoppingBag className="size-4" />
@@ -141,7 +141,7 @@ export function Vinyls() {
                     <button
                       type="button"
                       disabled
-                      aria-label={`${t("tracks.buy")} ${v.title}`}
+                      aria-label={`${t("common.buy")} ${v.title}`}
                       className="grid size-10 shrink-0 cursor-not-allowed place-items-center rounded-full border border-border/60 text-muted-foreground/35"
                     >
                       <ShoppingBag className="size-4" />

@@ -183,7 +183,7 @@ export const vinyls: Vinyl[] = [
   { side: "B5", title: "Insomnia", artist: "Faithless", year: "1995", labelColor: "#FF0000", remixedBy: "Mount Kimbie", buyUrl: "https://www.beatport.com/search?q=insomnia%20mount%20kimbie" },
 ];
 
-export type Track = {
+export type MixSession = {
   title: string;
   artist: string;
   duration: string;
@@ -192,7 +192,7 @@ export type Track = {
   buyUrl: string;
 };
 
-export const weeklyTracks: Track[] = [
+export const mixSessions: MixSession[] = [
   {
     title: "BSR Selection #1",
     artist: "byEddy Edit",

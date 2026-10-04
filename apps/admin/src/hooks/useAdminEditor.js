@@ -5,6 +5,8 @@ import { useMemo, useState } from 'react';
 import { fetchBootstrapData, publishAdminData, uploadAdminFile } from '../lib/adminRepository';
 import { isDbId, toSlug } from '../utils/adminHelpers';
 
+const MAX_MIX_SESSIONS = 8;
+
 function buildSnapshot(data, deletedIds) {
   return JSON.stringify({
     shows: data.shows || [],
@@ -143,7 +145,10 @@ function useAdminEditor() {
   }
 
   function addTrack() {
-    setTracks((prev) => [...prev, { id: null, title: '', dj_name: '', recommended_by: '', cover_url: '', buy_url: '', mp3_url: '', sort_order: prev.length, is_active: true }]);
+    setTracks((prev) => prev.length >= MAX_MIX_SESSIONS
+      ? prev
+      : [...prev, { id: null, title: `Mix Session ${prev.length + 1}`, dj_name: '', recommended_by: '', cover_url: '', buy_url: '', mp3_url: '', sort_order: prev.length, is_active: true }]
+    );
   }
 
   function addVideo() {

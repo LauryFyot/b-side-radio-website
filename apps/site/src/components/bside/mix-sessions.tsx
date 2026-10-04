@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { SectionManager } from "./section-manager";
-import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 
@@ -25,11 +24,9 @@ function readAudioDuration(src: string) {
   });
 }
 
-// Tracks section: playable weekly picks with a buy link.
-export function Tracks() {
-  const { playTrack } = usePlayer();
+export function MixSessions() {
   const { t } = useI18n();
-  const { weeklyTracks } = useSiteContent();
+  const { mixSessions } = useSiteContent();
   const [durations, setDurations] = useState<Record<string, number>>({});
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
@@ -40,12 +37,12 @@ export function Tracks() {
 
     async function loadDurations() {
       const entries = await Promise.all(
-        weeklyTracks.map(async (track, index) => [`track-${index}`, track.src ? await readAudioDuration(track.src) : null] as const),
+        mixSessions.map(async (mix, index) => [`mix-${index}`, mix.src?.trim() ? await readAudioDuration(mix.src) : null] as const),
       );
 
       if (!cancelled) {
         const validEntries = entries.filter(
-          (entry): entry is readonly [`track-${number}`, number] => entry[1] !== null,
+          (entry): entry is readonly [`mix-${number}`, number] => entry[1] !== null,
         );
         setDurations(Object.fromEntries(validEntries));
       }
@@ -56,23 +53,21 @@ export function Tracks() {
     return () => {
       cancelled = true;
     };
-  }, [weeklyTracks]);
+  }, [mixSessions]);
 
-  function playLocalTrack(id: string, track: (typeof weeklyTracks)[number]) {
+  function playLocalMix(id: string) {
     const currentAudio = trackAudioRefs.current[id];
 
-    if (playingTrackId === id) {
+    if (playingTrackId === id && activeTrackId === id) {
       currentAudio?.pause();
       return;
     }
-
-    playTrack({ id, title: track.title, artist: track.artist, src: track.src });
-    setActiveTrackId(id);
 
     Object.entries(trackAudioRefs.current).forEach(([audioId, audio]) => {
       if (audioId !== id) audio?.pause();
     });
 
+    setActiveTrackId(id);
     requestAnimationFrame(() => {
       void trackAudioRefs.current[id]?.play();
     });
@@ -80,44 +75,43 @@ export function Tracks() {
 
   return (
     <SectionManager
-      id="tracks"
+      id="mix-sessions"
       index="03"
-      title={t("tracks.title")}
-      kicker={t("tracks.kicker")}
+      title={t("mixSessions.title")}
+      kicker={t("mixSessions.kicker")}
       tone="surface"
+      panelClassName="!bg-white !text-[#222]"
     >
-      {/* Tracks grid */}
       <ul className="grid gap-3 md:grid-cols-2">
-        {weeklyTracks.map((track, index) => {
-          const id = `track-${index}`;
-          const active = playingTrackId === id;
-          const hasBuyLink = track.buyUrl.trim() !== "";
+        {mixSessions.map((mix, index) => {
+          if (!mix.src?.trim()) return null;
+
+          const id = `mix-${index}`;
+          const active = playingTrackId === id && activeTrackId === id;
+
           return (
-            /* Track card */
             <li
               key={id}
-              className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 rounded-2xl border border-border bg-background p-4 transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-[0_14px_30px_-20px_rgba(0,0,0,0.45)]"
+              className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 rounded-2xl border border-border bg-background p-4 transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-[0_14px_30px_-20px_rgba(0,0,0,0.45)]"
             >
-              {/* Play button */}
               <button
                 type="button"
-                onClick={() => playLocalTrack(id, track)}
-                aria-label={`${active ? t("player.pause") : t("tracks.listen")} ${track.title}`}
+                onClick={() => playLocalMix(id)}
+                aria-label={`${active ? t("player.pause") : t("mixSessions.listen")} ${mix.title}`}
                 className="grid size-11 shrink-0 place-items-center rounded-full border border-primary text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 {active ? <Pause className="size-4 fill-current" /> : <Play className="size-4 fill-current" />}
               </button>
 
-              {/* Track text */}
               <div className="min-w-0">
-                <p className="truncate font-display text-xl leading-tight">{track.title}</p>
+                <p className="truncate font-display text-xl leading-tight">{mix.title}</p>
                 <p className="truncate text-xs text-muted-foreground">
-                  {track.artist} · {formatTrackDuration(durations[id]) || track.duration}
+                  {mix.artist} · {formatTrackDuration(durations[id]) || mix.duration}
                 </p>
                 <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.15em] text-primary">
-                  {t("tracks.reco")} {track.dj}
+                  {t("mixSessions.reco")} {mix.dj}
                 </p>
-                {activeTrackId === id && track.src && (
+                {activeTrackId === id && (
                   <audio
                     ref={(audio) => {
                       trackAudioRefs.current[id] = audio;
@@ -125,36 +119,15 @@ export function Tracks() {
                     className="mt-3 h-8 w-full max-w-sm"
                     controls
                     preload="metadata"
-                    src={track.src}
+                    src={mix.src}
                     onPlay={() => setPlayingTrackId(id)}
                     onPause={() => setPlayingTrackId((current) => (current === id ? null : current))}
                     onEnded={() => setPlayingTrackId(null)}
-                    aria-label={`${t("tracks.listen")} ${track.title}`}
+                    aria-label={`${t("mixSessions.listen")} ${mix.title}`}
                   />
                 )}
               </div>
 
-              {/* Buy link */}
-              {/* {hasBuyLink ? (
-                <a
-                  href={track.buyUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`${t("tracks.buy")} ${track.title}`}
-                  className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-                >
-                  <ShoppingBag className="size-4" />
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  disabled
-                  aria-label={`${t("tracks.buy")} ${track.title}`}
-                  className="grid size-10 shrink-0 cursor-not-allowed place-items-center rounded-full border border-border/60 text-muted-foreground/35"
-                >
-                  <ShoppingBag className="size-4" />
-                </button>
-              )} */}
             </li>
           );
         })}

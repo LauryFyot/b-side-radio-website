@@ -306,11 +306,8 @@ export async function publishAdminData(data, deletedIds) {
   const newTracks = normalizedTracks.filter((track) => !isDbId(track.id));
 
   await upsertRows('favorite_tracks', existingTracks, (track) => {
-    const title = String(track.title || '').trim();
+    const title = String(track.title || '').trim() || `Mix Session ${Number(track.sort_order) + 1}`;
     const mp3Url = String(track.mp3_url || '').trim();
-    if (title === '') {
-      return null;
-    }
 
     return {
       id: track.id,
@@ -325,11 +322,8 @@ export async function publishAdminData(data, deletedIds) {
   });
 
   await insertRows('favorite_tracks', newTracks, (track) => {
-    const title = String(track.title || '').trim();
+    const title = String(track.title || '').trim() || `Mix Session ${Number(track.sort_order) + 1}`;
     const mp3Url = String(track.mp3_url || '').trim();
-    if (title === '' || mp3Url === '') {
-      return null;
-    }
 
     return {
       title,

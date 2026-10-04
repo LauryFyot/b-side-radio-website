@@ -2,7 +2,7 @@ export const tabs = [
   { id: 'comments', label: 'Comments' },
   { id: 'shows', label: 'Shows & schedule' },
   { id: 'youtube', label: 'YouTube spotlight' },
-  { id: 'mixes', label: 'Favorite mixes' },
+  { id: 'mixes', label: 'Mix sessions' },
   { id: 'vinyl', label: 'Vinyl carousel' }
 ];
 

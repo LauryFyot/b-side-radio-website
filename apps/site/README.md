@@ -52,7 +52,7 @@ Le site public est surtout pilote par ces fichiers:
 	header, hero, bloc on-air, bloc about
 - `src/components/bside/vinyls.tsx`
 	section vinyls
-- `src/components/bside/programme.tsx`, `src/components/bside/tracks.tsx`, `src/components/bside/replays.tsx`, `src/components/bside/team.tsx`, `src/components/bside/videos.tsx`, `src/components/bside/comments.tsx`, `src/components/bside/socials-footer.tsx`
+- `src/components/bside/programme.tsx`, `src/components/bside/mix-sessions.tsx`, `src/components/bside/replays.tsx`, `src/components/bside/team.tsx`, `src/components/bside/videos.tsx`, `src/components/bside/comments.tsx`, `src/components/bside/socials-footer.tsx`
 	sections du bas (programme, tracks, sessions, equipe, videos, commentaires, footer social)
 - `src/components/player/player-context.tsx`
 	logique audio du player

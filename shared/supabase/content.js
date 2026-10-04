@@ -76,7 +76,7 @@ export async function unlikeComment(commentId) {
 }
 
 export async function fetchPublicContent() {
-  const [shows, slots, covers, tracks, videos, comments] = await Promise.all([
+  const [shows, slots, covers, mixSessions, videos, comments] = await Promise.all([
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
     readTable('show_slots', 'id,show_id,day_of_week,start_time,end_time,priority,is_active', { column: 'day_of_week', ascending: true }),
     readTable('featured_covers', 'id,image_url,title,artist,release_year,remixed_by,buy_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
@@ -112,13 +112,13 @@ export async function fetchPublicContent() {
     slots,
     shows_slots,
     covers,
-    tracks,
+    mixSessions,
     videos,
     comments,
   };
 }
 
-export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_slots = [], covers = [], tracks = [], videos: videosData = [] }) {
+export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_slots = [], covers = [], mixSessions = [], videos: videosData = [] }) {
   const activeShows = shows.filter((show) => show.is_active !== false);
   const sortedSlots = [...slots].filter((slot) => slot.is_active !== false).sort((a, b) => {
     const dayDiff = Number(a.day_of_week || 0) - Number(b.day_of_week || 0);
@@ -186,7 +186,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
       buyUrl: cover.buy_url || '',
     }));
 
-  const weeklyTracks = tracks
+  const mappedMixSessions = mixSessions
     .filter((track) => track.is_active !== false)
     .map((track) => ({
       title: track.title || 'Track',
@@ -210,8 +210,8 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
     schedule,
     weekSchedule,
     vinyls,
-    weeklyTracks,
-    replays: weeklyTracks.slice(0, 3).map((track, index) => ({
+    mixSessions: mappedMixSessions,
+    replays: mappedMixSessions.filter((track) => track.src.trim() !== '').slice(0, 3).map((track) => ({
       name: track.title,
       dj: track.dj,
       length: '—',
