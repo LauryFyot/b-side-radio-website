@@ -56,7 +56,7 @@ const dict = {
 
     "vinyls.title": "Tops de la semaine",
     "vinyls.kicker":
-      "Les titres mis en avant cette semaine. En lien avec notre partenaire TRAXSOURCE",
+      "Les titres mis en avant cette semaine. En lien avec notre partenaire {{traxsource}}",
     "vinyls.prev": "Vinyls precedents",
     "vinyls.next": "Vinyls suivants",
 
@@ -168,7 +168,7 @@ const dict = {
 
     "vinyls.title": "Tops of the week",
     "vinyls.kicker":
-      "This week's featured tracks. In collaboration with our partner TRAXSOURCE.",
+      "This week's featured tracks. In collaboration with our partner {{traxsource}}.",
     "vinyls.prev": "Previous vinyls",
     "vinyls.next": "Next vinyls",
 

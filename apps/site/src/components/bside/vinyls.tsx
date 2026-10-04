@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
+import { LinkedText } from "@/components/linked-text";
 import { SectionManager } from "./section-manager";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
@@ -11,7 +12,6 @@ export function Vinyls() {
   const trackRef = useRef<HTMLUListElement>(null);
   const { t } = useI18n();
   const { vinyls } = useSiteContent();
-  const [kickerPrefix = "", kickerSuffix = ""] = t("vinyls.kicker").split("TRAXSOURCE");
 
   const scrollBy = (dir: 1 | -1) => {
     const el = trackRef.current;
@@ -20,20 +20,17 @@ export function Vinyls() {
   };
 
   return (
-    <SectionManager id="vinyls" index="01" title={t("vinyls.title")} kicker={(
-      <>
-        {kickerPrefix}
-        <a
-          href={TRAXSOURCE_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary"
-        >
-          TRAXSOURCE
-        </a>
-        {kickerSuffix}
-      </>
-    )} tone="surface"
+    <SectionManager
+      id="vinyls"
+      index="01"
+      title={t("vinyls.title")}
+      kicker={(
+        <LinkedText
+          text={t("vinyls.kicker")}
+          links={{ traxsource: { href: TRAXSOURCE_URL, label: "TRAXSOURCE" } }}
+        />
+      )}
+      tone="surface"
       headerAction={(
         <a
           href={TRAXSOURCE_URL}
@@ -44,7 +41,8 @@ export function Vinyls() {
         >
           <img src={traxsourceLogo} alt="Traxsource" className="size-full object-contain" />
         </a>
-      )}>
+      )}
+    >
       <div className="relative">
         {/* Carousel controls */}
         <div className="flex justify-end gap-2 -mt-18">
