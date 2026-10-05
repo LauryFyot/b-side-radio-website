@@ -23,42 +23,41 @@ export function Hero() {
       {/* Hero main content */}
       <div className="relative mx-auto flex min-h-[50vh] max-w-7xl flex-col justify-end px-4 pt-8 py-6 sm:px-6 2xl:py-12">
         {/* Hero content container */}
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-
-          {/* Left */}
-          <div className="w-full sm:flex-1">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+          <div className="min-w-0 sm:col-start-1 sm:row-start-1">
             <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-primary">
               {t("hero.kicker")}
             </p>
-            <h1 className="mt-4 text-[20vw] leading-[0.82] sm:text-[8rem] lg:text-[10rem] 2xl:text-[16rem]">
+            <h1 className="mt-4 text-[20vw] leading-[0.82] sm:text-[8rem] lg:text-[9rem] 2xl:text-[14rem]">
               ONLY
               <br/>
-              <span className="text-primary">MASHUPS</span>
+              <span className="text-primary">NEWS</span>
               <br/>
-              & REMIXES
+              REMIXES & MASHUPS
             </h1>
+          </div>
+
+          <div className="sm:col-start-1 sm:row-start-2">
             <span className="my-5 block h-px w-3/5 bg-white/70" />
-            <div className="mt-2 flex max-w-xl items-center gap-2 sm:gap-3">
+            <div className="flex max-w-xl items-center gap-2 sm:gap-3">
               <img src={bsideIcon} alt="" width={50} height={50} className="size-9 shrink-0 sm:size-14" />
               <p className="ml-2 whitespace-pre-line font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">{t("hero.desc")}</p>
             </div>
           </div>
 
-          {/* Right */}
-          <div className="w-full sm:w-auto">
-            {/* Hero actions */}
-            <div className="flex flex-wrap items-center gap-4 sm:justify-end sm:gap-6 lg:gap-8">
+          <div className="mt-6 w-full sm:col-start-2 sm:row-start-1 sm:mt-0 sm:w-auto sm:self-end">
+            <div className="flex flex-col items-end gap-4 sm:gap-6 lg:gap-8">
               <button
                 type="button"
                 onClick={toggleLive}
-                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-primary px-5 py-3 font-display text-lg tracking-widest text-primary-foreground shadow-[0_14px_34px_-18px_var(--primary)] transition-transform hover:scale-[1.02] active:scale-[0.98] lg:gap-3 lg:px-7 lg:py-4 lg:text-2xl"
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-primary px-5 py-3 font-display text-lg tracking-widest text-primary-foreground shadow-[0_14px_34px_-18px_var(--primary)] transition-transform hover:scale-[1.02] active:scale-[0.98] lg:gap-3 lg:px-7 lg:py-4 lg:text-2xl cursor-pointer"
               >
                 {playing ? <Pause className="size-4 fill-current lg:size-5" /> : <Play className="size-4 fill-current lg:size-5" />}
                 {playing ? t("hero.listening") : t("hero.listen")}
               </button>
               <a
                 href="#comments"
-                className="inline-flex items-center whitespace-nowrap rounded-full border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary sm:px-6 sm:py-4 sm:text-[11px]"
+                className="inline-flex items-center whitespace-nowrap rounded-full border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary sm:px-6 sm:py-4 sm:text-[11px] cursor-pointer"
               >
                 {t("hero.which")}
               </a>
