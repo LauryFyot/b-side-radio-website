@@ -71,7 +71,7 @@ const dict = {
 
     "mixSessions.title": "Mix Sessions",
     "mixSessions.kicker":
-      "XXX",
+      "Les mixes des DJs BSide, à écouter en intégralité et à votre rythme",
     "mixSessions.reco": "recommandé par:",
     "mixSessions.listen": "Ecouter",
     "common.buy": "Acheter",
@@ -184,7 +184,7 @@ const dict = {
     "programme.timeline.next": "Scroll schedule right",
 
     "mixSessions.title": "Mix Sessions",
-    "mixSessions.kicker": "XXX",
+    "mixSessions.kicker": "Full-length mixes from BSide’s DJs, ready to play whenever you are",
     "mixSessions.reco": "picked by",
     "mixSessions.listen": "Play",
     "common.buy": "Buy",
