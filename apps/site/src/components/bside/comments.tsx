@@ -13,6 +13,7 @@ type Comment = {
   at: string;
   atEn?: string;
   likes: number;
+  isPersisted?: boolean;
 };
 
 type SortKey = "date" | "likes";
@@ -272,7 +273,7 @@ export function Comments() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [pending, setPending] = useState<Comment[]>([]);
+  const [submittedComments, setSubmittedComments] = useState<Comment[]>([]);
   const [sort, setSort] = useState<CommentSort>({ key: "date", direction: "desc" });
   const [likedIds, setLikedIds] = useState<Set<string>>(() => readLikedIds());
   const [likeOverrides, setLikeOverrides] = useState<Record<string, number>>({});
@@ -286,7 +287,7 @@ export function Comments() {
   }, []);
 
   // Both sources are already ordered newest first, so "oldest" is simply the reverse.
-  const baseComments: Comment[] = isLive
+  const savedComments: Comment[] = isLive
     ? liveComments.map((comment) => ({
       id: comment.id,
       name: comment.name,
@@ -295,8 +296,10 @@ export function Comments() {
       at: formatCommentDate(comment.at, lang),
       atEn: formatCommentDate(comment.at, lang),
       likes: comment.likes,
+      isPersisted: true,
     }))
     : seedComments;
+  const baseComments = [...submittedComments, ...savedComments];
 
   function getLikeCount(comment: Comment) {
     return likeOverrides[comment.id] ?? comment.likes;
@@ -333,7 +336,7 @@ export function Comments() {
     setLikingIds((current) => new Set(current).add(comment.id));
 
     try {
-      if (isLive) {
+      if (comment.isPersisted) {
         const nextCount = alreadyLiked ? await unlikeComment(comment.id) : await likeComment(comment.id);
         setLikeOverrides((current) => ({
           ...current,
@@ -385,9 +388,18 @@ export function Comments() {
     setSubmitError("");
 
     try {
-      await submitComment({ authorName: name.trim(), body: message.trim(), email: email.trim() });
-      setPending((current) => [
-        { id: `pending-${Date.now()}`, name: name.trim(), message: message.trim(), at: "", likes: 0 },
+      const commentId = await submitComment({ authorName: name.trim(), body: message.trim(), email: email.trim() });
+      const submittedAt = formatCommentDate(new Date().toISOString(), lang);
+      setSubmittedComments((current) => [
+        {
+          id: String(commentId),
+          name: name.trim(),
+          message: message.trim(),
+          at: submittedAt,
+          atEn: submittedAt,
+          likes: 0,
+          isPersisted: true,
+        },
         ...current,
       ]);
       setName("");
@@ -403,12 +415,12 @@ export function Comments() {
 
   return (
     <SectionManager id="comments" index="06" title={t("comments.title")} kicker={t("comments.kicker")}>
-      <div className="mx-auto w-full max-w-[var(--comments-max-width)]">
+      <div className="mx-auto w-full">
+        {/* max-w-[var(--comments-max-width)] */}
 
         {/* Comments header */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-4">
-
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
             {/* Published comments counter */}
             <span className="inline-flex h-9 items-center gap-2 rounded-full bg-primary/10 px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
               <span className="grid size-5 place-items-center rounded-full bg-primary/20 text-[11px] font-bold leading-none tracking-normal">
@@ -416,74 +428,46 @@ export function Comments() {
               </span>
               {t("comments.published")}
             </span>
+            {/* Sort filters */}
+            <div className="flex items-center gap-4 border-b border-border/70">
+              {sortOptions.map((option) => {
+                const isActive = sort.key === option.value;
+                const SortIcon = isActive && sort.direction === "asc" ? ArrowUp : ArrowDown;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => toggleSort(option.value)}
+                    className={`relative inline-flex cursor-pointer items-center gap-1.5 pb-2 font-mono text-xs uppercase transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                  >
+                    {t(option.labelKey)}
+                    <SortIcon className="size-3.5" strokeWidth={2.4} />
+                    <span
+                      className={`absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary transition-opacity ${isActive ? "opacity-100" : "opacity-0"
+                        }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Add comment button */}
           <button
             type="button"
             onClick={() => setIsFormOpen(true)}
-            className="cursor-pointer inline-flex h-9 items-center gap-2 rounded-full bg-primary px-5 font-mono text-[11px] uppercase tracking-[0.2em] text-primary-foreground"
+            className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-full bg-primary px-5 font-mono text-[11px] uppercase tracking-[0.2em] text-primary-foreground"
           >
             <MessageSquarePlus className="size-4" />
             {t("comments.writeCta")}
           </button>
         </div>
 
-        {/* Sort filters */}
-        <div className="mt-4 flex justify-start">
-          <div className="cursor-pointer flex items-center gap-4 border-b border-border/70">
-          {sortOptions.map((option) => {
-            const isActive = sort.key === option.value;
-            const SortIcon = isActive && sort.direction === "asc" ? ArrowUp : ArrowDown;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => toggleSort(option.value)}
-                className={`cursor-pointer relative inline-flex items-center gap-1.5 pb-2 text-sm font-semibold transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                  }`}
-              >
-                {t(option.labelKey)}
-                <SortIcon className="size-3.5" strokeWidth={2.4} />
-                <span
-                  className={`cursor-pointer absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary transition-opacity ${isActive ? "opacity-100" : "opacity-0"
-                    }`}
-                />
-              </button>
-            );
-          })}
-          </div>
-        </div>
-
 
         {/* Comments scroll */}
         <div className="mt-4 max-h-[540px] overflow-y-auto pr-2 [scrollbar-width:thin] [scrollbar-color:var(--primary)_transparent]">
-
-          {/* Pending comments */}
-          {pending.length > 0 && (
-            <ul className="mt-4 space-y-2">
-              {pending.map((comment) => (
-                <li key={comment.id} className="flex items-center gap-4 rounded-2xl border border-dashed border-primary/50 bg-surface/60 p-4">
-                  {(() => {
-                    const vinyl = commentProfileVinyls[getCommentVinylIndex(comment, commentProfileVinyls.length)];
-
-                    return vinyl ? (
-                      <img
-                        src={vinyl.imageUrl}
-                        alt=""
-                        className="size-18 shrink-0 rounded-full object-cover ring-0 ring-primary/20"
-                      />
-                    ) : null;
-                  })()}
-                  <div className="min-w-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-primary">{t("comments.pending")}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{comment.message}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
 
           {/* Published comments list */}
           <ul className="space-y-4">
@@ -493,22 +477,22 @@ export function Comments() {
               const profileVinyl = commentProfileVinyls[getCommentVinylIndex(comment, commentProfileVinyls.length)];
 
               return (
-                <li key={comment.id} className="flex items-center gap-4 rounded-2xl border border-border border-l-4 border-l-primary bg-surface p-4">
+                <li key={comment.id} className="flex items-center gap-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-6 sm:rounded-full sm:px-6 sm:py-4">
                   {profileVinyl && (
                     <img
                       src={profileVinyl.imageUrl}
                       alt=""
-                      className="size-18 shrink-0 rounded-full object-cover ring-0 ring-border"
+                      className="size-14 shrink-0 rounded-full object-cover ring-0 ring-border sm:size-18"
                     />
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                       <span className="font-display text-xl">{comment.name}</span>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground text-primary">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-primary">
                         {en ? (comment.atEn ?? comment.at) : comment.at}
                       </span>
                     </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 text-[13px] text-muted-foreground">
                       {en ? (comment.messageEn ?? comment.message) : comment.message}
                     </p>
                     <button
@@ -517,7 +501,7 @@ export function Comments() {
                       disabled={isLiking}
                       aria-pressed={isLiked}
                       aria-label={t(isLiked ? "comments.unlike" : "comments.like")}
-                      className={`mt-3 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
+                      className={`mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                         } disabled:cursor-not-allowed disabled:opacity-60`}
                     >
                       <Heart className={`size-3.5 ${isLiked ? "fill-primary" : ""}`} />

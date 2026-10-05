@@ -36,15 +36,17 @@ export async function submitComment({ authorName, body, email } = {}) {
     throw new Error('Name and message are required.');
   }
 
-  const { error } = await supabase.from('comments').insert({
+  const { data, error } = await supabase.from('comments').insert({
     author_name: trimmedName,
     author_email: trimmedEmail || null,
     body: trimmedBody,
-  });
+  }).select('id').single();
 
   if (error) {
     throw new Error(error.message || 'Unable to submit comment.');
   }
+
+  return data.id;
 }
 
 // Increment a comment's like counter through the security-definer RPC.
