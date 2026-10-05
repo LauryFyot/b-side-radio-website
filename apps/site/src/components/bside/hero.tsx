@@ -28,12 +28,12 @@ export function Hero() {
             <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-primary">
               {t("hero.kicker")}
             </p>
-            <h1 className="mt-4 text-[20vw] leading-[0.82] sm:text-[8rem] lg:text-[9rem] 2xl:text-[14rem]">
+            <h1 className="mt-4 text-[20vw] leading-[0.82] sm:text-[7rem] lg:text-[10rem] 2xl:text-[14rem]">
               ONLY
               <br/>
-              <span className="text-primary">NEWS</span>
+              <span className="text-primary">NEWS <span className="text-white">REMIXES</span></span>
               <br/>
-              REMIXES & MASHUPS
+              & MASHUPS
             </h1>
           </div>
 
