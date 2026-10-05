@@ -60,9 +60,9 @@ function SiteHomePage() {
             <About />
             <Vinyls />
             <Programme />
+            <Team />
             <MixSessions />
             {/* <Replays /> */}
-            <Team />
             <Videos />
             <Comments />
           </main>

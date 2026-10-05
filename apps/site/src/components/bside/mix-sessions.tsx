@@ -76,7 +76,7 @@ export function MixSessions() {
   return (
     <SectionManager
       id="mix-sessions"
-      index="03"
+      index="04"
       title={t("mixSessions.title")}
       kicker={t("mixSessions.kicker")}
       tone="surface"
