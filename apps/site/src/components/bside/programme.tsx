@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { useI18n, type Lang } from "@/lib/i18n";
 import { type Show } from "@/lib/bside-data";
@@ -35,22 +36,23 @@ function getTimelineBounds(weekSchedule: { shows: Show[] }[]): TimelineBounds {
 }
 
 // Desktop week timeline
-function WeekTimeline({ weekSchedule, lang }: { weekSchedule: { day: string; dayEn: string; shows: Show[] }[]; lang: Lang }) {
+function WeekTimeline({ weekSchedule, lang, timelineRef }: { weekSchedule: { day: string; dayEn: string; shows: Show[] }[]; lang: Lang; timelineRef: React.RefObject<HTMLDivElement | null> }) {
   const bounds = getTimelineBounds(weekSchedule);
   const total = Math.max(bounds.end - bounds.start, 60);
-  const hourMarks = Array.from({ length: Math.floor(total / 240) + 1 }, (_, index) => bounds.start + index * 240);
+  const hourMarks = Array.from({ length: Math.floor(total / 60) + 1 }, (_, index) => bounds.start + index * 60);
   if (hourMarks[hourMarks.length - 1] !== bounds.end) {
     hourMarks.push(bounds.end);
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-      <div className="overflow-x-auto [scrollbar-width:thin]">
+    <div>
+      <div className="overflow-hidden rounded-2xl border border-border bg-surface">
+        <div ref={timelineRef} className="overflow-x-auto [scrollbar-width:thin]">
         {/* Wider than 980px so 1h shows get enough room for their title */}
         <div style={{ minWidth: `${Math.max((total / 60) * 130, 980)}px` }}>
           {/* Timeline hours */}
-          <div className="grid grid-cols-[7rem_minmax(0,1fr)] border-b border-border px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:grid-cols-[9rem_minmax(0,1fr)] sm:px-6">
-            <span>Jour</span>
+          <div className="grid grid-cols-[7rem_minmax(0,1fr)] border-b border-border pr-4 py-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:grid-cols-[9rem_minmax(0,1fr)] sm:pr-6">
+            <span className="sticky left-0 z-20 bg-surface pl-4 pr-4 shadow-[4px_0_8px_-8px_rgba(0,0,0,0.45)] sm:pl-6 sm:pr-6">Jour</span>
             <div className="relative h-5">
               {hourMarks.map((minutes) => (
                 <span
@@ -66,9 +68,9 @@ function WeekTimeline({ weekSchedule, lang }: { weekSchedule: { day: string; day
 
           {/* Timeline rows */}
           {weekSchedule.map((day) => (
-            <div key={day.day} className="grid grid-cols-[7rem_minmax(0,1fr)] border-b border-border px-4 py-2 last:border-b-0 sm:grid-cols-[9rem_minmax(0,1fr)] sm:px-6">
+            <div key={day.day} className="grid grid-cols-[7rem_minmax(0,1fr)] border-b border-border pr-4 py-2 last:border-b-0 sm:grid-cols-[9rem_minmax(0,1fr)] sm:pr-6">
               {/* Day label */}
-              <div className="pr-4 font-display text-2xl leading-none">
+              <div className="sticky left-0 z-10 mr-4 bg-surface pl-4 pr-4 font-display text-2xl leading-none shadow-[4px_0_8px_-8px_rgba(0,0,0,0.45)] sm:pl-6 sm:pr-6">
                 {lang === "en" ? day.dayEn : day.day}
               </div>
 
@@ -111,6 +113,7 @@ function WeekTimeline({ weekSchedule, lang }: { weekSchedule: { day: string; day
             </div>
           ))}
         </div>
+        </div>
       </div>
     </div>
   );
@@ -144,6 +147,7 @@ function ShowList({ shows, lang }: { shows: Show[]; lang: Lang }) {
 // Programme section: day/week switch and the current schedule list.
 export function Programme() {
   const [view, setView] = useState<"day" | "week">("week");
+  const timelineRef = useRef<HTMLDivElement>(null);
   const todayIndex = (new Date().getDay() + 6) % 7;
   const [day, setDay] = useState(todayIndex);
   const { t, lang } = useI18n();
@@ -151,6 +155,11 @@ export function Programme() {
   const todayShows = weekSchedule[todayIndex]?.shows ?? [];
   const visibleShows = todayShows.length > 0 ? todayShows : schedule;
   const selectedWeekShows = weekSchedule[day]?.shows ?? schedule;
+  const scrollTimeline = (direction: -1 | 1) => {
+    const timeline = timelineRef.current;
+    if (!timeline) return;
+    timeline.scrollBy({ left: direction * Math.max(timeline.clientWidth * 0.75, 320), behavior: "smooth" });
+  };
 
   return (
     <SectionManager
@@ -160,19 +169,41 @@ export function Programme() {
       kicker={t("programme.kicker")}
     >
       {/* View switch */}
-      <div className="mb-6 inline-flex rounded-full border border-border bg-surface p-1">
-        {(["week", "day"] as const).map((value) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => setView(value)}
-            className={`rounded-full px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
-              view === value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {value === "day" ? t("programme.day") : t("programme.week")}
-          </button>
-        ))}
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="inline-flex rounded-full border border-border bg-surface p-1">
+          {(["week", "day"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setView(value)}
+              className={`rounded-full px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
+                view === value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {value === "day" ? t("programme.day") : t("programme.week")}
+            </button>
+          ))}
+        </div>
+        {view === "week" && (
+          <div className="hidden shrink-0 gap-2 lg:flex">
+            <button
+              type="button"
+              onClick={() => scrollTimeline(-1)}
+              aria-label={t("programme.timeline.prev")}
+              className="grid size-10 place-items-center rounded-full border border-border transition-colors hover:border-primary hover:text-primary"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollTimeline(1)}
+              aria-label={t("programme.timeline.next")}
+              className="grid size-10 place-items-center rounded-full border border-border transition-colors hover:border-primary hover:text-primary"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {view === "day" ? (
@@ -204,7 +235,11 @@ export function Programme() {
 
           {/* Desktop week timeline */}
           <div className="hidden lg:block">
-            <WeekTimeline weekSchedule={weekSchedule} lang={lang} />
+            <WeekTimeline
+              weekSchedule={weekSchedule}
+              lang={lang}
+              timelineRef={timelineRef}
+            />
           </div>
         </>
       )}

@@ -66,6 +66,8 @@ const dict = {
     "programme.title.week": "Programme de la semaine",
     "programme.kicker":
       "La grille quotidienne. Les mixes lives arrivent le vendredi et le samedi soir.",
+    "programme.timeline.prev": "Defiler la grille vers la gauche",
+    "programme.timeline.next": "Defiler la grille vers la droite",
 
     "mixSessions.title": "Mix Sessions",
     "mixSessions.kicker":
@@ -178,6 +180,8 @@ const dict = {
     "programme.title.day": "Today's schedule",
     "programme.title.week": "Weekly schedule",
     "programme.kicker": "The daily grid. Live mixes land on Friday and Saturday night.",
+    "programme.timeline.prev": "Scroll schedule left",
+    "programme.timeline.next": "Scroll schedule right",
 
     "mixSessions.title": "Mix Sessions",
     "mixSessions.kicker": "XXX",
