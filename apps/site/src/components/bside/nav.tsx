@@ -7,9 +7,8 @@ import bsideIcon from "@/assets/bside_icon.png";
 const nav: { href: string; key: TKey }[] = [
   { href: "#vinyls", key: "nav.vinyls" },
   { href: "#programme", key: "nav.programme" },
-  { href: "#mix-sessions", key: "nav.mixSessions" },
-  { href: "#replays", key: "nav.replays" },
   { href: "#equipe", key: "nav.equipe" },
+  { href: "#mix-sessions", key: "nav.mixSessions" },
   { href: "#videos", key: "nav.videos" },
   { href: "#comments", key: "nav.comments" },
   { href: "#socials", key: "nav.contact" },

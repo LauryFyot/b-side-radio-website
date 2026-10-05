@@ -11,8 +11,8 @@ const dict = {
     "nav.replays": "Replays",
     "nav.equipe": "Equipe",
     "nav.videos": "Videos",
-    "nav.comments": "Commentaires",
-    "nav.contact": "Nous contacter",
+    "nav.comments": "Coms",
+    "nav.contact": "Contact",
     "nav.menu": "Menu",
     "nav.close": "Fermer",
 
@@ -124,7 +124,7 @@ const dict = {
     "nav.equipe": "Team",
     "nav.videos": "Videos",
     "nav.comments": "Comments",
-    "nav.contact": "Contact us",
+    "nav.contact": "Contact",
     "nav.menu": "Menu",
     "nav.close": "Close",
 
