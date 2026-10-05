@@ -45,7 +45,7 @@ export function Vinyls() {
     >
       <div className="relative">
         {/* Carousel controls */}
-        <div className="flex justify-end gap-2 -mt-18">
+        <div className="mt-4 flex justify-end gap-2 sm:-mt-18">
           <button
             type="button"
             onClick={() => scrollBy(-1)}
