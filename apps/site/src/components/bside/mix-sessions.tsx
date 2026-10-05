@@ -79,7 +79,7 @@ export function MixSessions() {
       index="04"
       title={t("mixSessions.title")}
       kicker={t("mixSessions.kicker")}
-      tone="surface"
+      // tone="surface"
       panelClassName=""
     >
       <ul className="grid gap-3 md:grid-cols-2">
