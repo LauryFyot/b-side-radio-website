@@ -1,6 +1,7 @@
-import eddy from "@/assets/team-eddy.jpg";
+import eddy from "@/assets/team-eddy.jpeg";
 import bart from "@/assets/team-bart.jpg";
-import lecyr from "@/assets/team-lecyr.jpg";
+import scryll from "@/assets/team-scryll.png";
+import knocxx from "@/assets/team-theknocxx.png";
 
 /**
  * Flux live de la radio. Remplacer par l'URL Icecast/AzuraCast de B Side Radio.
@@ -272,35 +273,35 @@ export const replays = [
 export const team = [
   {
     name: "Eddy",
-    role: "Fondateur b-sideradio.com / beatmatch mix/ digger de news/ des heures chaque jour de recherches",
-    roleEn: "Founder of b-sideradio.com / beatmatch mixer / news digger / spends hours every day researching",
+    role: "Fondateur b.side.radio.com",
+    roleEn: "Founder of b.side.radio.com",
     image: eddy,
-    bio: "A l'origine de B Side Radio. Digger de disco, de soul et de tout ce qui se remixe bien.",
-    bioEn: "The founder of B Side Radio. A digger of disco, soul and anything that remixes well.",
+    bio: "Le beatmatching pour religion / digger de sons",
+    bioEn: "Beatmatching is my religion / Sound digger",
   },
   {
     name: "DJ Bart",
-    role: "La funkyhouse en vibe !",
-    roleEn: "Funkyhouse vibing !",
+    role: "DJ / Producteur",
+    roleEn: "DJ / Producer",
     image: bart,
-    bio: "Le specialiste des mashups qui ne devraient pas marcher, et qui marchent quand meme.",
-    bioEn: "The specialist of mashups that shouldn't work, and somehow always do.",
+    bio: "La FunkyHouse en Vibe !",
+    bioEn: "FunkyHouse Vibe!",
   },
   {
-    name: "DJ LeCyr",
-    role: "Klub Time",
-    roleEn: "Klub Time",
-    image: lecyr,
-    bio: "House, tech-house et sessions live du vendredi et samedi soir.",
-    bioEn: "House, tech-house and the live sessions on Friday and Saturday nights.",
+    name: "DJ SCRYLL",
+    role: "DJ / Producteur",
+    roleEn: "DJ / Producer",
+    image: scryll,
+    bio: "Be HAPPY !!",
+    bioEn: "Be HAPPY !!",
   },
   {
-    name: "The knocxx",
-    role: "Klub Time",
-    roleEn: "Klub Time",
-    image: lecyr,
-    bio: "House, tech-house et sessions live du vendredi et samedi soir.",
-    bioEn: "House, tech-house and the live sessions on Friday and Saturday nights.",
+    name: "The KNOCXX",
+    role: "Electrisez vos soirées..",
+    roleEn: "Spice up your evenings...",
+    image: knocxx,
+    bio: "Pure TechHouse Connection !!",
+    bioEn: "Pure TechHouse Connection !!",
   }
 ];
 

@@ -80,7 +80,7 @@ const dict = {
     "replays.playing": "En ecoute",
 
     "team.title": "L'equipe",
-    "team.kicker": "Trois DJs, une seule regle : jamais la version originale.",
+    "team.kicker": "Quatre DJs, une seule regle : jamais la version originale.",
     "team.portrait": "Portrait de",
 
     "videos.title": "Videos de la semaine",
@@ -191,7 +191,7 @@ const dict = {
     "replays.playing": "Now playing",
 
     "team.title": "The crew",
-    "team.kicker": "Three DJs, one rule: never the original version.",
+    "team.kicker": "Four DJs, one rule: never the original version.",
     "team.portrait": "Portrait of",
 
     "videos.title": "Videos of the week",
