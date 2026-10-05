@@ -40,6 +40,7 @@ export type Show = {
   end: string;
   blurb: string;
   blurbEn: string;
+  coverUrl?: string;
   dayOfWeek?: number;
 };
 

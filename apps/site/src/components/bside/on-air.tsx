@@ -5,6 +5,7 @@ import { useSiteContent } from "@/lib/siteContent";
 import { findCurrentShow } from "@/lib/schedule-utils";
 import { SectionManager } from "./section-manager";
 import { Equalizer } from "@/components/player/player-bar";
+import bsideIcon from "@/assets/bside_icon.png";
 
 function findNextShow(shows: Show[], currentShow: Show | null) {
   if (shows.length === 0) {
@@ -48,7 +49,7 @@ export function OnAir() {
       tone="paper"
       noHeader
       sectionClassName=""
-      panelClassName="grid gap-8 px-5 pt-8 py-8 sm:px-10 sm:py-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+      panelClassName="grid gap-8 px-5 py-8 sm:px-10 sm:py-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
     >
         {/* Current show */}
         <div className="min-w-0">
@@ -60,26 +61,33 @@ export function OnAir() {
             <Equalizer active className="h-10 shrink-0" />
             <h2 className="text-4xl leading-[0.9] sm:text-6xl">{show.name}</h2>
           </div>
-          <p className="mt-3 font-mono text-sm tracking-widest">
-            {show.start} - {show.end} 
-            {/* · {t("onair.with")} {show.host} */}
-          </p>
-          <p className="mt-4 max-w-xl text-base opacity-75">
-            {lang === "en" ? show.blurbEn : show.blurb}
-          </p>
+          <div className="mt-6 flex items-center gap-5 sm:gap-7">
+            <img
+              src={show.coverUrl || bsideIcon}
+              alt={show.name}
+              className={`size-24 shrink-0 rounded-lg sm:size-28 ${show.coverUrl ? "object-cover" : "bg-background object-contain p-5"}`}
+            />
+            <div className="min-w-0">
+              <p className="font-mono text-sm tracking-widest">{show.start} - {show.end}</p>
+              <p className="mt-3 max-w-xl text-base opacity-75">
+                {lang === "en" ? show.blurbEn : show.blurb}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Next show */}
-        <div className="self-end border-l-2 border-primary pl-5">
-          <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">
-            {t("onair.next")}
-          </p>
-          <p className="mt-2 font-display text-4xl leading-none">{next?.name ?? t("onair.fallbackName")}</p>
-          {next && (
-            <p className="mt-1 font-mono text-xs tracking-widest opacity-70">
-              {next.start} · {next.end}
-            </p>
-          )}
+        <div className="flex items-center gap-5 border-l-2 border-primary pl-5 sm:gap-7 sm:pl-7">
+          <img
+            src={next?.coverUrl || bsideIcon}
+            alt={next?.name ?? t("onair.fallbackName")}
+            className={`size-24 shrink-0 rounded-lg sm:size-28 ${next?.coverUrl ? "object-cover" : "bg-background object-contain p-5"}`}
+          />
+          <div className="min-w-0 self-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">{t("onair.next")}</p>
+            <p className="mt-2 font-display text-3xl leading-none sm:text-4xl">{next?.name ?? t("onair.fallbackName")}</p>
+            {next && <p className="mt-2 font-mono text-xs tracking-widest opacity-70">{next.start} · {next.end}</p>}
+          </div>
         </div>
     </SectionManager>
   );
