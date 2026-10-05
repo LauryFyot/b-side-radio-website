@@ -10,7 +10,7 @@ export function Team() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <SectionManager id="equipe" index="05" title={t("team.title")} kicker={t("team.kicker")} tone="paper">
+    <SectionManager id="equipe" index="03" title={t("team.title")} kicker={t("team.kicker")} tone="paper">
       {/* Mobile accordion: first DJ open, others collapsed */}
       <div className="grid gap-3 sm:hidden">
         {team.map((member, index) => {

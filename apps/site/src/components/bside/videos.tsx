@@ -8,7 +8,7 @@ export function Videos() {
   const { videos } = useSiteContent();
 
   return (
-    <SectionManager id="videos" index="06" title={t("videos.title")} tone="surface">
+    <SectionManager id="videos" index="05" title={t("videos.title")} tone="surface">
       <div className="grid gap-6 md:grid-cols-3">
         {videos.map((video) => {
           const title = lang === "en" ? video.titleEn : video.title;

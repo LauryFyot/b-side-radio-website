@@ -402,7 +402,7 @@ export function Comments() {
   };
 
   return (
-    <SectionManager id="comments" index="07" title={t("comments.title")} kicker={t("comments.kicker")}>
+    <SectionManager id="comments" index="06" title={t("comments.title")} kicker={t("comments.kicker")}>
       <div className="mx-auto w-full max-w-[var(--comments-max-width)]">
 
         {/* Comments header */}
