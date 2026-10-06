@@ -17,12 +17,12 @@ export function LangToggle({ className = "" }: { className?: string }) {
         {flags[lang]}
       </button>
 
-      {/* Tablet/desktop: full fr/en pill switch */}
+      {/* Tablet/desktop: fr/en flag pill switch */}
       <button
         type="button"
         onClick={() => setLang(lang === "fr" ? "en" : "fr")}
         aria-label={t("toggle.lang")}
-        className={`hidden h-9 items-center gap-1 rounded-full border border-border px-1 font-mono text-[10px] uppercase tracking-[0.15em] sm:inline-flex ${className}`}
+        className={`hidden h-9 items-center gap-1 rounded-full border border-border px-1 text-sm sm:inline-flex ${className}`}
       >
         {(["fr", "en"] as const).map((l) => (
           <span
@@ -31,7 +31,7 @@ export function LangToggle({ className = "" }: { className?: string }) {
               lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"
             }`}
           >
-            {l}
+            {flags[l]}
           </span>
         ))}
       </button>
