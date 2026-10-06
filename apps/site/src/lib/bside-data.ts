@@ -325,8 +325,9 @@ export const videos = [
 ];
 
 export const socials = [
-  { name: "Instagram", handle: "@bsideradioparis", url: "https://www.instagram.com/bsideradioparis/" },
+  { name: "Instagram", handle: "@bside.radio", url: "https://www.instagram.com/bside.radio/" },
   { name: "Facebook", handle: "b.side.radio.byeddy", url: "https://www.facebook.com/b.side.radio.byeddy/" },
-  { name: "Twitter / X", handle: "@radio_bside", url: "https://twitter.com/radio_bside" },
+  // Twitter / X: temporarily disabled, no active account for now. Restore when one exists.
+  // { name: "Twitter / X", handle: "@radio_bside", url: "https://twitter.com/radio_bside" },
   { name: "Mail", handle: "b.side.radio.com@gmail.com", url: "mailto:b.side.radio.com@gmail.com" },
 ];

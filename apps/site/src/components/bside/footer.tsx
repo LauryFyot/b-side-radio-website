@@ -9,6 +9,13 @@ const socialIcons: Record<string, typeof Instagram> = {
   Mail: Mail,
 };
 
+const colsByCount: Record<number, string> = {
+  1: "sm:grid-cols-1 lg:grid-cols-1",
+  2: "sm:grid-cols-2 lg:grid-cols-2",
+  3: "sm:grid-cols-2 lg:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
+};
+
 // Footer section: social links and the final legal line.
 export function Footer() {
   const { t } = useI18n();
@@ -17,7 +24,9 @@ export function Footer() {
     <footer id="socials" className="px-2 pb-4 pt-2 sm:px-4">
       <div className="mx-auto max-w-7xl rounded-[2rem] bg-paper px-5 pb-32 pt-14 text-paper-foreground sm:px-10">
         <h2 className="text-4xl leading-none sm:text-6xl">{t("socials.title")}</h2>
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ul
+          className={`mt-8 grid gap-3 ${colsByCount[socials.length] ?? colsByCount[4]}`}
+        >
           {socials.map((social) => {
             const Icon = socialIcons[social.name];
             return (
