@@ -87,7 +87,7 @@ const dict = {
 
     "videos.title": "Videos de la semaine",
 
-    "comments.title": "Espace commentaires",
+    "comments.title": "Commentaires",
     "comments.kicker":
       "Dites-nous ce que vous ecoutez, demandez un titre, reagissez aux sessions.",
     "comments.replyTo": "Reponse a",
