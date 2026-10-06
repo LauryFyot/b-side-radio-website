@@ -9,7 +9,7 @@ const dict = {
     "nav.programme": "Programme",
     "nav.mixSessions": "Mix Sessions",
     "nav.replays": "Replays",
-    "nav.equipe": "Equipe",
+    "nav.equipe": "Team",
     "nav.videos": "Videos",
     "nav.comments": "Coms",
     "nav.contact": "Contact",

@@ -5,7 +5,6 @@ import { useI18n, type TKey } from "@/lib/i18n";
 import bsideIcon from "@/assets/bside_icon.png";
 
 const nav: { href: string; key: TKey }[] = [
-  { href: "#vinyls", key: "nav.vinyls" },
   { href: "#programme", key: "nav.programme" },
   { href: "#equipe", key: "nav.equipe" },
   { href: "#mix-sessions", key: "nav.mixSessions" },
