@@ -65,7 +65,7 @@ export function OnAir() {
             <img
               src={show.coverUrl || bsideIcon}
               alt={show.name}
-              className={`size-24 shrink-0 rounded-lg sm:size-28 ${show.coverUrl ? "object-cover" : "bg-background object-contain p-5"}`}
+              className={`aspect-[4/3] w-28 shrink-0 sm:w-36 ${show.coverUrl ? "object-contain" : "bg-background object-contain p-5"}`}
             />
             <div className="min-w-0">
               <p className="font-mono text-sm tracking-widest">{show.start} - {show.end}</p>
@@ -81,7 +81,7 @@ export function OnAir() {
           <img
             src={next?.coverUrl || bsideIcon}
             alt={next?.name ?? t("onair.fallbackName")}
-            className={`size-24 shrink-0 rounded-lg sm:size-28 ${next?.coverUrl ? "object-cover" : "bg-background object-contain p-5"}`}
+            className={`aspect-[16/9] object-contain w-28 shrink-0 sm:w-36 ${next?.coverUrl ? "object-contain" : "bg-background object-contain p-5"}`}
           />
           <div className="min-w-0 self-center">
             <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">{t("onair.next")}</p>
