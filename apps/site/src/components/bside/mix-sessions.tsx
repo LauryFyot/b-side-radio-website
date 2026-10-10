@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { SectionManager } from "./section-manager";
+import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 
@@ -27,6 +28,7 @@ function readAudioDuration(src: string) {
 export function MixSessions() {
   const { t } = useI18n();
   const { mixSessions } = useSiteContent();
+  const { audioRef: liveAudioRef, setPlaying: setLivePlaying } = usePlayer();
   const [durations, setDurations] = useState<Record<string, number>>({});
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
@@ -62,6 +64,9 @@ export function MixSessions() {
       currentAudio?.pause();
       return;
     }
+
+    liveAudioRef.current?.pause();
+    setLivePlaying(false);
 
     Object.entries(trackAudioRefs.current).forEach(([audioId, audio]) => {
       if (audioId !== id) audio?.pause();

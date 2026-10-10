@@ -65,7 +65,8 @@ export function PlayerBar() {
     <>
       <audio
         ref={audioRef}
-        preload="none"
+        preload="auto"
+        autoPlay
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       />
