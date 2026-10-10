@@ -1,6 +1,6 @@
 import { Pause, Play, ShoppingBag, Radio, Volume2 } from "lucide-react";
 import { usePlayer } from "./player-context";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 import { getRadioProvider } from "@/lib/radio";
@@ -25,12 +25,28 @@ export function Equalizer({ active, className = "h-5" }: { active: boolean; clas
 }
 
 export function PlayerBar() {
+  const barRef = useRef<HTMLDivElement>(null);
   const { audioRef, playing, source, toggleLive, setPlaying } = usePlayer();
   const [volume, setVolume] = useState(0.8);
   const [now, setNow] = useState(() => new Date());
   const { t } = useI18n();
   const { nowPlaying, schedule } = useSiteContent();
   const radioProvider = getRadioProvider();
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    const updateHeight = () => {
+      document.documentElement.style.setProperty("--site-player-height", `${bar.getBoundingClientRect().height}px`);
+    };
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(bar);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--site-player-height");
+    };
+  }, []);
 
   useEffect(() => {
     const update = () => setNow(new Date());
@@ -70,7 +86,7 @@ export function PlayerBar() {
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       />
-      <div className="fixed inset-x-0 bottom-0 z-50 px-2 pb-2 sm:px-4 sm:pb-4">
+      <div ref={barRef} className="fixed inset-x-0 bottom-0 z-50 px-2 pb-2 sm:px-4 sm:pb-4">
         <div className="mx-auto grid max-w-7xl grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-3xl border border-border bg-surface/95 px-3 py-2.5 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.35)] backdrop-blur-md sm:gap-5 sm:px-6 sm:py-3">
           <button
             type="button"

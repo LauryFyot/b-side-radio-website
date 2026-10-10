@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/controls/theme-toggle";
 import { LangToggle } from "@/components/controls/lang-toggle";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -14,10 +14,25 @@ const nav: { href: string; key: TKey }[] = [
 ];
 
 export function Nav() {
+  const headerRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const { t } = useI18n();
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () => {
+      document.documentElement.style.setProperty("--site-nav-height", `${header.getBoundingClientRect().height}px`);
+    };
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--site-nav-height");
+    };
+  }, []);
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur relative">
+    <header ref={headerRef} className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur relative">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6">
         <a href="#top" className="flex min-w-0 items-center gap-2 font-display text-2xl tracking-[0.15em]">
           <img src={bsideIcon} alt="" width={28} height={28} className="size-8 shrink-0 mr-2" />

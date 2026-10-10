@@ -65,14 +65,19 @@
 
 .hero-section {
   --hero-image-opacity: 0.42;
-  padding: 32px 24px 24px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 24px;
+  height: calc(100dvh - var(--site-nav-height, 61px));
+  padding: 24px 8px calc(var(--site-player-height, 98px) + 8px);
 }
 
 .hero-stage {
   position: relative;
   isolation: isolate;
-  max-width: 1200px;
-  height: 450px;
+  width: 100%;
+  max-width: 80rem;
+  min-height: 0;
   margin: 0 auto;
   border-radius: 32px;
 }
@@ -221,13 +226,18 @@
 }
 
 .hero-marquee {
-  max-width: 1220px;
-  margin: 30px auto 0;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .hero-section { padding-right: 16px; padding-left: 16px; }
 }
 
 @media (max-width: 639px) {
-  .hero-section { padding: 48px 28px 24px; }
-  .hero-stage { height: 600px; border-radius: 22px; }
+  .hero-section { padding-top: 32px; }
+  .hero-stage { border-radius: 22px; }
   .hero-image { object-position: 52% center; }
   .hero-heading { width: 58%; padding: 0 12px 16px 0; border-radius: 0 0 22px 0; }
   .hero-kicker { font-size: 8px; max-width: 180px; }
@@ -240,11 +250,9 @@
   .hero-actions { right: 14px; bottom: 46px; max-width: calc(100% - 150px); }
   .hero-listen { min-height: 44px; padding: 10px 16px; font-size: 17px; gap: 7px; }
   .hero-chat { display: none; }
-  .hero-marquee { margin-top: 48px; }
 }
 
 @media (max-width: 374px) {
-  .hero-section { padding-right: 16px; padding-left: 16px; }
   .hero-title { font-size: 42px; }
   .hero-slogan { font-size: 30px; }
   .hero-signature { padding-right: 16px; }
