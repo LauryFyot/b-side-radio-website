@@ -1,8 +1,8 @@
 // Content editing state manager for the admin app.
 // Holds local drafts for shows, schedule, media, videos, and comments.
 // Exposes CRUD helpers and publish action to sync changes to Supabase.
-import { useMemo, useState } from 'react';
-import { fetchBootstrapData, publishAdminData, uploadAdminFile } from '../lib/adminRepository';
+import { useMemo, useRef, useState } from 'react';
+import { fetchBootstrapData, publishAdminData, synchronizeR2Mixes, uploadAdminFile } from '../lib/adminRepository';
 import { isDbId, toSlug } from '../utils/adminHelpers';
 
 const MAX_MIX_SESSIONS = 8;
@@ -20,6 +20,7 @@ function buildSnapshot(data, deletedIds) {
 }
 
 function useAdminEditor() {
+  const uploadedMixUrls = useRef(new Set());
   const [isPublishing, setIsPublishing] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('success');
@@ -201,6 +202,7 @@ function useAdminEditor() {
 
   async function uploadTrackMp3(index, file) {
     const publicUrl = await uploadAdminFile(file, 'tracks');
+    uploadedMixUrls.current.add(publicUrl);
     updateTrack(index, 'mp3_url', publicUrl);
     return publicUrl;
   }
@@ -211,10 +213,23 @@ function useAdminEditor() {
     setIsPublishing(true);
 
     try {
+      const previousTracks = JSON.parse(publishedSnapshot).tracks;
+      const candidateUrls = [...new Set([
+        ...previousTracks.map((track) => track.mp3_url).filter(Boolean),
+        ...uploadedMixUrls.current
+      ])];
       await publishAdminData({ shows, slots, covers, tracks, videos, comments }, deletedIds);
       await loadData();
+      try {
+        await synchronizeR2Mixes(candidateUrls);
+        uploadedMixUrls.current.clear();
+      } catch (error) {
+        setMessageType('error');
+        setMessage(`Content published, but Cloudflare cleanup failed: ${error.message}`);
+        return;
+      }
       setMessageType('success');
-      setMessage('Publish done. Supabase is updated.');
+      setMessage('Publish done. Content and media storage are synchronized.');
     } catch (error) {
       setMessageType('error');
       setMessage(error.message || 'Publish failed.');

@@ -5,6 +5,7 @@ import { supabase } from './supabaseClient';
 import { isDbId, toSlug, toTimeInput } from '../utils/adminHelpers';
 
 const ADMIN_MEDIA_BUCKET = import.meta.env.VITE_SUPABASE_MEDIA_BUCKET || 'admin-media';
+const R2_UPLOAD_URL = import.meta.env.VITE_R2_UPLOAD_URL || import.meta.env.VITE_CLOUDFLARE_R2_UPLOAD_URL || '';
 
 // Normalize Supabase errors into explicit JS exceptions.
 async function throwOnError(result, fallbackMessage) {
@@ -30,13 +31,74 @@ function buildStoragePath(folder, file) {
   return `${folder}/${safeName}-${timestamp}-${randomPart}${extensionSuffix}`;
 }
 
-export async function uploadAdminFile(file, folder) {
+async function getAdminAccessToken() {
   if (!supabase) {
     throw new Error('Supabase is not initialized.');
   }
+  const { data, error } = await supabase.auth.getSession();
+  if (error || !data.session?.access_token) {
+    throw new Error('An admin session is required to manage Cloudflare files.');
+  }
+  return data.session.access_token;
+}
 
+async function uploadToCloudflareR2(file, folder) {
+  if (!R2_UPLOAD_URL) {
+    return null;
+  }
+
+  const request = await fetch(R2_UPLOAD_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await getAdminAccessToken()}`
+    },
+    body: JSON.stringify({
+      folder,
+      fileName: file.name,
+      contentType: file.type || 'application/octet-stream'
+    })
+  });
+
+  if (!request.ok) {
+    const payload = await request.json().catch(() => ({}));
+    throw new Error(payload?.error || 'Unable to get Cloudflare R2 upload URL.');
+  }
+
+  const payload = await request.json();
+  const uploadUrl = payload?.uploadUrl;
+  const publicUrl = payload?.publicUrl;
+
+  if (!uploadUrl || !publicUrl) {
+    throw new Error('Cloudflare R2 upload response is missing a signed URL.');
+  }
+
+  const uploadResponse = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type || 'application/octet-stream'
+    },
+    body: file
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error('Upload to Cloudflare R2 failed.');
+  }
+
+  return publicUrl;
+}
+
+export async function uploadAdminFile(file, folder) {
   if (!file) {
     throw new Error('No file selected.');
+  }
+
+  if (R2_UPLOAD_URL) {
+    return uploadToCloudflareR2(file, folder);
+  }
+
+  if (!supabase) {
+    throw new Error('Supabase is not initialized.');
   }
 
   const path = buildStoragePath(folder, file);
@@ -57,6 +119,26 @@ export async function uploadAdminFile(file, folder) {
   }
 
   return publicUrl;
+}
+
+export async function synchronizeR2Mixes(candidateUrls = []) {
+  if (!R2_UPLOAD_URL) {
+    return;
+  }
+
+  const response = await fetch(R2_UPLOAD_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await getAdminAccessToken()}`
+    },
+    body: JSON.stringify({ action: 'reconcile', candidateUrls })
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || payload.action !== 'reconcile') {
+    throw new Error(payload.error || 'Cloudflare cleanup failed. Deploy the updated upload Worker.');
+  }
+  return payload;
 }
 
 export async function getCurrentUser() {
