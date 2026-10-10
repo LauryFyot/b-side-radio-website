@@ -1,7 +1,7 @@
 // Editor for the mix sessions displayed on the site.
 // Supports MP3 URL/file input, live audio preview, and duration hints.
 import { useEffect, useState } from 'react';
-import { AudioLines, Plus, Trash2 } from 'lucide-react';
+import { AudioLines, LoaderCircle, Plus, Trash2, Upload } from 'lucide-react';
 import { formatDuration } from '../../utils/adminHelpers';
 
 const MAX_MIX_SESSIONS = 8;
@@ -10,18 +10,9 @@ function getMixSessionKey(track, index) {
   return track.id == null ? `draft-${index}` : `saved-${track.id}`;
 }
 
-function UploadIcon() {
-  return (
-    <svg className="size-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 15V6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M8.5 9.5 12 6l3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M5.5 17.5v1.2A1.3 1.3 0 0 0 6.8 20h10.4a1.3 1.3 0 0 0 1.3-1.3v-1.2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp3, onRemoveTrack }) {
   const [durations, setDurations] = useState({});
+  const [uploadingKey, setUploadingKey] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,6 +81,7 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
       <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-3">
         {tracks.map((track, i) => {
           const key = getMixSessionKey(track, i);
+          const isUploading = uploadingKey === key;
           return (
           <article className={`tone-${(i % 4) + 1} flex min-h-[248px] flex-col gap-2 rounded-[var(--admin-radius)] p-[18px] text-white`} key={key}>
             <div className="mb-0.5 flex items-center justify-between">
@@ -99,6 +91,7 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
                 <button
                   className="grid size-7 cursor-pointer place-items-center rounded-full border-0 bg-black/10 text-current"
                   type="button"
+                  disabled={uploadingKey !== null}
                   onClick={() => onRemoveTrack(i)}
                   aria-label={`Delete mix session ${i + 1}`}
                 >
@@ -108,8 +101,10 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
             </div>
 
             <div className="flex items-center gap-2.5">
-              <label className={`cursor-pointer items-center justify-center gap-2 rounded-full border p-1.5 font-bold text-sm ${i % 4 === 1 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428]' : 'border-[rgba(255,255,255,0.42)]'}`} htmlFor={`mix-file-${key}`}>
-                <UploadIcon />
+              <label className={`${uploadingKey !== null ? 'cursor-wait' : 'cursor-pointer'} inline-flex size-8 shrink-0 items-center justify-center rounded-full border font-bold text-sm ${i % 4 === 1 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428]' : 'border-[rgba(255,255,255,0.42)]'}`} htmlFor={`mix-file-${key}`} title={isUploading ? 'Uploading MP3' : 'Upload MP3'} aria-label={isUploading ? 'Uploading MP3' : 'Upload MP3'} aria-busy={isUploading}>
+                {isUploading
+                  ? <LoaderCircle className="size-4 shrink-0 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+                  : <Upload className="size-4 shrink-0" aria-hidden="true" />}
               </label>
 
               <div className="min-w-0 flex-1">
@@ -148,19 +143,24 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
                 id={`mix-file-${key}`}
                 className="pointer-events-none absolute h-0 w-0 opacity-0"
                 type="file"
+                disabled={uploadingKey !== null}
                 accept="audio/mpeg,.mp3"
                 onChange={async (event) => {
-                  const file = event.target.files?.[0];
+                  const input = event.currentTarget;
+                  const file = input.files?.[0];
                   if (!file) {
                     return;
                   }
 
+                  setUploadingKey(key);
                   try {
                     await onUploadTrackMp3(i, file);
                   } catch (error) {
                     console.error(error);
+                  } finally {
+                    setUploadingKey(null);
+                    input.value = '';
                   }
-                  event.target.value = '';
                 }}
               />
             </div>
@@ -168,6 +168,7 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
             <input
               className={`w-full rounded-full border bg-transparent px-3.5 py-2 text-[length:var(--admin-field-text-size)] outline-0 ${i % 4 === 1 || i % 4 === 3 ? 'border-[rgba(49,29,35,0.28)] text-[#2f2428] placeholder:text-[rgba(47,36,40,0.7)]' : 'border-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.86)] placeholder:text-[rgba(255,255,255,0.75)]'}`}
               placeholder="https://...mp3"
+              disabled={isUploading}
               value={track.mp3_url || ''}
               onChange={(event) => onUpdateTrack(i, 'mp3_url', event.target.value)}
             />
