@@ -32,8 +32,8 @@ export function Nav() {
     };
   }, []);
   return (
-    <header ref={headerRef} className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur relative">
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6">
+    <header ref={headerRef} className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur relative lg:px-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:px-0">
         <a href="#top" className="flex min-w-0 items-center gap-2 font-display text-2xl tracking-[0.15em]">
           <img src={bsideIcon} alt="" width={28} height={28} className="size-8 shrink-0 mr-2" />
           BSIDE<span className="text-primary">RADIO</span>
