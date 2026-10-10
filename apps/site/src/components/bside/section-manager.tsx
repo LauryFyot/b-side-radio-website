@@ -31,7 +31,7 @@ export function SectionManager({
         : "bg-background text-foreground";
 
   return (
-    <section id={id} className={`scroll-mt-24 px-2 py-2 sm:px-4 ${sectionClassName}`.trim()}>
+    <section id={id} className={`px-2 py-2 sm:px-4 ${sectionClassName}`.trim()}>
       <div className={`mx-auto max-w-7xl rounded-panel px-4 py-10 sm:px-8 sm:py-10 ${panel} ${panelClassName}`.trim()}>
         {!noHeader && (
           <header className={`mb-8 grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-4 sm:mb-12 ${headerAction ? "relative z-10" : ""}`}>

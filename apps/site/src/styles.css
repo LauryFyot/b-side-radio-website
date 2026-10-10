@@ -63,6 +63,20 @@
   }
 }
 
+html {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: var(--site-nav-height, 61px);
+  scroll-padding-bottom: var(--site-player-height, 98px);
+}
+
+main > section {
+  scroll-snap-align: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-snap-type: none; }
+}
+
 .hero-section {
   --hero-image-opacity: 0.42;
   display: grid;
