@@ -93,8 +93,9 @@
 }
 
 .hero-image {
-  object-fit: cover;
-  object-position: center 55%;
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
 }
 
 .hero-image-overlay {
@@ -280,7 +281,7 @@
 @media (max-width: 639px) {
   .hero-section { padding-top: 32px; }
   .hero-stage { --hero-cutout-radius: 22px; border-radius: 22px; }
-  .hero-image { object-position: 52% center; }
+  .hero-image { background-position: 52% top; }
   .hero-heading { width: 58%; padding: 0 12px 16px 0; border-radius: 0 0 22px 0; }
   .hero-kicker { font-size: 8px; max-width: 180px; }
   .hero-title { font-size: 48px; }
