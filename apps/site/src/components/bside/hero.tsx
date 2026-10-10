@@ -1,6 +1,7 @@
 import { Play, Pause } from "lucide-react";
 import heroImg from "@/assets/mixbannerbw.jpeg";
 import bsideIcon from "@/assets/bside_icon.png";
+import traxsourceLogo from "../../../../../assets/images/traxsource-logo-blue.png";
 import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
 
@@ -45,6 +46,20 @@ export function Hero() {
             </div>
           </div>
 
+          <a
+            href="https://www.traxsource.com/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Traxsource"
+            className="hidden size-14 shrink-0 place-items-center rounded-full border border-border p-3.5 transition-colors hover:border-primary sm:col-start-2 sm:row-start-2 sm:grid sm:self-end sm:justify-self-end"
+          >
+            <img
+              src={traxsourceLogo}
+              alt="Traxsource"
+              className="size-full object-contain brightness-0 dark:invert"
+            />
+          </a>
+
           <div className="mt-6 w-full sm:col-start-2 sm:row-start-1 sm:mt-0 sm:w-auto sm:self-end">
             <div className="flex flex-col items-end gap-4 sm:gap-6 lg:gap-8">
               <button
@@ -70,7 +85,7 @@ export function Hero() {
 
       {/* Scrolling marquee */}
       <div className="relative mx-2 mb-6 overflow-hidden rounded-2xl border border-border bg-surface py-3">
-        <div className="flex w-max animate-none gap-10" style={{ animation: "marquee 24s linear infinite" }}>
+        <div className="flex w-max animate-none gap-10" style={{ animation: "marquee 36s linear infinite" }}>
           {Array.from({ length: 4 }).map((_, k) => (
             <div key={k} className="flex min-w-max shrink-0 gap-10">
               {(["marquee.1", "marquee.2", "marquee.3", "marquee.4"] as const).map((key) => (
