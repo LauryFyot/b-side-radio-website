@@ -10,11 +10,10 @@ export function Hero() {
 
   return (
     <section id="top" className="hero-section">
+      {/* Hero background image, fixed so the page scrolls over it */}
       <div className="hero-stage">
-        <div className="hero-media" aria-hidden="true">
-          <div className="hero-image" style={{ backgroundImage: `url(${heroImg})` }} />
-          <div className="hero-image-overlay" />
-        </div>
+        <img className="hero-image" src={heroImg} alt="" fetchPriority="high" />
+        <div className="hero-image-overlay" aria-hidden="true" />
         <div className="hero-heading">
           <p className="hero-kicker">{t("hero.kicker")}</p>
           <h1 className="hero-title">BSIDE<span>RADIO</span></h1>
