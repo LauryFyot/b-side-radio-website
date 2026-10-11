@@ -107,9 +107,25 @@ main > section {
 }
 
 .hero-image {
+  position: absolute;
   background-size: cover;
   background-position: center top;
   background-attachment: fixed;
+}
+
+.hero-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.75;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklab, var(--foreground) 12%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 4px 4px;
 }
 
 .hero-image-overlay {
