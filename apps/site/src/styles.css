@@ -64,13 +64,18 @@
 }
 
 html {
-  scroll-snap-type: y proximity;
   scroll-padding-top: var(--site-nav-height, 61px);
   scroll-padding-bottom: var(--site-player-height, 98px);
 }
 
-main > section {
-  scroll-snap-align: start;
+@media (min-width: 1024px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  main > section {
+    scroll-snap-align: start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
