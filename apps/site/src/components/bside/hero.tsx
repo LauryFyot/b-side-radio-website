@@ -75,7 +75,7 @@ export function Hero() {
             &amp; <span className="hero-outline">MASHUPS</span>
           </p>
           <a className="hero-partner" href="https://www.traxsource.com/" target="_blank" rel="noreferrer" aria-label="Traxsource">
-            <span>Powered by</span>
+            <span>Partnership</span>
             <img src={traxsourceLogo} alt="Traxsource" />
           </a>
         </div>
