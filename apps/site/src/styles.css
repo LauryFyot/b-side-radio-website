@@ -110,7 +110,12 @@ main > section {
   position: absolute;
   background-size: cover;
   background-position: center top;
-  background-attachment: fixed;
+}
+
+@media (min-width: 1024px) and (hover: hover) {
+  .hero-image {
+    background-attachment: fixed;
+  }
 }
 
 .hero-image::after {
