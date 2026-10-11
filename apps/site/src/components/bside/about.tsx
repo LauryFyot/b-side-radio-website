@@ -1,7 +1,14 @@
 import { useI18n } from "@/lib/i18n";
+import { useSiteContent } from "@/lib/siteContent";
 
 export function About() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const { team } = useSiteContent();
+  const residentCount = team.length;
+  const residentPlural = residentCount === 1 ? "" : "s";
+  const mixesDescription = t("about.p2")
+    .replaceAll("{count}", String(residentCount))
+    .replaceAll("{plural}", residentPlural);
   return (
     <section id="about" className="border-b border-border/60">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 sm:py-18 lg:grid-cols-2">
@@ -19,12 +26,12 @@ export function About() {
         </div>
         <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
           <p className="whitespace-pre-line">{t("about.p1")}</p>
-          <p className="whitespace-pre-line">{t("about.p2")}</p>
+          <p className="whitespace-pre-line">{mixesDescription}</p>
           <div className="grid grid-cols-3 gap-4 border-t border-border pt-6">
             {([
               ["24/7", "about.stat1"],
               ["0", "about.stat2"],
-              ["4", "about.stat3"],
+              [String(residentCount), "about.stat3"],
             ] as const).map(([n, key]) => (
               <div key={key}>
                 <p className="font-display text-5xl leading-none text-primary">{n}</p>

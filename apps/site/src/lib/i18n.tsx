@@ -40,7 +40,7 @@ const dict = {
     "about.title.3": "remixé aujourd'hui !",
     "about.p1": "Vous écoutez 7j/7 BSide Radio dans le monde entier.\n Chaque jour, les nouveautés Funky House, Nu-Disco, Soulful mais aussi Jackin' & Techhouse.\n BSide Radio c'est aussi les 80's / 90's & 00's en versions RemiXes & MasHups exclusivement.",
     "about.p2":
-      "B.SIDE.RADIO vous offre des MiXes Lives de 4 djs tous les vendredis et samedis soirs ainsi que le Replay des mixes de samedi, tous les dimanches après midi. \n \n La nouveauté Klub, c'est ici !\nTURN UP THE NEW SOUND",
+      "B.SIDE.RADIO vous offre des MiXes Lives de {count} DJ{plural} tous les vendredis et samedis soirs ainsi que le Replay des mixes de samedi, tous les dimanches après midi. \n \n La nouveauté Klub, c'est ici !\nTURN UP THE NEW SOUND",
     "about.stat1": "En direct",
     "about.stat2": "Publicite",
     "about.stat3": "DJs residents",
@@ -155,7 +155,7 @@ const dict = {
     "about.p1":
       "You can listen to BSide Radio 7 days a week, anywhere in the world.\n Every day, we feature the latest in Funky House, Nu-Disco, and Soulful, as well as Jackin' and Tech House.\n BSide Radio also plays exclusively remixes and mashups from the '80s, '90s, and '00s.",
     "about.p2":
-      "B.SIDE.RADIO brings you live mixes from four DJs every Friday and Saturday night, as well as a replay of Saturday’s mixes every Sunday afternoon. \n \n The latest in club music is right here!\nTURN UP THE NEW SOUND",
+      "B.SIDE.RADIO brings you live mixes from {count} resident DJ{plural} every Friday and Saturday night, as well as a replay of Saturday’s mixes every Sunday afternoon. \n \n The latest in club music is right here!\nTURN UP THE NEW SOUND",
     "about.stat1": "Live",
     "about.stat2": "Adverts",
     "about.stat3": "Resident DJs",

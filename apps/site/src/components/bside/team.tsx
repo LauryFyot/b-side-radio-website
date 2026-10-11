@@ -9,9 +9,13 @@ export function Team() {
   const { t, lang } = useI18n();
   const { team } = useSiteContent();
   const [openIndex, setOpenIndex] = useState(0);
+  const residentCount = team.length;
+  const teamKicker = lang === "en"
+    ? `${residentCount} resident DJ${residentCount === 1 ? "" : "s"}, one rule: never the original version.`
+    : `${residentCount} DJ résident${residentCount === 1 ? "" : "s"}, une seule règle : jamais la version originale.`;
 
   return (
-    <SectionManager id="equipe" index="03" title={t("team.title")} kicker={t("team.kicker")} tone="paper">
+    <SectionManager id="equipe" index="03" title={t("team.title")} kicker={teamKicker} tone="paper">
       {/* Mobile accordion: first DJ open, others collapsed */}
       <div className="grid gap-3 sm:grid-cols-2 md:hidden">
         {team.map((member, index) => {
