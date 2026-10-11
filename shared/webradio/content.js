@@ -113,7 +113,9 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
   const rawText = track?.text || track?.subtitle || track?.title || track?.name || station?.text || nowPlaying?.text || '';
   const parts = splitSongText(rawText);
   const artistName = cleanTrackMetadata(track?.artist || track?.artist_name || track?.artiste || track?.artists?.[0]?.name || parts[0] || '');
-  const title = cleanTrackMetadata(track?.title || track?.name || parts[1] || '');
+  const title = cleanTrackMetadata(track?.title || track?.name || parts[1] || '')
+    .replace(/\s+-\s+-\s*no_cover_image$/i, '')
+    .trim();
   const traxsourceId = track?.traxsource_id || track?.traxsourceId || track?.id_traxsource || track?.idTraxsource || findTraxsourceId(parts, rawText);
   const text = traxsourceId ? [artistName, title, traxsourceId].filter(Boolean).join(' - ') : [artistName, title].filter(Boolean).join(' - ') || cleanSongText(rawText);
   const imageUrl = track?.art || track?.image || track?.cover || track?.album_art || nowPlaying?.art || nowPlaying?.image || station?.art || '';
@@ -142,7 +144,7 @@ export function buildTraxsourceText(track) {
   return track.traxsourceId ? `${baseText} [traxsource:${track.traxsourceId}]` : baseText;
 }
 
-function parseLegacyNowPlaying(responseText) {
+export function parseLegacyNowPlayingResponse(responseText) {
   const normalized = responseText.replace(/,\s*([}\]])/g, '$1');
 
   try {
@@ -184,7 +186,7 @@ export async function fetchWebRadioNowPlaying(fetchImpl = globalThis.fetch) {
     if (RADIO_PROVIDER !== 'legacy') {
       throw error;
     }
-    payload = parseLegacyNowPlaying(responseText);
+    payload = parseLegacyNowPlayingResponse(responseText);
   }
 
   return normalizeNowPlayingPayload(payload, 1);

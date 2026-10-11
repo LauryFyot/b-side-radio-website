@@ -1,9 +1,13 @@
 // Reusable radio stream API helpers for now-playing data.
 // Exposes base endpoints plus normalized parsing for station/song metadata.
 // Designed to be shared by admin and public site components.
-export const RADIO_BASE_URL = 'http://51.91.124.240';
-export const RADIO_NOW_PLAYING_URL = `${RADIO_BASE_URL}/api/nowplaying`;
-export const RADIO_AUDIO_URL = `${RADIO_BASE_URL}/listen/bside_radio/radio.mp3`;
+import { normalizeNowPlayingPayload, parseLegacyNowPlayingResponse } from '../../../../shared/webradio/content.js';
+
+const RADIO_PROXY_BASE = String(import.meta.env?.VITE_RADIO_API_BASE_URL || '/api/radio/legacy').replace(/\/$/, '');
+
+export const RADIO_BASE_URL = RADIO_PROXY_BASE;
+export const RADIO_NOW_PLAYING_URL = `${RADIO_PROXY_BASE}/status-json.xsl?mount=/stream`;
+export const RADIO_AUDIO_URL = `${RADIO_PROXY_BASE}/stream`;
 
 export function getRadioEndpoints() {
   return {
@@ -19,7 +23,12 @@ export async function fetchNowPlayingPayload(fetchImpl = fetch) {
     throw new Error(`Now playing HTTP ${response.status}`);
   }
 
-  return response.json();
+  const responseText = await response.text();
+  try {
+    return JSON.parse(responseText);
+  } catch {
+    return parseLegacyNowPlayingResponse(responseText);
+  }
 }
 
 export function getPrimaryNowPlayingStation(payload) {
@@ -31,23 +40,16 @@ export function getPrimaryNowPlayingStation(payload) {
 
 export function parseNowPlayingInfo(payload) {
   const station = getPrimaryNowPlayingStation(payload);
-  const song = station?.now_playing?.song;
-
-  const text = String(song?.text || '').trim() || 'Unknown title';
-  const parts = text.split(' - ');
-  const artist = parts[0] || 'Unknown Artist';
-  const title = parts[1] || 'Unknown Title';
-  const id_traxsource = parts[2] || '';
-  const cover_path = parts[3] || '';
+  const normalized = normalizeNowPlayingPayload(payload);
 
   return {
-    title,
-    artist,
-    displayText: `${title} - ${artist}`,
-    isLive: station?.live?.is_live === true,
+    title: normalized.title || 'Unknown title',
+    artist: normalized.artist || 'Unknown Artist',
+    displayText: normalized.text || `${normalized.title} - ${normalized.artist}`,
+    isLive: normalized.hasLiveTrack,
     stationName: String(station?.station?.name || '').trim(),
     streamUrl: String(station?.station?.listen_url || RADIO_AUDIO_URL).trim() || RADIO_AUDIO_URL,
-    artworkUrl: String(song?.art || '').trim()
+    artworkUrl: normalized.imageUrl
   };
 }
 

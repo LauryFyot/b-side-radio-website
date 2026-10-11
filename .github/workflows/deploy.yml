@@ -69,6 +69,7 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_SUPABASE_MEDIA_BUCKET: ${{ secrets.VITE_SUPABASE_MEDIA_BUCKET }}
           VITE_R2_UPLOAD_URL: ${{ vars.VITE_R2_UPLOAD_URL }}
+          VITE_RADIO_API_BASE_URL: https://b-side-radio-website.vercel.app/api/radio/legacy
         run: |
           npm ci
           npm run build
