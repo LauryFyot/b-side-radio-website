@@ -1,0 +1,333 @@
+import eddy from "@/assets/team-eddy.jpeg";
+import bart from "@/assets/team-bart.jpg";
+import scryll from "@/assets/team-scryll.png";
+import knocxx from "@/assets/team-theknocxx.png";
+
+/**
+ * Flux live de la radio. Remplacer par l'URL Icecast/AzuraCast de B Side Radio.
+ */
+export const STREAM_URL = "https://stream.b-side-radio.com/radio.mp3";
+
+export type NowPlaying = {
+  title: string;
+  artist: string;
+  original: string;
+  buyUrl: string;
+  comment?: string;
+  hasLiveTrack?: boolean;
+  imageUrl?: string;
+  text?: string;
+  traxsourceId?: string | number;
+  stationId?: number;
+};
+
+export const nowPlaying: NowPlaying = {
+  title: "Billie Jean (B Side Rework)",
+  artist: "Michael Jackson x Purple Disco Machine",
+  original: "Original : Michael Jackson — Billie Jean (1982)",
+  buyUrl: "https://www.beatport.com/search?q=purple%20disco%20machine",
+};
+
+export const nextUp = {
+  title: "Rhythm Is A Mashup",
+  artist: "Snap! x Dom Dolla",
+};
+
+export type Show = {
+  name: string;
+  host: string;
+  start: string;
+  end: string;
+  blurb: string;
+  blurbEn: string;
+  coverUrl?: string;
+  dayOfWeek?: number;
+};
+
+export const schedule: Show[] = [
+  {
+    name: "Wake Up",
+    host: "DJ Eddy",
+    start: "07:00",
+    end: "10:00",
+    blurb: "Reveil en douceur : nu-disco, edits soul et mashups pop pour lancer la journee.",
+    blurbEn: "A gentle wake-up: nu-disco, soul edits and pop mashups to kick off the day.",
+  },
+  {
+    name: "Day Side",
+    host: "Auto DJ",
+    start: "10:00",
+    end: "17:00",
+    blurb: "Rotation non-stop, sans pub : les meilleurs remixes des annees 80 a aujourd'hui.",
+    blurbEn: "Non-stop, ad-free rotation: the best remixes from the 80s to today.",
+  },
+  {
+    name: "Drive Time",
+    host: "DJ Bart",
+    start: "17:00",
+    end: "20:00",
+    blurb: "Le retour du taf en mode funky house, mashups efficaces et gros basslines.",
+    blurbEn: "The commute home in funky house mode: punchy mashups and fat basslines.",
+  },
+  {
+    name: "Klub Time",
+    host: "DJ LeCyr",
+    start: "20:00",
+    end: "23:00",
+    blurb: "Le club a la maison : house, tech-house et remixes exclusifs mixes en live.",
+    blurbEn: "The club at home: house, tech-house and exclusive remixes mixed live.",
+  },
+  {
+    name: "After Hours",
+    host: "B Side Bot",
+    start: "23:00",
+    end: "07:00",
+    blurb: "Deep, downtempo et B-sides oubliees pour finir la nuit.",
+    blurbEn: "Deep, downtempo and forgotten B-sides to close out the night.",
+  },
+];
+
+export type Vinyl = {
+  side: string;
+  title: string;
+  artist: string;
+  year: string;
+  labelColor: string;
+  remixedBy: string;
+  imageUrl?: string;
+  buyUrl?: string;
+};
+
+export type DaySchedule = { day: string; dayEn: string; shows: Show[] };
+
+const weekend: Show[] = [
+  {
+    name: "Slow Wake",
+    host: "DJ Eddy",
+    start: "09:00",
+    end: "12:00",
+    blurb: "Reveil tardif : soul edits, disco douce et B-sides pour le brunch.",
+    blurbEn: "Late wake-up: soul edits, mellow disco and B-sides for brunch.",
+  },
+  {
+    name: "Day Side",
+    host: "Auto DJ",
+    start: "12:00",
+    end: "18:00",
+    blurb: "Rotation non-stop, sans pub : les meilleurs remixes des annees 80 a aujourd'hui.",
+    blurbEn: "Non-stop, ad-free rotation: the best remixes from the 80s to today.",
+  },
+  {
+    name: "Klub Time Live",
+    host: "DJ LeCyr",
+    start: "18:00",
+    end: "23:00",
+    blurb: "Session live etendue : house, tech-house et exclus mixees en direct.",
+    blurbEn: "Extended live session: house, tech-house and exclusives mixed on air.",
+  },
+  {
+    name: "After Hours",
+    host: "B Side Bot",
+    start: "23:00",
+    end: "09:00",
+    blurb: "Deep, downtempo et B-sides oubliees pour finir la nuit.",
+    blurbEn: "Deep, downtempo and forgotten B-sides to close out the night.",
+  },
+];
+
+export const weekSchedule: DaySchedule[] = [
+  { day: "Lundi", dayEn: "Monday", shows: schedule },
+  { day: "Mardi", dayEn: "Tuesday", shows: schedule },
+  { day: "Mercredi", dayEn: "Wednesday", shows: schedule },
+  { day: "Jeudi", dayEn: "Thursday", shows: schedule },
+  {
+    day: "Vendredi",
+    dayEn: "Friday",
+    shows: [
+      ...schedule.slice(0, 4),
+      {
+        name: "Friday Funky Session",
+        host: "DJ Eddy",
+        start: "23:00",
+        end: "07:00",
+        blurb: "Le mix session du vendredi : funky house et disco jusqu'au bout de la nuit.",
+        blurbEn: "Friday's mix session: funky house and disco until the night is over.",
+      },
+    ],
+  },
+  { day: "Samedi", dayEn: "Saturday", shows: weekend },
+  {
+    day: "Dimanche",
+    dayEn: "Sunday",
+    shows: [
+      ...weekend.slice(0, 2),
+      {
+        name: "Sunday B Side Session",
+        host: "DJ Bart",
+        start: "18:00",
+        end: "23:00",
+        blurb: "Mashups et edits pour cloturer la semaine en douceur.",
+        blurbEn: "Mashups and edits to wind the week down gently.",
+      },
+      weekend[3]!,
+    ],
+  },
+];
+
+export const vinyls: Vinyl[] = [
+  { side: "A1", title: "Le Freak", artist: "Chic", year: "1978", labelColor: "#FF0000", remixedBy: "Dimitri From Paris", buyUrl: "https://www.beatport.com/search?q=le%20freak%20dimitri%20from%20paris" },
+  { side: "A2", title: "Blue Monday", artist: "New Order", year: "1983", labelColor: "#B65151", remixedBy: "Vitalic", buyUrl: "https://www.beatport.com/search?q=blue%20monday%20vitalic" },
+  { side: "A3", title: "Around The World", artist: "Daft Punk", year: "1997", labelColor: "#F2F2F2", remixedBy: "Folamour", buyUrl: "https://www.beatport.com/search?q=around%20the%20world%20folamour" },
+  { side: "A4", title: "Show Me Love", artist: "Robin S", year: "1993", labelColor: "#FF0000", remixedBy: "DJ Eddy", buyUrl: "https://www.beatport.com/search?q=show%20me%20love%20dj%20eddy" },
+  { side: "A5", title: "Groove Is In The Heart", artist: "Deee-Lite", year: "1990", labelColor: "#B65151", remixedBy: "Purple Disco Machine", buyUrl: "https://www.beatport.com/search?q=groove%20is%20in%20the%20heart%20purple%20disco%20machine" },
+  { side: "B1", title: "Music Sounds Better", artist: "Stardust", year: "1998", labelColor: "#F2F2F2", remixedBy: "DJ Bart", buyUrl: "https://www.beatport.com/search?q=music%20sounds%20better%20dj%20bart" },
+  { side: "B2", title: "I Feel Love", artist: "Donna Summer", year: "1977", labelColor: "#FF0000", remixedBy: "Roisin Murphy", buyUrl: "https://www.beatport.com/search?q=i%20feel%20love%20roisin%20murphy" },
+  { side: "B3", title: "Give Me The Night", artist: "George Benson", year: "1980", labelColor: "#B65151", remixedBy: "Yuksek", buyUrl: "https://www.beatport.com/search?q=give%20me%20the%20night%20yuksek" },
+  { side: "B4", title: "Ain't Nobody", artist: "Chaka Khan", year: "1983", labelColor: "#F2F2F2", remixedBy: "DJ LeCyr", buyUrl: "https://www.beatport.com/search?q=ain%27t%20nobody%20dj%20lecyr" },
+  { side: "B5", title: "Insomnia", artist: "Faithless", year: "1995", labelColor: "#FF0000", remixedBy: "Mount Kimbie", buyUrl: "https://www.beatport.com/search?q=insomnia%20mount%20kimbie" },
+];
+
+export type MixSession = {
+  title: string;
+  artist: string;
+  duration: string;
+  dj: string;
+  src: string;
+  buyUrl: string;
+};
+
+export const mixSessions: MixSession[] = [
+  {
+    title: "BSR Selection #1",
+    artist: "byEddy Edit",
+    duration: "6:12",
+    dj: "DJ Eddy",
+    src: "http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3",
+    buyUrl: "https://www.beatport.com/search?q=edit",
+  },
+  {
+    title: "BSR Selection #2",
+    artist: "byEddy Edit",
+    duration: "5:44",
+    dj: "DJ Eddy",
+    src: "http://byeddy.free.fr/MIXES/BSR_byeddy_2.mp3",
+    buyUrl: "https://www.beatport.com/search?q=edit",
+  },
+  {
+    title: "Funky House Cut",
+    artist: "DJ Bart",
+    duration: "7:03",
+    dj: "DJ Bart",
+    src: "http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3",
+    buyUrl: "https://www.beatport.com/search?q=funky+house",
+  },
+  {
+    title: "Late Night Cut",
+    artist: "DJ Bart",
+    duration: "6:37",
+    dj: "DJ Bart",
+    src: "http://byeddy.free.fr/MIXES/BSR_djbart_2.mp3",
+    buyUrl: "https://www.beatport.com/search?q=funky+house",
+  },
+  {
+    title: "Klub Time Weapon",
+    artist: "DJ LeCyr",
+    duration: "5:58",
+    dj: "DJ LeCyr",
+    src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3",
+    buyUrl: "https://www.beatport.com/search?q=tech+house",
+  },
+  {
+    title: "B Side Closer",
+    artist: "DJ LeCyr",
+    duration: "8:21",
+    dj: "DJ LeCyr",
+    src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_2.mp3",
+    buyUrl: "https://www.beatport.com/search?q=tech+house",
+  },
+];
+
+export const replays = [
+  {
+    name: "Friday Funky Session",
+    dj: "DJ Eddy",
+    length: "62 min",
+    style: "Funky House / Disco",
+    src: "http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3",
+  },
+  {
+    name: "Saturday Klub Session",
+    dj: "DJ Bart",
+    length: "74 min",
+    style: "House / Mashups",
+    src: "http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3",
+  },
+  {
+    name: "Sunday B Side Session",
+    dj: "DJ LeCyr",
+    length: "58 min",
+    style: "Tech House / Edits",
+    src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3",
+  },
+];
+
+export const team = [
+  {
+    name: "Eddy",
+    role: "Fondateur b.side.radio.com",
+    roleEn: "Founder of b.side.radio.com",
+    image: eddy,
+    bio: "Le beatmatching pour religion / digger de sons",
+    bioEn: "Beatmatching is my religion / Sound digger",
+  },
+  {
+    name: "DJ Bart",
+    role: "DJ / Producteur",
+    roleEn: "DJ / Producer",
+    image: bart,
+    bio: "La FunkyHouse en Vibe !",
+    bioEn: "FunkyHouse Vibe!",
+  },
+  {
+    name: "DJ SCRYLL",
+    role: "DJ / Producteur",
+    roleEn: "DJ / Producer",
+    image: scryll,
+    bio: "Be HAPPY !!",
+    bioEn: "Be HAPPY !!",
+  },
+  {
+    name: "The KNOCXX",
+    role: "Electrisez vos soirées..",
+    roleEn: "Spice up your evenings...",
+    image: knocxx,
+    bio: "Pure TechHouse Connection !!",
+    bioEn: "Pure TechHouse Connection !!",
+  }
+];
+
+export const videos = [
+  {
+    id: "1-eYunUhSpo",
+    title: "B Side Session — Rooftop Paris",
+    titleEn: "B Side Session — Rooftop Paris",
+  },
+  {
+    id: "FcQvsQstZEA",
+    title: "Mashup Lab — Behind The Decks",
+    titleEn: "Mashup Lab — Behind The Decks",
+  },
+  {
+    id: "UuzImt46v2Y",
+    title: "Klub Time — Live Set Extrait",
+    titleEn: "Klub Time — Live Set Excerpt",
+  },
+];
+
+export const socials = [
+  { name: "Instagram", handle: "@bside.radio", url: "https://www.instagram.com/bside.radio/" },
+  { name: "Facebook", handle: "b.side.radio.byeddy", url: "https://www.facebook.com/b.side.radio.byeddy/" },
+  // Twitter / X: temporarily disabled, no active account for now. Restore when one exists.
+  // { name: "Twitter / X", handle: "@radio_bside", url: "https://twitter.com/radio_bside" },
+  { name: "Mail", handle: "b.side.radio.com@gmail.com", url: "mailto:b.side.radio.com@gmail.com" },
+];

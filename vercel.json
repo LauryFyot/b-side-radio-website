@@ -1,0 +1,26 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/radio/azuracast/:path*",
+      "destination": "http://51.91.124.240/:path*"
+    },
+    {
+      "source": "/api/radio/legacy/:path*",
+      "destination": "http://91.134.242.174:8000/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/radio/azuracast/:path*",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/api/radio/legacy/:path*",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}

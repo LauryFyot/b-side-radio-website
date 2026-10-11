@@ -1,0 +1,12 @@
+{
+  "name": "bside-r2-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test r2-upload-worker.test.js",
+    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run --outdir dist"
+  },
+  "dependencies": { "aws4fetch": "^1.0.20" },
+  "devDependencies": { "wrangler": "^4.0.0" }
+}

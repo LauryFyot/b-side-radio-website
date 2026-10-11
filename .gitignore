@@ -1,2 +1,13 @@
 .DS_Store
 .vscode/
+supabase-config.php
+admin-config.php
+config/*.php
+!config/*.example.php
+.env
+.env.*
+!.env.example
+node_modules/
+**/node_modules/
+apps/site/.output/
+apps/site/.wrangler/

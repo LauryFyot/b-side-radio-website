@@ -1,0 +1,367 @@
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Titi</h1><p class="date-comments">14 decembre 2019 à 20h07</p><p class="comment-comments">Magnifaiiiique ce nouveau siteBises</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Titi</h1><p class="date-comments">30 decembre 2019 à 22h55</p><p class="comment-comments">Un p’tit coucou</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lorinsk</h1><p class="date-comments">1 fevrier 2020 à 23h50</p><p class="comment-comments">toujours aussi bon le son !!!!!les DJs Bart et By-Eddy assurent comme dabje kiffffJe vous adorelolo</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">BesTof Music by djTof</h1><p class="date-comments">23 avril 2021 à 11h55</p><p class="comment-comments">Hey les copains. Ca zic comme d'hab. Refonte du site top. Ne changez rien, vous êtes au top.A bientôt sur Gre, je m'emploie à vous faire connaitre. Sur mon site, https://besttofmusic.fr/je vous ai mis un lien clicable avec votre logo. Bise. Musicalement Vôtre. DjTof</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Chouchou</h1><p class="date-comments">24 avril 2021 à 10h48</p><p class="comment-comments">Toujours un regal a vous écouter, que du bon son !!Continuez,et changez rien. Enjoy !!!Bisous a toute la Team.Chouchou91 </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">27 avril 2021 à 23h08</p><p class="comment-comments">Je suis fan des mix que vou passezIl en faudrait plus cest original et bien mixe encore plus svpContinuez</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Mehdi </h1><p class="date-comments">28 avril 2021 à 0h02</p><p class="comment-comments">Merci Eddy de m'avoir fait connaître cette belle radio. Au TOP c'est tout ce que j'aime. Je sais ce que je vais écouter dans la voiture maintenant 😉Continuez comme ça 👍</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart </h1><p class="date-comments">29 avril 2021 à 13h12</p><p class="comment-comments">Merci pour c’est message , cela fait du bien de savoir que ce que l’on fait vous plaîtEt on vous donne rdv samedi soir </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Sach</h1><p class="date-comments">30 avril 2021 à 19h19</p><p class="comment-comments">On dirait un direct de l échappatoire Cetait le bon vieux temps </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Byeddy</h1><p class="date-comments">30 avril 2021 à 19h20</p><p class="comment-comments">Oui et donna summer qui arrive</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">30 avril 2021 à 23h19</p><p class="comment-comments">Salut on pourrait avoir les titres qui passent  ya des trucs vraiment bon ya que ici quils passentLes mix trop fortCa continu A bientôt </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Byeddy</h1><p class="date-comments">01 mai 2021 à 14h23</p><p class="comment-comments">Salut Lan, Pour avoir les noms des titres, il suffit de noter l'heure du passage et la date.Par contre, ne pas attendre plus d'une journée  car j'efface les playlists tous les 2 j..À bientôt  et bonne écoute sur B side.radio</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">03 mai 2021 à 19h18</p><p class="comment-comments">SalutCtki la reprise de jocelyn brown à 19h15Supetbe</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Byeddy</h1><p class="date-comments">03 mai 2021 à 21h41</p><p class="comment-comments">Salut lanLe titre à 19h15 c'était Beverlei brown...gonna get over youEthan wood 2021 rmxVoili voilouMerci de nous suivre</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">04 mai 2021 à 21h39</p><p class="comment-comments">Salut onpeux avoir le tracklist du mix stp. Si je peux trouver les titres.Cest du mix pro j'adore</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">04 mai 2021 à 22h24</p><p class="comment-comments">Bonsoir Lan, Ravi de voir que tu apprécie nos mixes. Pour la tracklist de ce soir, je te l'envoie sur fb.Reste bien branché(e) T'es au top!...</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">15 mai 2021 à 18h46</p><p class="comment-comments">Ya bien les mix ce soirCest pas annonce J'espère </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">15 mai 2021 à 21h03</p><p class="comment-comments">Bonsoir lanOui, comme tous les samedis ...Pas eu le temps de publier l'annonce.Bonne écoute sur bside radioEddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">30 mai 2021 à 0h52</p><p class="comment-comments">Salut tout le mobdeJ'ecoute depuis 19h. Les mix dechirent total. Plein les oreilles et cest oas fini.Continuez à nous regaler.Arnaud du sud</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">05 juin 2021 à 22h26</p><p class="comment-comments">Hello Mix enormes depuis 19h.Je decourve la jackin ce soirC'est vraiment du bon son.J'attends aussi les mix funkyvhouse ce soir.Vous nous regalez Bon mixArnaud du sud</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart </h1><p class="date-comments">13 juin 2021 à 17h24</p><p class="comment-comments">Bonjour Arnaud L’équipe de B-bside est  ravi que tu passes de très bonnes soirées à nous écouter Hésite pas à parler de nous à ton entourageBon vine à toi B-side-radio</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart </h1><p class="date-comments">13 juin 2021 à 21h53</p><p class="comment-comments">Bonjour Arnaud L’équipe de B-bside est  ravi que tu passes de très bonnes soirées à nous écouter Hésite pas à parler de nous à ton entourageBon vine à toi B-side-radio</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">17 juin 2021 à 19h06</p><p class="comment-comments">Y a que des jingles depuis 19h00...</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">17 juin 2021 à 19h09</p><p class="comment-comments">Salut LanHé oui, les mystères de l'informatique...Ça y est, c'est reparti. On retrouve  la nouvelle playlist de la semaine  by djBart dès mardi car lundi.....fête de la musique  oblige, que du don dancefloor dès 17h...A bientôt ByEddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">09 juillet 2021 à 20h31</p><p class="comment-comments">Le son est bizarre mais les nix sont très bon je voudrais les titres demain. Kif</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">09 juillet 2021 à 20h34</p><p class="comment-comments">Bien les remix de funkLes annees 80 en version2021 très tres bon. Ca nous changeContinuez...</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">10 juillet 2021 à 23h23</p><p class="comment-comments">Les gars vous nous faites une soirée hyper variée C'est au top 3 styles différents et c'est pas finiJe reste jusqu'à la fermetureArnaud du sud</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">10 juillet 2021 à 23h47</p><p class="comment-comments">Les gars je trouve pas vos versionsMichael Jackson Kool and the gang et maintenant Yazoo Dinguerie</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">30 juillet 2021 à 23h39</p><p class="comment-comments">La vache le remix de club tropicana</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">04 août 2021 à 19h01</p><p class="comment-comments">Je voudrais plus de mix finkhouseCette semaine yen avait plein le soirEn plus si quelqu'un a une methode ppur enregistré coolDes mixs </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">04 août 2021 à 20h57</p><p class="comment-comments">Bonsoir LanJe prepare des playlists funkyhouse des années 80 pour vendredi...Real funk mais tjs avec le son 2021..Alors à très vite et merci d'être là...Eddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud</h1><p class="date-comments">06 août 2021 à 22h36</p><p class="comment-comments">Salut les garsQuelle pêche la prog ce soirDu bln gros son La suite</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Chouchou</h1><p class="date-comments">07 août 2021 à 19h06</p><p class="comment-comments">Merci pour cette hommage à Paul Jonhson, j'ai adoré. Ca rappelle des bons souvenirs. RIP and Thank you mister DJ🙏! C'était 🔊🔊😍😍</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">07 août 2021 à 21h20</p><p class="comment-comments">Hello chouchouDj LeCyr prend un grand plaisir à lui rendre hommage par ses mixes.Mercii à lui erMerci à toi ppur ton soutien....Reste branché 💥💕👌</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">04 septembre 2021 à 22h32</p><p class="comment-comments">Salut les gars du bon gros son ce soir La rentrée est bien la la suite vite</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Le couz du Nord</h1><p class="date-comments">18 septembre 2021 à 20h33</p><p class="comment-comments">Merci pour l'envois, continuez comme ça vous êtes super</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from Bside </h1><p class="date-comments">18 septembre 2021 à 22h19</p><p class="comment-comments">ByEddy est en mega forme 👍👍</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">le velizien</h1><p class="date-comments">18 septembre 2021 à 23h44</p><p class="comment-comments">le son deboite grave merci bside </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">le velizien</h1><p class="date-comments">18 septembre 2021 à 23h45</p><p class="comment-comments">le son est au top merci bside et a dj bart</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">dj bart from bside </h1><p class="date-comments">18 septembre 2021 à 23h47</p><p class="comment-comments">merci aux 300 auditeur connecter ce soir  </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from Bside </h1><p class="date-comments">18 septembre 2021 à 23h59</p><p class="comment-comments">ByEddy est en mega forme 👍👍</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">24 septembre 2021 à 23h22</p><p class="comment-comments">Ce soir cest soirée funk ça roule comme jamais.J'adore </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">08 octobre 2021 à 23h41</p><p class="comment-comments">Salut on edt 5 ce soir a une bonne table a la maison on ecoute ts mixDamien demande sur quoi tu mix si cest du pionneerEn tous cas ca booooooom</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from Bside radio</h1><p class="date-comments">15 octobre 2021 à 9h44</p><p class="comment-comments">Bonjour Lan92Pour Rémi ère à ta question. Oui je mix sur des cdj 900 Merci de nous écoutez avec tes amis </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from Bside radio</h1><p class="date-comments">15 octobre 2021 à 9h51</p><p class="comment-comments">Hello les bsiders Nous avons un page FB donc hésiter pas à nous laisser vos encouragement et surtout à partager notre page pour nous faire connaître Merci d’avance à vous tous A samedi soir  😘</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from Bside radio</h1><p class="date-comments">15 octobre 2021 à 9h56</p><p class="comment-comments">Hello les bsiders Nous avons un page FB donc hésiter pas à nous laisser vos encouragement et surtout à partager notre page pour nous faire connaître Merci d’avance à vous tous A samedi soir  😘</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Le Velizien </h1><p class="date-comments">16 octobre 2021 à 22h47</p><p class="comment-comments">Comme dab le son tape fort Merci Bside Merci DJ BART</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Coralie</h1><p class="date-comments">06 novembre 2021 à 22h26</p><p class="comment-comments">Qui est ce dj en ce moment ? 22h25 J adoreeeeeeee</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Coralie</h1><p class="date-comments">06 novembre 2021 à 22h26</p><p class="comment-comments">Qui est ce dj en ce moment ? 22h25 J adoreeeeeeee</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Coralie</h1><p class="date-comments">06 novembre 2021 à 22h27</p><p class="comment-comments">Qui est ce dj en ce moment ? 22h25 J adoreeeeeeee</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from Bside </h1><p class="date-comments">09 novembre 2021 à 17h23</p><p class="comment-comments">Bonsoir coralie Il s’appelle DJ SCRYLL </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">17 novembre 2021 à 19h36</p><p class="comment-comments">Salut Ya que des jingle depuis 19hCa y est c'est revrnu en musique..Funk mix en plus🙂</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Coralie</h1><p class="date-comments">11 décembre 2021 à 23h45</p><p class="comment-comments">De la bombe 💣💣💣💣💣💣</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from bsr </h1><p class="date-comments">12 décembre 2021 à 0h38</p><p class="comment-comments">Merci coralie De la part de l’équipe de BSR </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Bertrand paris 8</h1><p class="date-comments">31 décembre 2021 à 14h27</p><p class="comment-comments">Très bonne radio sans blabla ni pub.je mets dans le magasin et cet après-midi va bien passer.La dance bien mixée super!Bon reveillon à tous</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">31 décembre 2021 à 14h29</p><p class="comment-comments">Alors c'est quoi ce stonesTrop cool on oeux le trouver oùEnvoyez moi </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Louisa</h1><p class="date-comments">31 décembre 2021 à 14h49</p><p class="comment-comments">Bonjour Mon fils m'a dit cette radio c'est ta musique.Effectivement,que des tubes de mes meilleures années.je nr connais pas ces versions là mais c'est super à écouter.Je vais la laisser avec mes invités jusqu'à l'aube.Merci mon fils ;-)</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Lan 92</h1><p class="date-comments">31 décembre 2021 à 15h15</p><p class="comment-comments">Salut la team ya pas les jingle </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">31 décembre 2021 à 15h55</p><p class="comment-comments">Encore un stones de malade cool</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">31 décembre 2021 à 16h24</p><p class="comment-comments">On dirait que ce mix est déjà passé</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">31 décembre 2021 à 16h24</p><p class="comment-comments">On dirait que ce mix est déjà passé</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">31 décembre 2021 à 18h24</p><p class="comment-comments">Bonsoir Bertrand du 8eme.J'espère que les ventes ont suivi pour cette dernière journée de 2021.Merci d'etre avec nous.Bon reveillon..Eddy </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">31 décembre 2021 à 18h26</p><p class="comment-comments">@ Arnaud...Bonsoir, oui les Rolling Stones en rmx c sympa...Y' a des bugs informatiques qui ont fait que ce mix passe 2 fois...À 18h , on part en funk et aprèsDj lecyr...Bonne soirée et à l'année prochaine.Eddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">31 décembre 2021 à 18h28</p><p class="comment-comments">@louisaBonsoir Louisa,Merci de nous écouter et d'apprecier...Alors, jusqu'au bout dd la nuit...À bientôt.Eddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio</h1><p class="date-comments">31 décembre 2021 à 18h30</p><p class="comment-comments">@Lan du 92 Oui, les jingles c'est surtout les vendredis et samedis .Aller, quelques-uns...Merci d'etre làEddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj BART @ bside radio</h1><p class="date-comments">31 décembre 2021 à 23h41</p><p class="comment-comments">Vos sms font hyper plaizzzBon réveillon à tous Encore merci de nous écouter </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">12 mars 2022 à 0h59</p><p class="comment-comments">Superbe soirée totale funk je suis pas couchéQue du très bon son ce soir belle nuit tout le monde</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Le couz du Nord</h1><p class="date-comments">17 juin 2022 à 20h44</p><p class="comment-comments">C'est toujours un plaisir de vous écouter avec cette musique qui vous envoûte jusqu'au bout de la nuit le week-end. Bonne continuation à tous avec vos mix d'enfer.</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Dj bart from bsr</h1><p class="date-comments">27 juin 2022 à 16h25</p><p class="comment-comments">Salut le couz Un grand merci pour ton sms Kiss</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">14 octobre 2022 à 17h27</p><p class="comment-comments">Hi le mix de 17h funky dechireLe top</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">ByEddy@B.side radio </h1><p class="date-comments">15 octobre 2022 à 0h30</p><p class="comment-comments">Bonsoir Arnaud,  merci d´avoir apprécié le funky mix passé  cet am.On essaie d´être pointus sur nos mixes....A très  bien tôt Enjoy BSR</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">MAXENCE</h1><p class="date-comments">11 novembre 2022 à 16h29</p><p class="comment-comments">c'est vous qui faites ces remix de street life merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">18 novembre 2022 à 19h14</p><p class="comment-comments">Bonjour Maxence, Dsl pour le retard à l'allumage.. Pas celui-là. C'est AN:RO - street lifeMerci pour ton écoute attentive.. Eddy</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Le bar 83</h1><p class="date-comments">06 janvier 2023 à 22h58</p><p class="comment-comments">Salut onpeut avoir la playlist de 19 ey celle de maintenant merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">dj bart </h1><p class="date-comments">23 janvier 2023 à 18h34</p><p class="comment-comments">le bar 83 tu ne veux pas les mixes directement ?</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Did  </h1><p class="date-comments">03 mars 2023 à 21h03</p><p class="comment-comments">Avec cette radio on passe de superbes moments on en ressort boosté .....</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">eddy B side radio</h1><p class="date-comments">03 mars 2023 à 21h05</p><p class="comment-comments">C'est unique et c'est sur b side radio ...</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Did</h1><p class="date-comments">04 mars 2023 à 9h37</p><p class="comment-comments">Comme je dis tous les jours  BSIDE RADIO   La radio qu il me faut ....Osez l écoute...</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Alain </h1><p class="date-comments">08 mars 2023 à 7h10</p><p class="comment-comments">Merci pour cette bonne musique </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">kevin </h1><p class="date-comments">08 mars 2023 à 7h15</p><p class="comment-comments">J aime bien tous vos remix Bravo </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">08 mars 2023 à 8h05</p><p class="comment-comments">Merci Kevin & Alain pour votre soutien...Nouvelle programmation aujourd´hui..profitez....</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud </h1><p class="date-comments">11 mars 2023 à 0h51</p><p class="comment-comments">Tous ses mix d´enfer ce soir je dois coupé et merci eddy pour le mix parfait dema playlist jen ferais unexautre bientôt maintenant sue jecsai quoi mettre à bientôt </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud</h1><p class="date-comments">25 mars 2023 à 20h02</p><p class="comment-comments">c'est bof ce mix du nouveau c'est pas notre music    </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Loïc</h1><p class="date-comments">25 mars 2023 à 20h55</p><p class="comment-comments">Techno house à 19 h ????🤔🤔</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">dj bart from bside radio</h1><p class="date-comments">26 mars 2023 à 11h16</p><p class="comment-comments">bonjour arnaud et loïc nous prenons note de votre marque, nous voulions faire un essai avec un nouveau dj qui n’a pas l’air de vous plaireEncore merci pour vos remarquesMerci de nous écouter😘</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Bertrand paris 8</h1><p class="date-comments">01 avril 2023 à 19h45</p><p class="comment-comments">bonsoir, là je peux pas mettre dans le magasin. Dommage, je ferme à 20h Bonne soirée a tous.</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud</h1><p class="date-comments">08 avril 2023 à 20h01</p><p class="comment-comments">salut tout le monde Vivement les autres dj c 'est parti </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">jean marc </h1><p class="date-comments">29 avril 2023 à 18h24</p><p class="comment-comments">cool dj bart est de retrour  </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Alain</h1><p class="date-comments">05 mai 2023 à 19h39</p><p class="comment-comments">Salut ile st possible d'avoir la liste des titres de 19h  des bonnes nouveautes  merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Alain</h1><p class="date-comments">05 mai 2023 à 19h48</p><p class="comment-comments">Salut ile st possible d'avoir la liste des titres de 19h  des bonnes nouveautes  merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Alain</h1><p class="date-comments">05 mai 2023 à 23h50</p><p class="comment-comments">Celui de 20h aussi et celui de 21h qui tape aussi   merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Alain</h1><p class="date-comments">05 mai 2023 à 23h50</p><p class="comment-comments">Celui de 20h aussi et celui de 21h qui tape aussi   merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">06 mai 2023 à 15h25</p><p class="comment-comments">Salut Alain. Merci d'être tjs là. Pour les playlists, passe en mp sur le mail de la radio. Tu auras même droit aux titres à écouter chez toi !!  A très vite. </p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Bertrand</h1><p class="date-comments">12 mai 2023 à 19h20</p><p class="comment-comments">bonsoir yeke avec boris bresja fallait oser c'est fait impecc</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud</h1><p class="date-comments">12 mai 2023 à 23h11</p><p class="comment-comments">salut je shazam les morceaux mais il les trouve pas tous   ca viens d'ou tous ca  c ce serait bien  d'avoir les playlist parceque les mix sont top  merci</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">13 mai 2023 à 16h38</p><p class="comment-comments">Salut Arnaud. Certains titres sont envoyés par la prod donc peut-être un peu en avance sur la mise à disposition mais ça devrait suivre. Sinon, passe en mail et je t'envoie les playlists...Merci d'être toujours là.</p></div></div>
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">dj bart from bsr </h1><p class="date-comments">25 octobre 2023 à 17h21</p><p class="comment-comments">hello les bsiders pas d’inquiétude nous allons revenir très bientôt. Nous avons un gros souci technique que nous sommes en train de régler.</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Le couz du nord</h1><p class="date-comments">15 novembre 2023 à 18h56</p><p class="comment-comments">Quel plaisir de vous écouter à nouveau. Merci à toute l'équipe. </p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Did</h1><p class="date-comments">15 novembre 2023 à 20h36</p><p class="comment-comments">Cette web est vraiment top . Beaucoup de nouveautés remixes . Enfin quelque chose qui tient la route.. Merci et bravo à toute l équipe </p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">16 novembre 2023 à 0h06</p><p class="comment-comments">Salut tout le monde, La radio repart ce jeudi 15 novembre avec 250 nouveautés en rotations toute la semaine et les sessions mixes: les mardis 20h/1h et les samedis 19/3h, sans oublier le replay le dimanche de 14h à 20h. Bonne écoute et merci d'être toujours là. 
+ </p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">16 novembre 2023 à 0h08</p><p class="comment-comments">J'invite par la même occasion l'auditeur de Lille à venir ici nous faire un petit coucou !</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">16 novembre 2023 à 0h08</p><p class="comment-comments">J'invite par la même occasion l'auditeur de Lille à venir ici nous faire un petit coucou !</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Florence</h1><p class="date-comments">18 novembre 2023 à 16h00</p><p class="comment-comments">je decouvre votre radio par ma belle soeur qui est venue sur votre domaine. Elle a dit que c'etait pour moi. Effectivement j'ai ecoute le s mix d'hier soir. C'est l a 1ere fois que j'entend autant de chansons en 1h. c'est vraiment en direct ?  Et est c'est genial d'entendre autant d'effets. Ce soir je recois et je vais mettre la radio. A ce soir! Flo</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Florence</h1><p class="date-comments">18 novembre 2023 à 16h00</p><p class="comment-comments">je decouvre votre radio par ma belle soeur qui est venue sur votre domaine. Elle a dit que c'etait pour moi. Effectivement j'ai ecoute le s mix d'hier soir. C'est l a 1ere fois que j'entend autant de chansons en 1h. c'est vraiment en direct ?  Et est c'est genial d'entendre autant d'effets. Ce soir je recois et je vais mettre la radio. A ce soir! Flo</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Did </h1><p class="date-comments">18 novembre 2023 à 21h55</p><p class="comment-comments">Je voulais remercier le Dj qui a mixer ce samedi 18 novenbre de 21 à 22h car j ai passé vraiment un agréable moment je vous souhaite de la réussite.....au plaisir de vous entendre a nouveau bye bye </p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Florence</h1><p class="date-comments">19 novembre 2023 à 10h28</p><p class="comment-comments">hier soir , on était 20 à danser jusqu'à 2h. C'était vraiment de la bonne musique .Efficace .Merci beaucoup. Au bureau pour la semaine prochaine. Bye Flo</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Florence</h1><p class="date-comments">19 novembre 2023 à 10h28</p><p class="comment-comments">hier soir , on était 20 à danser jusqu'à 2h. C'était vraiment de la bonne musique .Efficace .Merci beaucoup. Au bureau pour la semaine prochaine. Bye Flo</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_1.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">19 novembre 2023 à 18h39</p><p class="comment-comments">Bonsoir Flo, Merci pour ton soutien avec ce message très encourageant. On essais d'être bons et de nous démarquer des autres. Continue de nous suivre et nous raconter tes soirées. Bonne écoute sur B Side </p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_3.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">19 novembre 2023 à 18h41</p><p class="comment-comments">@ Did ... Merci Did, c'était Dj Le Cyr à 21h ce samedi. Ca lui a fait très plezzz. Continue d'écouter B Side.. Thk U</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_4.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Eddy b side radio</h1><p class="date-comments">19 novembre 2023 à 18h41</p><p class="comment-comments">@ Did ... Merci Did, c'était Dj Le Cyr à 21h ce samedi. Ca lui a fait très plezzz. Continue d'écouter B Side.. Thk U</p></div></div>
+
+
+
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Arnaud</h1><p class="date-comments">24 novembre 2023 à 23h50</p><p class="comment-comments">C'est quoi ce mix de malade depuis 23h Y'a 3 disuqes en même temps au moins. De dingue  Tuuurie</p></div></div>
+
+
+
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Did </h1><p class="date-comments">26 novembre 2023 à 17h07</p><p class="comment-comments">Dimanche 26/11 de 16h00 à 17h00  Merci  pour ce super moment .</p></div></div>
+
+
+
+<div class="comments-content"><div class="left"><img src="IMAGES\Icon_user_2.png" class="icon-user" width="70" height="70"></div><div class="right"><h1 class="name-comments">Did </h1><p class="date-comments">26 novembre 2023 à 19h03</p><p class="comment-comments">Dimanche 26/ 11  encore moi de 17h00 à 19h00 .   je devais quitté plus tôt la web et là…. tellement que tous  s’enchainent  avec des rythmes d’enfer je suis encore là ……ces Mix sont terribles et je vais même rester jusqu’ à 20h00 ….      Vraiment génial cette web radio … Bravo et Merci à toute l’équipe .  </p></div></div>
+
+
+
+
+
+
+

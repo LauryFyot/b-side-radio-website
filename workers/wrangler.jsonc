@@ -1,0 +1,10 @@
+{
+  "name": "bsidemediaworker",
+  "main": "r2-upload-worker.js",
+  "compatibility_date": "2026-10-10",
+  "keep_vars": true,
+  "r2_buckets": [
+    { "binding": "BSIDE_MEDIA", "bucket_name": "bside-media" }
+  ],
+  "triggers": { "crons": ["0 3 * * *"] }
+}

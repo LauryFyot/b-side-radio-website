@@ -1,0 +1,88 @@
+@import 'tailwindcss' source(none);
+@source './';
+
+:root {
+  --bg: #151115;
+  --shell: #f7f5f6;
+  --sidebar: #0f0b0d;
+  --ink: #161419;
+  --muted: #6f6a74;
+  --line: #e4dfe6;
+  --red: #DF2125;
+  --red-soft: #ffe7e9;
+  --chip: #ffffff;
+  --admin-section-title-size: 24px; /* Titres des parties */
+  --admin-section-title-weight: 700; /* Epaisseur des parties */
+  --admin-subsection-title-spacing: -0.02em;
+  --admin-section-kicker-size: 12px; /* Titres des kickers gris */
+  --admin-section-support-size: 14px;
+  --admin-section-support-line-height: 1.45;
+  --admin-section-kicker-gap: 6px;
+  --admin-section-support-gap: 8px;
+  --admin-section-content-gap: 16px;
+  --admin-field-text-size: 13px; /* Titres des textes */
+  --admin-card-title-size: 14px; /* Titres des cards */
+  --admin-overall-bg: #F7F5F4;
+  --admin-subsection-bg: #ffffff;
+  --admin-subsection-muted-bg: #F7F5F4;
+  --admin-radius: 24px;
+  --admin-shell-radius: 20px;
+  --admin-panel-padding: 24px;
+  --admin-panel-padding-mobile: 16px;
+  --admin-shows-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+}
+
+@theme inline {
+  --color-admin-bg: var(--bg);
+  --color-admin-shell: var(--shell);
+  --color-admin-sidebar: var(--sidebar);
+  --color-admin-ink: var(--ink);
+  --color-admin-muted: var(--muted);
+  --color-admin-line: var(--line);
+  --color-admin-red: var(--red);
+  --color-admin-red-soft: var(--red-soft);
+  --color-admin-subsection: var(--admin-subsection-bg);
+  --color-admin-subsection-muted: var(--admin-subsection-muted-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  color: var(--ink);
+  background: radial-gradient(1200px 550px at 10% -5%, #2a1f25 0%, var(--bg) 65%);
+}
+
+h1,
+h2,
+h3,
+button {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.tone-1 {
+  background: linear-gradient(135deg, #fc3737, #ea2121);
+}
+
+.tone-2 {
+  background: linear-gradient(135deg, #f7c3ca, #efadb6);
+  color: #3f3438;
+}
+
+.tone-3 {
+  background: linear-gradient(135deg, #4b4448, #343035);
+}
+
+.tone-4 {
+  background: linear-gradient(135deg, #b8483d, #9f3830);
+}
+

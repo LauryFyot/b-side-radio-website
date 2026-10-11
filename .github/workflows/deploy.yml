@@ -1,0 +1,273 @@
+name: Deploy OVH (SFTP)
+
+on:
+  push:
+    branches:
+      # - main # Desactive temporairement au profit de Vercel en production
+      - dev
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Resolve remote directory from branch
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "SITE_REMOTE_DIR=./" >> "$GITHUB_ENV"
+            echo "PUBLIC_URL=https://b-side-radio.com/" >> "$GITHUB_ENV"
+            echo "ADMIN_REMOTE_DIR=admin/" >> "$GITHUB_ENV"
+            echo "ADMIN_PUBLIC_URL=https://b-side-radio.com/admin/" >> "$GITHUB_ENV"
+            echo "SITE_ADMIN_URL=https://b-side-radio.com/admin/" >> "$GITHUB_ENV"
+          elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
+            echo "SITE_REMOTE_DIR=dev/" >> "$GITHUB_ENV"
+            echo "PUBLIC_URL=https://b-side-radio.com/dev/" >> "$GITHUB_ENV"
+            echo "ADMIN_REMOTE_DIR=dev/admin/" >> "$GITHUB_ENV"
+            echo "ADMIN_PUBLIC_URL=https://b-side-radio.com/dev/admin/" >> "$GITHUB_ENV"
+            echo "SITE_ADMIN_URL=https://b-side-radio.com/dev/admin/" >> "$GITHUB_ENV"
+          else
+            echo "Unsupported branch: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+      - name: Validate required secrets
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_R2_UPLOAD_URL: ${{ vars.VITE_R2_UPLOAD_URL }}
+        run: |
+          [ -n "$OVH_HOST" ] || { echo "Missing secret: OVH_HOST"; exit 1; }
+          [ -n "$OVH_USERNAME" ] || { echo "Missing secret: OVH_USERNAME"; exit 1; }
+          [ -n "$OVH_PASSWORD" ] || { echo "Missing secret: OVH_PASSWORD"; exit 1; }
+          [ -n "$VITE_SUPABASE_URL" ] || { echo "Missing secret: VITE_SUPABASE_URL"; exit 1; }
+          [ -n "$VITE_SUPABASE_ANON_KEY" ] || { echo "Missing secret: VITE_SUPABASE_ANON_KEY"; exit 1; }
+          [ -n "$VITE_R2_UPLOAD_URL" ] || { echo "Missing repository variable: VITE_R2_UPLOAD_URL"; exit 1; }
+          echo "Secrets are present."
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Build admin frontend
+        working-directory: apps/admin
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_MEDIA_BUCKET: ${{ secrets.VITE_SUPABASE_MEDIA_BUCKET }}
+          VITE_R2_UPLOAD_URL: ${{ vars.VITE_R2_UPLOAD_URL }}
+          VITE_RADIO_API_BASE_URL: https://b-side-radio-website.vercel.app/api/radio/legacy
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build site frontend (static OVH bundle)
+        working-directory: apps/site
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_ADMIN_URL: ${{ env.SITE_ADMIN_URL }}
+        run: |
+          npm ci
+          npm run build:static
+
+      - name: Test SFTP connection
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "set sftp:auto-confirm yes; set net:max-retries 1; set net:timeout 20; pwd; bye"
+
+      - name: Debug deploy context
+        run: |
+          echo "Branch: ${GITHUB_REF_NAME}"
+          echo "SITE_REMOTE_DIR=${SITE_REMOTE_DIR}"
+          echo "PUBLIC_URL=${PUBLIC_URL}"
+          echo "ADMIN_REMOTE_DIR=${ADMIN_REMOTE_DIR}"
+          echo "ADMIN_PUBLIC_URL=${ADMIN_PUBLIC_URL}"
+          echo "SITE_ADMIN_URL=${SITE_ADMIN_URL}"
+          lftp --version
+
+      - name: Preflight SFTP write test
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          TEST_FILE="ci-write-test-${GITHUB_RUN_ID}.txt"
+          echo "ci preflight" > "$TEST_FILE"
+
+          LFTP_PREFLIGHT=$(cat <<EOF
+          set sftp:auto-confirm yes
+          set cmd:fail-exit yes
+          set net:max-retries 1
+          set net:timeout 12
+          cd www/${ADMIN_REMOTE_DIR}
+          put $TEST_FILE
+          ls -l $TEST_FILE
+          rm $TEST_FILE
+          bye
+          EOF
+          )
+
+          echo "Running SFTP preflight write/delete check on www/${ADMIN_REMOTE_DIR}"
+          lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "$LFTP_PREFLIGHT"
+
+      - name: Deploy site files over SFTP
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          LFTP_SITE_CMDS=$(cat <<EOF
+          set sftp:auto-confirm yes
+          set cmd:fail-exit yes
+          set net:max-retries 5
+          set net:timeout 30
+          set mirror:set-permissions no
+          set xfer:use-temp-file false
+          cd www/${SITE_REMOTE_DIR}
+          mirror -R --verbose --delete --no-perms --parallel=1 --overwrite \
+            apps/site/dist-ftp/ ./
+          bye
+          EOF
+          )
+
+
+          for attempt in 1 2; do
+            echo "SFTP site deploy attempt ${attempt}/2"
+
+            if lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "$LFTP_SITE_CMDS"
+            then
+              echo "SFTP site deploy succeeded on attempt ${attempt}."
+              break
+            fi
+
+            if [ "$attempt" -eq 2 ]; then
+              echo "SFTP site deploy failed after 2 attempts."
+              exit 1
+            fi
+
+            echo "SFTP site deploy attempt ${attempt} failed, retrying..."
+          done
+
+      - name: Deploy admin files over SFTP
+        env:
+          OVH_HOST: ${{ secrets.OVH_HOST }}
+          OVH_USERNAME: ${{ secrets.OVH_USERNAME }}
+          OVH_PASSWORD: ${{ secrets.OVH_PASSWORD }}
+        run: |
+          LFTP_ADMIN_CMDS=$(cat <<EOF
+          set sftp:auto-confirm yes
+          set cmd:fail-exit yes
+          set net:max-retries 5
+          set net:timeout 30
+          set mirror:set-permissions no
+          set xfer:use-temp-file false
+          cd www/${ADMIN_REMOTE_DIR}
+          mirror -R --verbose --delete --no-perms --parallel=1 --overwrite \
+            apps/admin/dist/ ./
+          bye
+          EOF
+          )
+
+
+          for attempt in 1 2; do
+            echo "SFTP admin deploy attempt ${attempt}/2"
+
+            if lftp -u "$OVH_USERNAME","$OVH_PASSWORD" "sftp://$OVH_HOST" -e "$LFTP_ADMIN_CMDS"
+            then
+              echo "SFTP admin deploy succeeded on attempt ${attempt}."
+              break
+            fi
+
+            if [ "$attempt" -eq 2 ]; then
+              echo "SFTP admin deploy failed after 2 attempts."
+              exit 1
+            fi
+
+            echo "SFTP admin deploy attempt ${attempt} failed, retrying..."
+          done
+
+      - name: Smoke test deployed site URL
+        run: |
+          TARGET_URL="${PUBLIC_URL}"
+          echo "Smoke test URL: ${TARGET_URL}"
+
+          HTTPS_BODY="$(mktemp)"
+          HTTP_BODY="$(mktemp)"
+
+          HTTPS_STATUS=$(curl --silent --show-error --location --retry 2 --retry-all-errors --max-time 20 --insecure --output "$HTTPS_BODY" --write-out "%{http_code}" "$TARGET_URL" || true)
+          echo "HTTPS status: ${HTTPS_STATUS}"
+          if [ "$HTTPS_STATUS" -ge 200 ] && [ "$HTTPS_STATUS" -lt 400 ]; then
+            echo "Site smoke test passed on HTTPS (TLS verification bypassed with --insecure)."
+            exit 0
+          fi
+
+          HTTP_FALLBACK_URL="${TARGET_URL/https:\/\//http://}"
+          if [ "$HTTP_FALLBACK_URL" != "$TARGET_URL" ]; then
+            echo "HTTPS smoke test failed, trying HTTP fallback: ${HTTP_FALLBACK_URL}"
+            HTTP_STATUS=$(curl --silent --show-error --location --retry 2 --retry-all-errors --max-time 20 --output "$HTTP_BODY" --write-out "%{http_code}" "$HTTP_FALLBACK_URL" || true)
+            echo "HTTP fallback status: ${HTTP_STATUS}"
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+              echo "Site smoke test passed on HTTP fallback (SSL certificate still needs fixing)."
+              exit 0
+            fi
+          fi
+
+          echo "Site smoke test failed on both HTTPS and HTTP fallback."
+          echo "----- HTTPS response preview (first 40 lines) -----"
+          sed -n '1,40p' "$HTTPS_BODY"
+          echo "----- HTTP response preview (first 40 lines) -----"
+          sed -n '1,40p' "$HTTP_BODY"
+          exit 1
+
+      - name: Smoke test deployed admin URL
+        run: |
+          TARGET_URL="${ADMIN_PUBLIC_URL}"
+          echo "Smoke test URL: ${TARGET_URL}"
+
+          HTTPS_BODY="$(mktemp)"
+          HTTP_BODY="$(mktemp)"
+
+          HTTPS_STATUS=$(curl --silent --show-error --location --retry 2 --retry-all-errors --max-time 20 --insecure --output "$HTTPS_BODY" --write-out "%{http_code}" "$TARGET_URL" || true)
+          echo "HTTPS status: ${HTTPS_STATUS}"
+          if [ "$HTTPS_STATUS" -ge 200 ] && [ "$HTTPS_STATUS" -lt 400 ]; then
+            echo "Smoke test passed on HTTPS (TLS verification bypassed with --insecure)."
+            exit 0
+          fi
+
+          HTTP_FALLBACK_URL="${TARGET_URL/https:\/\//http://}"
+          if [ "$HTTP_FALLBACK_URL" != "$TARGET_URL" ]; then
+            echo "HTTPS smoke test failed, trying HTTP fallback: ${HTTP_FALLBACK_URL}"
+            HTTP_STATUS=$(curl --silent --show-error --location --retry 2 --retry-all-errors --max-time 20 --output "$HTTP_BODY" --write-out "%{http_code}" "$HTTP_FALLBACK_URL" || true)
+            echo "HTTP fallback status: ${HTTP_STATUS}"
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+              echo "Smoke test passed on HTTP fallback (SSL certificate still needs fixing)."
+              exit 0
+            fi
+          fi
+
+          echo "Smoke test failed on both HTTPS and HTTP fallback."
+          echo "----- HTTPS response preview (first 40 lines) -----"
+          sed -n '1,40p' "$HTTPS_BODY"
+          echo "----- HTTP response preview (first 40 lines) -----"
+          sed -n '1,40p' "$HTTP_BODY"
+          HEALTHCHECK_URL="${ADMIN_PUBLIC_URL}"
+          echo "----- Healthcheck probe: ${HEALTHCHECK_URL} -----"
+          curl --silent --show-error --location --retry 1 --max-time 20 --insecure "$HEALTHCHECK_URL" || true
+          exit 1
