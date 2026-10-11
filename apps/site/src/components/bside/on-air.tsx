@@ -77,15 +77,17 @@ export function OnAir() {
         </div>
 
         {/* Next show */}
-        <div className="flex items-center gap-5 border-l-2 border-primary pl-5 sm:gap-7 sm:pl-7">
+        <div className="relative flex items-center gap-5 border-l-2 border-primary pl-5 pt-9 sm:gap-7 sm:pl-7">
+          <p className="absolute left-5 top-0 m-0 font-mono text-[14px] uppercase tracking-[0.3em] text-primary sm:left-7">
+            {t("onair.next")}
+          </p>
           <img
             src={next?.coverUrl || bsideIcon}
             alt={next?.name ?? t("onair.fallbackName")}
             className={`aspect-[16/9] object-contain w-28 shrink-0 sm:w-36 ${next?.coverUrl ? "object-contain" : "bg-background object-contain p-5"}`}
           />
           <div className="min-w-0 self-center">
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">{t("onair.next")}</p>
-            <p className="mt-2 font-display text-3xl leading-none sm:text-4xl">{next?.name ?? t("onair.fallbackName")}</p>
+            <p className="m-0 font-display text-3xl leading-none sm:text-4xl">{next?.name ?? t("onair.fallbackName")}</p>
             {next && <p className="mt-2 font-mono text-xs tracking-widest opacity-70">{next.start} · {next.end}</p>}
           </div>
         </div>
