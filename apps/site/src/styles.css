@@ -150,7 +150,7 @@ main > section {
   font-family: var(--font-mono);
   font-size: 10px;
   line-height: 1.5;
-  letter-spacing: 0;
+  letter-spacing: 0.3rem;
   color: var(--primary);
   text-transform: uppercase;
 }
@@ -160,7 +160,7 @@ main > section {
   font-family: var(--font-display);
   font-size: 80px;
   line-height: 0.95;
-  letter-spacing: 0;
+  letter-spacing: 5px;
 }
 
 .hero-title span,
@@ -221,7 +221,7 @@ main > section {
 .hero-slogan {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 50px;
+  font-size: 65px;
   line-height: 0.95;
   letter-spacing: 0;
 }
@@ -241,14 +241,15 @@ main > section {
 
 .hero-partner span {
   font-family: var(--font-mono);
-  font-size: 7px;
+  font-size: 10px;
   text-transform: uppercase;
   color: var(--muted-foreground);
+  letter-spacing: 0.2em;
 }
 
 .hero-partner img {
-  width: 58px;
-  height: 14px;
+  width: 120px;
+  height: 20px;
   object-fit: contain;
 }
 
@@ -313,10 +314,10 @@ main > section {
   .hero-stage { --hero-cutout-radius: 22px; border-radius: 22px; }
   .hero-image { background-position: 52% top; }
   .hero-heading { width: 58%; padding: 0 12px 16px 0; border-radius: 0 0 22px 0; }
-  .hero-kicker { font-size: 8px; max-width: 180px; }
-  .hero-title { font-size: 48px; }
+  .hero-kicker { font-size: 8px; max-width: 180px; letter-spacing: 0;}
+  .hero-title { font-size: 48px; letter-spacing: 0;}
   .hero-signature { padding: 26px 24px 0 0; border-radius: 0 22px 0 0; }
-  .hero-slogan { font-size: 34px; }
+  .hero-slogan { font-size: 45px; }
   .hero-partner { gap: 6px; margin-top: 20px; }
   .hero-partner span { font-size: 6px; }
   .hero-partner img { width: 52px; }
@@ -327,7 +328,7 @@ main > section {
 
 @media (max-width: 374px) {
   .hero-title { font-size: 42px; }
-  .hero-slogan { font-size: 30px; }
+  .hero-slogan { font-size: 50px; }
   .hero-signature { padding-right: 16px; }
   .hero-actions { right: 10px; max-width: calc(100% - 132px); }
   .hero-listen { font-size: 15px; padding-right: 12px; padding-left: 12px; }
