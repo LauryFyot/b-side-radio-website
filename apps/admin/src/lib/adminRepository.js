@@ -180,7 +180,7 @@ export async function fetchBootstrapData() {
     throw new Error('Supabase config missing (.env).');
   }
 
-  const [shows, slots, covers, tracks, videos, comments] = await Promise.all([
+  const [shows, slots, covers, tracks, videos, comments, banner] = await Promise.all([
     throwOnError(
       await supabase.from('shows').select('id,name,slug,description,cover_url,is_active').order('id', { ascending: true }),
       'Unable to load shows.'
@@ -209,7 +209,8 @@ export async function fetchBootstrapData() {
     throwOnError(
       await supabase.from('comments').select('id,author_name,author_email,body,status,created_at').order('created_at', { ascending: false }).limit(200),
       'Unable to load comments.'
-    )
+    ),
+    supabase.from('scrolling_banner').select('messages').eq('id', 1).maybeSingle()
   ]);
 
   return {
@@ -218,8 +219,27 @@ export async function fetchBootstrapData() {
     covers: Array.isArray(covers) ? covers : [],
     tracks: Array.isArray(tracks) ? tracks : [],
     videos: Array.isArray(videos) ? videos : [],
-    comments: Array.isArray(comments) ? comments : []
+    comments: Array.isArray(comments) ? comments : [],
+    bannerMessages: banner.error || !banner.data ? null : banner.data.messages
   };
+}
+
+export async function publishScrollingBanner(messages) {
+  if (!Array.isArray(messages)) {
+    throw new Error('Scrolling banner is not configured. Run its Supabase migration.');
+  }
+  const normalized = messages.map((message) => ({
+    fr: String(message.fr || '').trim(),
+    en: String(message.en || '').trim()
+  }));
+  if (normalized.some((message) => !message.fr || !message.en)) {
+    throw new Error('Each scrolling banner message needs French and English text.');
+  }
+  await throwOnError(await supabase.from('scrolling_banner').upsert({
+    id: 1,
+    messages: normalized,
+    updated_at: new Date().toISOString()
+  }), 'Unable to publish scrolling banner.');
 }
 
 async function deleteByIds(table, ids) {

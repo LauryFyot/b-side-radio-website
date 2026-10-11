@@ -10,6 +10,7 @@ import YoutubeSection from './sections/YoutubeSection';
 import MixSessionsSection from './sections/MixSessionsSection';
 import VinylSection from './sections/VinylSection';
 import CommentsSection from './sections/CommentsSection';
+import ScrollingBannerSection from './sections/ScrollingBannerSection';
 
 function PublishIcon() {
   return (
@@ -119,6 +120,7 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
         )}
 
         {activeTab === 'comments' && <CommentsSection comments={editor.comments} onSetCommentStatus={editor.setCommentStatus} />}
+        {activeTab === 'banner' && <ScrollingBannerSection messages={editor.bannerMessages} onChange={editor.setBannerMessages} />}
       </div>
     </section>
   );

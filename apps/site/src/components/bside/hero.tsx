@@ -1,12 +1,62 @@
 import { Play, Pause } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
 import heroImg from "@/assets/mixbannerbw.jpeg";
 import traxsourceLogo from "../../../../../assets/images/traxsource-logo-long-blue.png";
 import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
+import { useSiteContent } from "@/lib/siteContent";
+
+function ScrollingMessages({ messages }: { messages: string[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cycleRef = useRef<HTMLDivElement>(null);
+  const [repetitions, setRepetitions] = useState(1);
+  const contentKey = JSON.stringify(messages);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const cycle = cycleRef.current;
+    if (!container || !cycle) return;
+    const measure = () => {
+      const width = cycle.getBoundingClientRect().width;
+      if (width > 0) {
+        setRepetitions(Math.max(1, Math.ceil(container.clientWidth / width)));
+      }
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    observer.observe(cycle);
+    return () => observer.disconnect();
+  }, [contentKey]);
+
+  return (
+    <div ref={containerRef} className="hero-marquee grain relative overflow-hidden rounded-2xl border border-border py-3">
+      <div className="flex w-max motion-reduce:!animate-none" style={{ animation: "marquee 36s linear infinite" }}>
+        {[0, 1].map((group) => (
+          <div key={group} className="flex shrink-0" aria-hidden={group === 1 ? true : undefined}>
+            {Array.from({ length: repetitions }, (_, cycle) => (
+              <div key={cycle} ref={group === 0 && cycle === 0 ? cycleRef : undefined} className="flex w-max shrink-0 gap-10 pr-10" aria-hidden={cycle > 0 ? true : undefined}>
+                {messages.map((message, index) => (
+                  <span key={index} className="shrink-0 whitespace-nowrap font-display text-xl tracking-[0.2em] text-muted-foreground">
+                    {message} <span className="text-primary">/</span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Hero() {
   const { playing, toggleLive } = usePlayer();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const { bannerMessages } = useSiteContent();
+  const messages = bannerMessages === null
+    ? (["marquee.1", "marquee.2", "marquee.3", "marquee.4"] as const).map((key) => t(key))
+    : bannerMessages.map((message) => message[lang]).filter((message) => message.trim());
 
   return (
     <section id="top" className="hero-section">
@@ -39,19 +89,7 @@ export function Hero() {
       </div>
 
       {/* Scrolling marquee */}
-      <div className="hero-marquee grain relative overflow-hidden rounded-2xl border border-border py-3">
-        <div className="flex w-max animate-none gap-10" style={{ animation: "marquee 36s linear infinite" }}>
-          {Array.from({ length: 4 }).map((_, k) => (
-            <div key={k} className="flex min-w-max shrink-0 gap-10">
-              {(["marquee.1", "marquee.2", "marquee.3", "marquee.4"] as const).map((key) => (
-                <span key={key} className="shrink-0 font-display text-xl tracking-[0.2em] text-muted-foreground">
-                  {t(key)} <span className="text-primary">/</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+      {messages.length > 0 && <ScrollingMessages messages={messages} />}
     </section>
   );
 }

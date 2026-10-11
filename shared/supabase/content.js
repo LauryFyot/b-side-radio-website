@@ -78,7 +78,7 @@ export async function unlikeComment(commentId) {
 }
 
 export async function fetchPublicContent() {
-  const [shows, slots, covers, mixSessions, videos, comments] = await Promise.all([
+  const [shows, slots, covers, mixSessions, videos, comments, banner] = await Promise.all([
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
     readTable('show_slots', 'id,show_id,day_of_week,start_time,end_time,priority,is_active', { column: 'day_of_week', ascending: true }),
     readTable('featured_covers', 'id,image_url,title,artist,release_year,remixed_by,buy_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
@@ -88,6 +88,7 @@ export async function fetchPublicContent() {
     }),
     readTable('featured_videos', 'id,slot,title,youtube_url,is_active', { column: 'slot', ascending: true }),
     readTable('comments', 'id,author_name,body,created_at,likes_count', { column: 'created_at', ascending: false }),
+    readTable('scrolling_banner', 'id,messages'),
   ]);
 
   const activeShowsById = new Map(
@@ -117,6 +118,7 @@ export async function fetchPublicContent() {
     mixSessions,
     videos,
     comments,
+    bannerMessages: banner.find((row) => row.id === 1)?.messages ?? null,
   };
 }
 

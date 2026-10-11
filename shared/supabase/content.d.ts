@@ -6,6 +6,7 @@ export function fetchPublicContent(): Promise<{
   mixSessions: any[];
   videos: any[];
   comments: any[];
+  bannerMessages: { fr: string; en: string }[] | null;
 }>;
 
 export function mapSupabaseContentToSiteModel(input: any): {

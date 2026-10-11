@@ -3,7 +3,8 @@ export const tabs = [
   { id: 'shows', label: 'Shows & schedule' },
   { id: 'youtube', label: 'YouTube spotlight' },
   { id: 'mixes', label: 'Mix sessions' },
-  { id: 'vinyl', label: 'Vinyl carousel' }
+  { id: 'vinyl', label: 'Vinyl carousel' },
+  { id: 'banner', label: 'Scrolling banner' }
 ];
 
 export const dayLabels = {

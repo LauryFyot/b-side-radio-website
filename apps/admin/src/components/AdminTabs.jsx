@@ -1,14 +1,15 @@
 // Horizontal tab switcher for admin sections.
 // Receives tab definitions and current active id from parent state.
 // Emits selected tab id back to the parent on click.
-import { CalendarDays, Disc3, MessageSquare, Music2, Youtube } from 'lucide-react';
+import { CalendarDays, Disc3, MessageSquare, Music2, MoveHorizontal, Youtube } from 'lucide-react';
 
 const tabIcons = {
   comments: MessageSquare,
   shows: CalendarDays,
   youtube: Youtube,
   mixes: Music2,
-  vinyl: Disc3
+  vinyl: Disc3,
+  banner: MoveHorizontal
 };
 
 function AdminTabs({ tabs, activeTab, onTabChange }) {

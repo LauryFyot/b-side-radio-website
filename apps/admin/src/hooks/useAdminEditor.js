@@ -2,7 +2,7 @@
 // Holds local drafts for shows, schedule, media, videos, and comments.
 // Exposes CRUD helpers and publish action to sync changes to Supabase.
 import { useMemo, useRef, useState } from 'react';
-import { fetchBootstrapData, publishAdminData, synchronizeR2Mixes, uploadAdminFile } from '../lib/adminRepository';
+import { fetchBootstrapData, publishAdminData, publishScrollingBanner, synchronizeR2Mixes, uploadAdminFile } from '../lib/adminRepository';
 import { isDbId, toSlug } from '../utils/adminHelpers';
 
 const MAX_MIX_SESSIONS = 8;
@@ -15,6 +15,7 @@ function buildSnapshot(data, deletedIds) {
     tracks: data.tracks || [],
     videos: data.videos || [],
     comments: data.comments || [],
+    bannerMessages: data.bannerMessages ?? null,
     deletedIds: deletedIds || { shows: [], slots: [], covers: [], tracks: [], videos: [] }
   });
 }
@@ -31,6 +32,7 @@ function useAdminEditor() {
   const [tracks, setTracks] = useState([]);
   const [videos, setVideos] = useState([]);
   const [comments, setComments] = useState([]);
+  const [bannerMessages, setBannerMessages] = useState(null);
 
   const [deletedIds, setDeletedIds] = useState({
     shows: [],
@@ -53,6 +55,7 @@ function useAdminEditor() {
     const nextTracks = data.tracks || [];
     const nextVideos = data.videos || [];
     const nextComments = data.comments || [];
+    const nextBannerMessages = data.bannerMessages ?? null;
     const emptyDeleted = { shows: [], slots: [], covers: [], tracks: [], videos: [] };
 
     // Replace full local draft from a server snapshot.
@@ -62,6 +65,7 @@ function useAdminEditor() {
     setTracks(nextTracks);
     setVideos(nextVideos);
     setComments(nextComments);
+    setBannerMessages(nextBannerMessages);
     setDeletedIds(emptyDeleted);
     setPublishedSnapshot(
       buildSnapshot(
@@ -71,7 +75,8 @@ function useAdminEditor() {
           covers: nextCovers,
           tracks: nextTracks,
           videos: nextVideos,
-          comments: nextComments
+          comments: nextComments,
+          bannerMessages: nextBannerMessages
         },
         emptyDeleted
       )
@@ -213,12 +218,19 @@ function useAdminEditor() {
     setIsPublishing(true);
 
     try {
+      const bannerChanged = JSON.stringify(bannerMessages) !== JSON.stringify(JSON.parse(publishedSnapshot).bannerMessages);
+      if (bannerChanged && bannerMessages?.some((message) => !message.fr.trim() || !message.en.trim())) {
+        throw new Error('Each scrolling banner message needs French and English text.');
+      }
       const previousTracks = JSON.parse(publishedSnapshot).tracks;
       const candidateUrls = [...new Set([
         ...previousTracks.map((track) => track.mp3_url).filter(Boolean),
         ...uploadedMixUrls.current
       ])];
       await publishAdminData({ shows, slots, covers, tracks, videos, comments }, deletedIds);
+      if (bannerChanged) {
+        await publishScrollingBanner(bannerMessages);
+      }
       await loadData();
       try {
         await synchronizeR2Mixes(candidateUrls);
@@ -251,11 +263,12 @@ function useAdminEditor() {
           covers,
           tracks,
           videos,
-          comments
+          comments,
+          bannerMessages
         },
         deletedIds
       ) !== publishedSnapshot,
-    [shows, slots, covers, tracks, videos, comments, deletedIds, publishedSnapshot]
+    [shows, slots, covers, tracks, videos, comments, bannerMessages, deletedIds, publishedSnapshot]
   );
 
   return {
@@ -270,6 +283,8 @@ function useAdminEditor() {
     tracks,
     videos,
     comments,
+    bannerMessages,
+    setBannerMessages,
     loadData,
     clearData,
     publish,

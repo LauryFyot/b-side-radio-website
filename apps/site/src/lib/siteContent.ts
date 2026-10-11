@@ -42,6 +42,7 @@ export const fallbackContent = {
   replays: fallbackReplays,
   videos: fallbackVideos,
   comments: [] as SiteComment[],
+  bannerMessages: null as { fr: string; en: string }[] | null,
   nowPlaying: fallbackNowPlaying,
   nextUp: fallbackNextUp,
 };
@@ -111,10 +112,14 @@ async function loadSiteContent() {
   ]);
 
   const mappedContent = mapSupabaseContentToSiteModel(publicContent);
+  const bannerMessages = Array.isArray(publicContent.bannerMessages)
+    ? publicContent.bannerMessages.filter((message) => message && typeof message.fr === 'string' && typeof message.en === 'string')
+    : null;
 
   if (!hasLiveDatabaseContent(mappedContent, publicContent.comments)) {
     return {
       ...fallbackContent,
+      bannerMessages,
       nowPlaying: mergeNowPlaying(fallbackContent.nowPlaying, liveNowPlaying),
     };
   }
@@ -127,6 +132,7 @@ async function loadSiteContent() {
     replays: mappedContent.replays.length ? mappedContent.replays : fallbackContent.replays,
     videos: mappedContent.videos.length ? mappedContent.videos : fallbackContent.videos,
     comments: mapComments(publicContent.comments),
+    bannerMessages,
     nowPlaying: mergeNowPlaying(mappedContent.nowPlaying, liveNowPlaying),
     nextUp: fallbackContent.nextUp,
   };

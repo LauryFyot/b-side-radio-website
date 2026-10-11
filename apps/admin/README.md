@@ -35,6 +35,16 @@ npm run preview
 
 ## Note
 
+L'onglet `Scrolling banner` gere une liste ordonnee de messages francais et anglais.
+Pour une base existante, executer `supabase/scrolling-banner-migration.sql` dans
+le SQL Editor Supabase, puis recharger l'admin. Le schema initial inclut aussi cette table.
+Les modifications restent en brouillon jusqu'a `Publish changes`. Les deux langues
+sont obligatoires pour chaque message. Une liste vide masque le bandeau sur le site.
+L'ordre et les traductions sont sauvegardes ensemble dans `public.scrolling_banner`.
+La lecture est publique; l'ecriture exige `can_manage_content()` (admin/editor).
+Recharger le site public pour voir les messages publies. Aucun changement Cloudflare
+n'est necessaire. La migration peut etre relancee sans ecraser les messages modifies.
+
 Le bouton `Publish` envoie toutes les modifications directement a Supabase.
 Ne jamais exposer une `service_role_key` dans ce frontend.
 
