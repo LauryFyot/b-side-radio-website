@@ -3,7 +3,7 @@ name: Deploy OVH (SFTP)
 on:
   push:
     branches:
-      - main
+      # - main # Desactive temporairement au profit de Vercel en production
       - dev
 
 concurrency:
