@@ -1,6 +1,27 @@
 <!doctype html>
 <html lang="fr">
   <head>
+    <!-- Google tag (gtag.js) only un public and production website -->
+    <script>
+      (() => {
+        const isPublicProduction =
+          window.location.protocol === 'https:' &&
+          ['b-side-radio.com', 'www.b-side-radio.com'].includes(window.location.hostname) &&
+          !/^\/(?:admin|dev)(?:\/|$)/i.test(window.location.pathname);
+
+        if (!isPublicProduction) return;
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-3SNWYSPZ5Z');
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-3SNWYSPZ5Z';
+        document.head.appendChild(script);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>B Side Radio | Only Mashups & Remixes</title>
