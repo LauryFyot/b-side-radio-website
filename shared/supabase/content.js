@@ -35,6 +35,20 @@ async function readOptionalTable(table, select, orderBy) {
   return normalizeRows(data);
 }
 
+async function readApprovedComments() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('comments')
+    .select('id,author_name,body,created_at,likes_count')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+  if (error) {
+    console.warn('[supabase:comments]', error.message || error);
+    return [];
+  }
+  return normalizeRows(data);
+}
+
 // Insert a visitor comment; the DB trigger auto-approves it (see comment_insert_guard).
 export async function submitComment({ authorName, body, email } = {}) {
   if (!supabase) {
@@ -99,7 +113,7 @@ export async function fetchPublicContent() {
       return readTable('favorite_tracks', 'id,title,dj_name,cover_url,mp3_url,sort_order,is_active', { column: 'sort_order', ascending: true });
     }),
     readTable('featured_videos', 'id,slot,title,youtube_url,is_active', { column: 'slot', ascending: true }),
-    readTable('comments', 'id,author_name,body,created_at,likes_count', { column: 'created_at', ascending: false }),
+    readApprovedComments(),
     readTable('scrolling_banner', 'id,messages'),
     readOptionalTable('team_members', 'id,name,role,role_en,bio,bio_en,image_url,sort_order', { column: 'sort_order', ascending: true }),
   ]);
