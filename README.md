@@ -2,14 +2,19 @@
 
 Ce repository est organise autour de 2 apps React distinctes:
 
-- site public principal: `apps/site`
-- admin: `apps/admin` (accessible via `/admin` en ligne)
+- site public principal: `apps/site` -> [https://b-side-radio.com](https://b-side-radio.com)
+- admin back-office: `apps/admin` -> [https://admin.b-side-radio.com](https://admin.b-side-radio.com)
+
+> 📖 **Documentation détaillée de l'infrastructure, du DNS et des déploiements :**  
+> Consulter [docs/ARCHITECTURE_ET_DEPLOIEMENT.md](docs/ARCHITECTURE_ET_DEPLOIEMENT.md).
 
 ## Stack
 
-- React 18 + Vite
-- Supabase (Auth, Postgres, Storage)
-- GitHub Actions + SFTP OVH
+- React 19 + Vite + Tailwind CSS
+- Vercel (Hébergement Site + Admin + Rewrites proxy radio)
+- Supabase (Auth, Postgres, Realtime, Storage)
+- Cloudflare R2 + Workers (Stockage & streaming audio des mixs)
+- OVH (Gestionnaire de nom de domaine & Zone DNS)
 
 ## Structure
 
