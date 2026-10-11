@@ -11,6 +11,7 @@ import MixSessionsSection from './sections/MixSessionsSection';
 import VinylSection from './sections/VinylSection';
 import CommentsSection from './sections/CommentsSection';
 import ScrollingBannerSection from './sections/ScrollingBannerSection';
+import TeamSection from './sections/TeamSection';
 
 function PublishIcon() {
   return (
@@ -121,6 +122,16 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
 
         {activeTab === 'comments' && <CommentsSection comments={editor.comments} onSetCommentStatus={editor.setCommentStatus} />}
         {activeTab === 'banner' && <ScrollingBannerSection messages={editor.bannerMessages} onChange={editor.setBannerMessages} />}
+        {activeTab === 'team' && (
+          <TeamSection
+            members={editor.teamMembers}
+            onAdd={editor.addTeamMember}
+            onUpdate={editor.updateTeamMember}
+            onUploadImage={editor.uploadTeamImage}
+            onRemove={editor.removeTeamMember}
+            onMove={editor.moveTeamMember}
+          />
+        )}
       </div>
     </section>
   );

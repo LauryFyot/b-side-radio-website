@@ -7,6 +7,7 @@ export function fetchPublicContent(): Promise<{
   videos: any[];
   comments: any[];
   bannerMessages: { fr: string; en: string }[] | null;
+  teamMembers: any[] | null;
 }>;
 
 export function mapSupabaseContentToSiteModel(input: any): {
@@ -17,5 +18,6 @@ export function mapSupabaseContentToSiteModel(input: any): {
   mixSessions: any[];
   replays: any[];
   videos: any[];
+  team: any[] | null;
   nowPlaying: any;
 };

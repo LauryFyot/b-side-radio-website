@@ -6,6 +6,7 @@ import { fetchBootstrapData, publishAdminData, publishScrollingBanner, synchroni
 import { isDbId, toSlug } from '../utils/adminHelpers';
 
 const MAX_MIX_SESSIONS = 8;
+const MAX_TEAM_MEMBERS = 8;
 
 function buildSnapshot(data, deletedIds) {
   return JSON.stringify({
@@ -16,7 +17,8 @@ function buildSnapshot(data, deletedIds) {
     videos: data.videos || [],
     comments: data.comments || [],
     bannerMessages: data.bannerMessages ?? null,
-    deletedIds: deletedIds || { shows: [], slots: [], covers: [], tracks: [], videos: [] }
+    teamMembers: data.teamMembers ?? null,
+    deletedIds: deletedIds || { shows: [], slots: [], covers: [], tracks: [], videos: [], teamMembers: [] }
   });
 }
 
@@ -33,18 +35,20 @@ function useAdminEditor() {
   const [videos, setVideos] = useState([]);
   const [comments, setComments] = useState([]);
   const [bannerMessages, setBannerMessages] = useState(null);
+  const [teamMembers, setTeamMembers] = useState(null);
 
   const [deletedIds, setDeletedIds] = useState({
     shows: [],
     slots: [],
     covers: [],
     tracks: [],
-    videos: []
+    videos: [],
+    teamMembers: []
   });
   const [publishedSnapshot, setPublishedSnapshot] = useState(
     buildSnapshot(
-      { shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [] },
-      { shows: [], slots: [], covers: [], tracks: [], videos: [] }
+      { shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [], teamMembers: null },
+      { shows: [], slots: [], covers: [], tracks: [], videos: [], teamMembers: [] }
     )
   );
 
@@ -56,7 +60,8 @@ function useAdminEditor() {
     const nextVideos = data.videos || [];
     const nextComments = data.comments || [];
     const nextBannerMessages = data.bannerMessages ?? null;
-    const emptyDeleted = { shows: [], slots: [], covers: [], tracks: [], videos: [] };
+    const nextTeamMembers = Array.isArray(data.teamMembers) ? data.teamMembers : null;
+    const emptyDeleted = { shows: [], slots: [], covers: [], tracks: [], videos: [], teamMembers: [] };
 
     // Replace full local draft from a server snapshot.
     setShows(nextShows);
@@ -66,6 +71,7 @@ function useAdminEditor() {
     setVideos(nextVideos);
     setComments(nextComments);
     setBannerMessages(nextBannerMessages);
+    setTeamMembers(nextTeamMembers);
     setDeletedIds(emptyDeleted);
     setPublishedSnapshot(
       buildSnapshot(
@@ -76,7 +82,8 @@ function useAdminEditor() {
           tracks: nextTracks,
           videos: nextVideos,
           comments: nextComments,
-          bannerMessages: nextBannerMessages
+          bannerMessages: nextBannerMessages,
+          teamMembers: nextTeamMembers
         },
         emptyDeleted
       )
@@ -90,7 +97,7 @@ function useAdminEditor() {
   }
 
   function clearData() {
-    const emptyState = { shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [] };
+    const emptyState = { shows: [], slots: [], covers: [], tracks: [], videos: [], comments: [], teamMembers: null };
     hydrateState(emptyState);
     setMessage('');
   }
@@ -115,6 +122,7 @@ function useAdminEditor() {
   const updateCover = (index, key, value) => updateItem(setCovers, index, key, value);
   const updateTrack = (index, key, value) => updateItem(setTracks, index, key, value);
   const updateVideo = (index, key, value) => updateItem(setVideos, index, key, value);
+  const updateTeamMember = (index, key, value) => updateItem(setTeamMembers, index, key, value);
 
   function removeItem(type, setter, index) {
     setter((prev) => {
@@ -167,6 +175,24 @@ function useAdminEditor() {
     setVideos((prev) => [...prev, { id: null, slot: Math.min(nextSlot, 3), title: '', youtube_url: '', is_active: true }]);
   }
 
+  function addTeamMember() {
+    setTeamMembers((prev) => !Array.isArray(prev) || prev.length >= MAX_TEAM_MEMBERS
+      ? prev
+      : [...prev, { id: null, draft_key: globalThis.crypto.randomUUID(), name: '', role: '', role_en: '', bio: '', bio_en: '', image_url: '', sort_order: prev.length }]
+    );
+  }
+
+  function moveTeamMember(index, direction) {
+    setTeamMembers((prev) => {
+      if (!Array.isArray(prev)) return prev;
+      const destination = index + direction;
+      if (destination < 0 || destination >= prev.length) return prev;
+      const reordered = [...prev];
+      [reordered[index], reordered[destination]] = [reordered[destination], reordered[index]];
+      return reordered.map((member, sort_order) => ({ ...member, sort_order }));
+    });
+  }
+
   function setCommentStatus(id, status) {
     setComments((prev) => prev.map((comment) => (comment.id === id ? { ...comment, status } : comment)));
   }
@@ -205,6 +231,18 @@ function useAdminEditor() {
     return publicUrl;
   }
 
+  async function uploadTeamImage(memberKey, file) {
+    const publicUrl = await uploadAdminFile(file, 'covers');
+    setTeamMembers((prev) => Array.isArray(prev)
+      ? prev.map((member) => {
+          const currentKey = member.id != null ? `saved-${member.id}` : member.draft_key;
+          return currentKey === memberKey ? { ...member, image_url: publicUrl } : member;
+        })
+      : prev
+    );
+    return publicUrl;
+  }
+
   async function uploadTrackMp3(index, file) {
     const publicUrl = await uploadAdminFile(file, 'tracks');
     uploadedMixUrls.current.add(publicUrl);
@@ -219,6 +257,9 @@ function useAdminEditor() {
 
     try {
       const bannerChanged = JSON.stringify(bannerMessages) !== JSON.stringify(JSON.parse(publishedSnapshot).bannerMessages);
+      if (Array.isArray(teamMembers) && (teamMembers.length > MAX_TEAM_MEMBERS || teamMembers.some((member) => !member.name.trim() || !member.image_url.trim()))) {
+        throw new Error('Each team member needs a name and portrait. The team is limited to 8 members.');
+      }
       if (bannerChanged && bannerMessages?.some((message) => !message.fr.trim() || !message.en.trim())) {
         throw new Error('Each scrolling banner message needs French and English text.');
       }
@@ -227,7 +268,7 @@ function useAdminEditor() {
         ...previousTracks.map((track) => track.mp3_url).filter(Boolean),
         ...uploadedMixUrls.current
       ])];
-      await publishAdminData({ shows, slots, covers, tracks, videos, comments }, deletedIds);
+      await publishAdminData({ shows, slots, covers, tracks, videos, comments, teamMembers }, deletedIds);
       if (bannerChanged) {
         await publishScrollingBanner(bannerMessages);
       }
@@ -264,11 +305,12 @@ function useAdminEditor() {
           tracks,
           videos,
           comments,
-          bannerMessages
+          bannerMessages,
+          teamMembers
         },
         deletedIds
       ) !== publishedSnapshot,
-    [shows, slots, covers, tracks, videos, comments, bannerMessages, deletedIds, publishedSnapshot]
+    [shows, slots, covers, tracks, videos, comments, bannerMessages, teamMembers, deletedIds, publishedSnapshot]
   );
 
   return {
@@ -285,6 +327,7 @@ function useAdminEditor() {
     comments,
     bannerMessages,
     setBannerMessages,
+    teamMembers,
     loadData,
     clearData,
     publish,
@@ -293,20 +336,25 @@ function useAdminEditor() {
     addCover,
     addTrack,
     addVideo,
+    addTeamMember,
+    moveTeamMember,
     setCommentStatus,
     updateShow,
     updateSlot,
     updateCover,
     updateTrack,
     updateVideo,
+    updateTeamMember,
     uploadShowCover,
     uploadCoverImage,
     uploadTrackMp3,
+    uploadTeamImage,
     removeShow: (index) => removeItem('shows', setShows, index),
     removeSlot: (index) => removeItem('slots', setSlots, index),
     removeCover: (index) => removeItem('covers', setCovers, index),
     removeTrack: (index) => removeItem('tracks', setTracks, index),
-    removeVideo: (index) => removeItem('videos', setVideos, index)
+    removeVideo: (index) => removeItem('videos', setVideos, index),
+    removeTeamMember: (index) => removeItem('teamMembers', setTeamMembers, index)
   };
 }
 

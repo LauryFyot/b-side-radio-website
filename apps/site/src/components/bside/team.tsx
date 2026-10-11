@@ -2,17 +2,18 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { useI18n } from "@/lib/i18n";
-import { team } from "@/lib/bside-data";
+import { useSiteContent } from "@/lib/siteContent";
 
-// Team section: static portraits and bios from local content.
+// Team portraits and bilingual text come from the shared site content store.
 export function Team() {
   const { t, lang } = useI18n();
+  const { team } = useSiteContent();
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
     <SectionManager id="equipe" index="03" title={t("team.title")} kicker={t("team.kicker")} tone="paper">
       {/* Mobile accordion: first DJ open, others collapsed */}
-      <div className="grid gap-3 sm:hidden">
+      <div className="grid gap-3 sm:grid-cols-2 md:hidden">
         {team.map((member, index) => {
           const isOpen = openIndex === index;
           return (
@@ -60,9 +61,13 @@ export function Team() {
       </div>
 
       {/* Desktop and tablet: all DJs on a single row */}
-      <div className="hidden gap-6 sm:grid sm:grid-cols-4">
+      <div className="team-desktop hidden flex-nowrap justify-center gap-3 md:flex">
         {team.map((member, index) => (
-          <article key={`${member.name}-${index}`} className="group">
+          <article
+            key={`${member.name}-${index}`}
+            className="group min-w-0 max-w-[320px]"
+            style={{ flex: `0 1 calc((100% - ${(team.length - 1) * 12}px) / ${team.length})`, maxWidth: 320 }}
+          >
             <div className="overflow-hidden rounded-[1.75rem]">
               <img
                 src={member.image}
@@ -73,7 +78,7 @@ export function Team() {
                 className="aspect-[4/5] w-full object-cover grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
               />
             </div>
-            <h3 className="mt-4 text-3xl leading-none">{member.name}</h3>
+              <h3 className="mt-4 break-words text-2xl leading-none 2xl:text-3xl">{member.name}</h3>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
               {lang === "en" ? member.roleEn : member.role}
             </p>

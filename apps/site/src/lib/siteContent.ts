@@ -10,6 +10,7 @@ import {
   vinyls as fallbackVinyls,
   weekSchedule as fallbackWeekSchedule,
   mixSessions as fallbackMixSessions,
+  team as fallbackTeam,
   videos as fallbackVideos,
 } from '@/lib/bside-data';
 import { fetchPublicContent, mapSupabaseContentToSiteModel } from '@shared/supabase/content.js';
@@ -42,6 +43,7 @@ export const fallbackContent = {
   replays: fallbackReplays,
   videos: fallbackVideos,
   comments: [] as SiteComment[],
+  team: fallbackTeam,
   bannerMessages: null as { fr: string; en: string }[] | null,
   nowPlaying: fallbackNowPlaying,
   nextUp: fallbackNextUp,
@@ -98,6 +100,7 @@ function hasLiveDatabaseContent(mapped: ReturnType<typeof mapSupabaseContentToSi
     mapped.mixSessions.length,
     mapped.replays.length,
     mapped.videos.length,
+    mapped.team?.length || 0,
     Array.isArray(comments) ? comments.length : 0,
   ].some((count) => count > 0);
 }
@@ -119,6 +122,7 @@ async function loadSiteContent() {
   if (!hasLiveDatabaseContent(mappedContent, publicContent.comments)) {
     return {
       ...fallbackContent,
+      team: mappedContent.team ?? fallbackTeam,
       bannerMessages,
       nowPlaying: mergeNowPlaying(fallbackContent.nowPlaying, liveNowPlaying),
     };
@@ -132,6 +136,7 @@ async function loadSiteContent() {
     replays: mappedContent.replays.length ? mappedContent.replays : fallbackContent.replays,
     videos: mappedContent.videos.length ? mappedContent.videos : fallbackContent.videos,
     comments: mapComments(publicContent.comments),
+    team: mappedContent.team ?? fallbackTeam,
     bannerMessages,
     nowPlaying: mergeNowPlaying(mappedContent.nowPlaying, liveNowPlaying),
     nextUp: fallbackContent.nextUp,

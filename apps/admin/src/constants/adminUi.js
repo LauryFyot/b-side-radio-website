@@ -4,7 +4,8 @@ export const tabs = [
   { id: 'youtube', label: 'YouTube spotlight' },
   { id: 'mixes', label: 'Mix sessions' },
   { id: 'vinyl', label: 'Vinyl carousel' },
-  { id: 'banner', label: 'Scrolling banner' }
+  { id: 'banner', label: 'Scrolling banner' },
+  { id: 'team', label: 'Team' }
 ];
 
 export const dayLabels = {

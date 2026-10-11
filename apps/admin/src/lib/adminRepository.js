@@ -180,7 +180,7 @@ export async function fetchBootstrapData() {
     throw new Error('Supabase config missing (.env).');
   }
 
-  const [shows, slots, covers, tracks, videos, comments, banner] = await Promise.all([
+  const [shows, slots, covers, tracks, videos, comments, banner, teamMembers] = await Promise.all([
     throwOnError(
       await supabase.from('shows').select('id,name,slug,description,cover_url,is_active').order('id', { ascending: true }),
       'Unable to load shows.'
@@ -210,7 +210,15 @@ export async function fetchBootstrapData() {
       await supabase.from('comments').select('id,author_name,author_email,body,status,created_at').order('created_at', { ascending: false }).limit(200),
       'Unable to load comments.'
     ),
-    supabase.from('scrolling_banner').select('messages').eq('id', 1).maybeSingle()
+    supabase.from('scrolling_banner').select('messages').eq('id', 1).maybeSingle(),
+    (async () => {
+      const result = await supabase
+        .from('team_members')
+        .select('id,name,role,role_en,bio,bio_en,image_url,sort_order')
+        .order('sort_order', { ascending: true })
+        .order('id', { ascending: true });
+      return result.error ? null : result.data;
+    })()
   ]);
 
   return {
@@ -220,7 +228,8 @@ export async function fetchBootstrapData() {
     tracks: Array.isArray(tracks) ? tracks : [],
     videos: Array.isArray(videos) ? videos : [],
     comments: Array.isArray(comments) ? comments : [],
-    bannerMessages: banner.error || !banner.data ? null : banner.data.messages
+    bannerMessages: banner.error || !banner.data ? null : banner.data.messages,
+    teamMembers: Array.isArray(teamMembers) ? teamMembers : null
   };
 }
 
@@ -286,13 +295,16 @@ async function insertRows(table, rows, transformRow) {
 }
 
 export async function publishAdminData(data, deletedIds) {
-  const { shows, slots, covers, tracks, videos, comments } = data;
+  const { shows, slots, covers, tracks, videos, comments, teamMembers } = data;
 
   await deleteByIds('show_slots', deletedIds.slots);
   await deleteByIds('shows', deletedIds.shows);
   await deleteByIds('featured_covers', deletedIds.covers);
   await deleteByIds('favorite_tracks', deletedIds.tracks);
   await deleteByIds('featured_videos', deletedIds.videos);
+  if (Array.isArray(teamMembers)) {
+    await deleteByIds('team_members', deletedIds.teamMembers);
+  }
 
   const existingShows = shows.filter((show) => isDbId(show.id));
   const newShows = shows.filter((show) => !isDbId(show.id));
@@ -469,6 +481,30 @@ export async function publishAdminData(data, deletedIds) {
       is_active: video.is_active !== false
     };
   });
+
+  if (Array.isArray(teamMembers)) {
+    const normalizedTeam = teamMembers.map((member, index) => ({ ...member, sort_order: index }));
+    const existingMembers = normalizedTeam.filter((member) => isDbId(member.id));
+    const newMembers = normalizedTeam.filter((member) => !isDbId(member.id));
+    const toRow = (member, includeId) => {
+      const name = String(member.name || '').trim();
+      const imageUrl = String(member.image_url || '').trim();
+      if (!name || !imageUrl) return null;
+      return {
+        ...(includeId ? { id: member.id } : {}),
+        name,
+        role: String(member.role || '').trim(),
+        role_en: String(member.role_en || '').trim(),
+        bio: String(member.bio || '').trim(),
+        bio_en: String(member.bio_en || '').trim(),
+        image_url: imageUrl,
+        sort_order: member.sort_order
+      };
+    };
+
+    await upsertRows('team_members', existingMembers, (member) => toRow(member, true));
+    await insertRows('team_members', newMembers, (member) => toRow(member, false));
+  }
 
   const commentUpdates = comments
     .filter((comment) => comment.id !== null && comment.id !== undefined)

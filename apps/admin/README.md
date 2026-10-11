@@ -45,6 +45,12 @@ La lecture est publique; l'ecriture exige `can_manage_content()` (admin/editor).
 Recharger le site public pour voir les messages publies. Aucun changement Cloudflare
 n'est necessaire. La migration peut etre relancee sans ecraser les messages modifies.
 
+L'onglet `Team` gere jusqu'a 8 membres avec portrait, nom, role et texte FR/EN.
+Sur desktop, jusqu'a 6 cartes partagent une ligne et les membres supplementaires
+sont centres sur la suivante. Executer `supabase/team-members-migration.sql`
+pour creer/remplir la table et reparer les URL locales des portraits existants.
+La migration est relancable et ne remplace pas les portraits deja modifies.
+
 Le bouton `Publish` envoie toutes les modifications directement a Supabase.
 Ne jamais exposer une `service_role_key` dans ce frontend.
 

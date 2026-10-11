@@ -23,6 +23,18 @@ async function readTable(table, select, orderBy) {
   return normalizeRows(data);
 }
 
+async function readOptionalTable(table, select, orderBy) {
+  if (!supabase) return null;
+  let query = supabase.from(table).select(select);
+  if (orderBy) query = query.order(orderBy.column, { ascending: orderBy.ascending ?? true });
+  const { data, error } = await query;
+  if (error) {
+    console.warn(`[supabase:${table}]`, error.message || error);
+    return null;
+  }
+  return normalizeRows(data);
+}
+
 // Insert a visitor comment; the DB trigger auto-approves it (see comment_insert_guard).
 export async function submitComment({ authorName, body, email } = {}) {
   if (!supabase) {
@@ -78,7 +90,7 @@ export async function unlikeComment(commentId) {
 }
 
 export async function fetchPublicContent() {
-  const [shows, slots, covers, mixSessions, videos, comments, banner] = await Promise.all([
+  const [shows, slots, covers, mixSessions, videos, comments, banner, teamMembers] = await Promise.all([
     readTable('shows', 'id,name,slug,description,cover_url,is_active', { column: 'id', ascending: true }),
     readTable('show_slots', 'id,show_id,day_of_week,start_time,end_time,priority,is_active', { column: 'day_of_week', ascending: true }),
     readTable('featured_covers', 'id,image_url,title,artist,release_year,remixed_by,buy_url,sort_order,is_active', { column: 'sort_order', ascending: true }),
@@ -89,6 +101,7 @@ export async function fetchPublicContent() {
     readTable('featured_videos', 'id,slot,title,youtube_url,is_active', { column: 'slot', ascending: true }),
     readTable('comments', 'id,author_name,body,created_at,likes_count', { column: 'created_at', ascending: false }),
     readTable('scrolling_banner', 'id,messages'),
+    readOptionalTable('team_members', 'id,name,role,role_en,bio,bio_en,image_url,sort_order', { column: 'sort_order', ascending: true }),
   ]);
 
   const activeShowsById = new Map(
@@ -119,10 +132,11 @@ export async function fetchPublicContent() {
     videos,
     comments,
     bannerMessages: banner.find((row) => row.id === 1)?.messages ?? null,
+    teamMembers,
   };
 }
 
-export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_slots = [], covers = [], mixSessions = [], videos: videosData = [] }) {
+export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_slots = [], covers = [], mixSessions = [], videos: videosData = [], teamMembers = null }) {
   const activeShows = shows.filter((show) => show.is_active !== false);
   const sortedSlots = [...slots].filter((slot) => slot.is_active !== false).sort((a, b) => {
     const dayDiff = Number(a.day_of_week || 0) - Number(b.day_of_week || 0);
@@ -210,6 +224,20 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
       titleEn: video.title || 'Featured video',
     }));
 
+  const mappedTeam = Array.isArray(teamMembers)
+    ? teamMembers
+        .sort((first, second) => Number(first.sort_order || 0) - Number(second.sort_order || 0))
+        .map((member) => ({
+          id: member.id,
+          name: member.name || '',
+          role: member.role || '',
+          roleEn: member.role_en || '',
+          bio: member.bio || '',
+          bioEn: member.bio_en || '',
+          image: member.image_url || '',
+        }))
+    : null;
+
   return {
     shows: activeShows,
     schedule,
@@ -224,6 +252,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
       src: track.src,
     })),
     videos: mappedVideos,
+    team: mappedTeam,
     nowPlaying: {
       title: '',
       artist: 'Live from BSide Radio',
