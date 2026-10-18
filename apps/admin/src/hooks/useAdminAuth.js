@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { hasSupabaseConfig } from '../lib/supabaseClient';
 import { getCurrentUser, signInWithEmail, signOutUser } from '../lib/adminRepository';
+import { trackAdminClarityEvent } from '../lib/clarity';
 function useAdminAuth() {
   const [isLoading, setIsLoading] = useState(true);
   const [adminUser, setAdminUser] = useState(null);
@@ -51,7 +52,9 @@ function useAdminAuth() {
       setIsLoading(true);
       const user = await signInWithEmail(loginForm.email, loginForm.password);
       setAdminUser(user);
+      trackAdminClarityEvent('admin-login-success');
     } catch (error) {
+      trackAdminClarityEvent('admin-login-error');
       setLoginError(error.message || 'Login failed.');
     } finally {
       setIsLoading(false);

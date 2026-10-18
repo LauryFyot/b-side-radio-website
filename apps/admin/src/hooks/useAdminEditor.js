@@ -3,6 +3,7 @@
 // Exposes CRUD helpers and publish action to sync changes to Supabase.
 import { useMemo, useRef, useState } from 'react';
 import { fetchBootstrapData, publishAdminData, publishScrollingBanner, synchronizeR2Mixes, uploadAdminFile } from '../lib/adminRepository';
+import { trackAdminClarityEvent } from '../lib/clarity';
 import { isDbId, toSlug } from '../utils/adminHelpers';
 
 const MAX_MIX_SESSIONS = 8;
@@ -254,6 +255,7 @@ function useAdminEditor() {
     // Persist the current draft to Supabase, then reload canonical data.
     setMessage('');
     setIsPublishing(true);
+    let contentSaved = false;
 
     try {
       const bannerChanged = JSON.stringify(bannerMessages) !== JSON.stringify(JSON.parse(publishedSnapshot).bannerMessages);
@@ -272,11 +274,14 @@ function useAdminEditor() {
       if (bannerChanged) {
         await publishScrollingBanner(bannerMessages);
       }
+      contentSaved = true;
+      trackAdminClarityEvent('admin-publish-success');
       await loadData();
       try {
         await synchronizeR2Mixes(candidateUrls);
         uploadedMixUrls.current.clear();
       } catch (error) {
+        trackAdminClarityEvent('admin-publish-cleanup-error');
         setMessageType('error');
         setMessage(`Content published, but Cloudflare cleanup failed: ${error.message}`);
         return;
@@ -284,6 +289,7 @@ function useAdminEditor() {
       setMessageType('success');
       setMessage('Publish done. Content and media storage are synchronized.');
     } catch (error) {
+      trackAdminClarityEvent(contentSaved ? 'admin-publish-followup-error' : 'admin-publish-error');
       setMessageType('error');
       setMessage(error.message || 'Publish failed.');
     } finally {
