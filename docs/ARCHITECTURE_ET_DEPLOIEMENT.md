@@ -1,5 +1,13 @@
 # Architecture & Guide de Déploiement - B-Side Radio
 
+> Documentation complementaire : [index des guides](README.md),
+> [base et stockage](DB_AND_STORAGE.md), [architecture React](REACT_ARCHI.md),
+> [livraison d'une mise a jour](HOW_TO_DEPLOY.md) et [specificites](SPECIFICITES.md).
+> Les valeurs DNS et les reglages dashboard ci-dessous doivent etre verifies
+> dans Vercel/OVH avant reutilisation. Le sous-domaine admin peut commencer par
+> `www` uniquement s'il a ete explicitement configure : ce n'est pas une interdiction DNS.
+> Le Worker local doit autoriser l'origine admin de production avant ses uploads.
+
 Ce document récapitule l'ensemble de l'infrastructure, la configuration réseau/DNS, les variables d'environnement et le workflow de déploiement de **B-Side Radio**.
 
 ---
@@ -16,8 +24,8 @@ flowchart TD
         VercelAdmin -->|Gestion grille, animateurs, RLS| Supabase
         VercelAdmin -->|Upload mixs| CFWorker["Cloudflare Worker (r2-upload)"]
         CFWorker -->|Stockage audio| R2[("Cloudflare R2")]
-        VercelSite -->|Proxy /api/radio/*| RadioServer["Serveur Radio (Icecast / AzuraCast)"]
-        VercelSite -->|Lecteur audio| R2
+        VercelSite -->|Proxy HTTPS du flux radio| RadioServer["Serveur Radio (Icecast Legacy / AzuraCast)"]
+        VercelSite -->|Lecture des mixes de la section Mix uniquement| R2
     end
 
     subgraph Nom de Domaine & DNS
@@ -26,6 +34,10 @@ flowchart TD
         OVH -.->|CNAME: admin| VercelAdmin
     end
 ```
+
+Cloudflare R2 heberge uniquement les fichiers audio des mixes affiches dans la
+section Mix. Le flux radio live provient du serveur Legacy (Icecast) ou
+d'AzuraCast si ce fournisseur est selectionne ; il n'est pas servi par Cloudflare.
 
 ---
 
