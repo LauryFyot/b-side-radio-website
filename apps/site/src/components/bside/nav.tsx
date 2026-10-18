@@ -34,7 +34,7 @@ export function Nav() {
   return (
     <header ref={headerRef} className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur relative lg:px-4">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:px-0">
-        <a href="#top" className="flex min-w-0 items-center gap-2 font-display text-2xl tracking-[0.15em]">
+        <a href="#top" className="flex min-w-0 items-center gap-2 font-display text-2xl tracking-[0.15em]" data-clarity-label="navigation-home">
           <img src={bsideIcon} alt="" width={28} height={28} className="size-8 shrink-0 mr-2" />
           BSIDE<span className="text-primary">RADIO</span>
         </a>
@@ -44,6 +44,7 @@ export function Nav() {
               <a
                 key={n.href}
                 href={n.href}
+                data-clarity-label={`navigation-${n.href.slice(1)}`}
                 className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-primary"
               >
                 {t(n.key)}
@@ -57,6 +58,7 @@ export function Nav() {
             onClick={() => setOpen((v) => !v)}
             className="font-mono text-[11px] uppercase tracking-[0.2em] lg:hidden"
             aria-expanded={open}
+            data-clarity-label="navigation-menu-toggle"
           >
             {open ? t("nav.close") : t("nav.menu")}
           </button>
@@ -75,6 +77,7 @@ export function Nav() {
                 key={n.href}
                 href={n.href}
                 onClick={() => setOpen(false)}
+                data-clarity-label={`navigation-${n.href.slice(1)}`}
                 style={{ animationDelay: `${index * 35}ms` }}
                 className="animate-in fade-in slide-in-from-top-2 fill-mode-backwards py-2 font-display text-xl tracking-wide transition-colors hover:text-primary"
               >

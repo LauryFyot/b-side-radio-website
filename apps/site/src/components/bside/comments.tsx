@@ -3,6 +3,7 @@ import { ArrowDown, ArrowUp, Heart, MessageSquarePlus, X } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { useI18n, type Lang, type TKey } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
+import { trackClarityEvent } from "@/lib/clarity";
 import { likeComment, submitComment, unlikeComment } from "@shared/supabase/content.js";
 
 type Comment = {
@@ -202,13 +203,14 @@ function CommentFormModal({
             type="button"
             onClick={onClose}
             aria-label={t("comments.cancel")}
+            data-clarity-label="comment-form-close"
             className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-border/60 hover:text-foreground"
           >
             <X className="size-5" />
           </button>
         </div>
 
-        <form onSubmit={onSubmit} className="mt-5 space-y-3">
+        <form onSubmit={onSubmit} className="mt-5 space-y-3" data-clarity-label="comment-submit">
           {/* Honeypot: hidden from real visitors, bots tend to fill every field. */}
           <input
             type="text"
@@ -221,34 +223,45 @@ function CommentFormModal({
             className="absolute left-[-9999px] h-0 w-0 opacity-0"
           />
           <input
+            id="comment-name"
             value={name}
             onChange={(event) => onNameChange(event.target.value)}
             placeholder={t("comments.name")}
             maxLength={40}
+            data-clarity-label="comment-name-focus"
+            data-clarity-mask="true"
             className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
           />
           <input
+            id="comment-email"
             type="email"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
             placeholder={t("comments.email")}
             maxLength={120}
+            data-clarity-label="comment-email-focus"
+            data-clarity-mask="true"
             className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
           />
           <textarea
+            id="comment-message"
             value={message}
             onChange={(event) => onMessageChange(event.target.value)}
             placeholder={t("comments.message")}
             rows={5}
             maxLength={600}
+            data-clarity-label="comment-message-focus"
+            data-clarity-mask="true"
             className="w-full resize-none rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
           />
           {submitError && <p className="text-xs text-destructive">{submitError}</p>}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
             <p className="text-xs text-muted-foreground">{t("comments.moderation")}</p>
             <button
+              id="comment-submit-button"
               type="submit"
               disabled={isSubmitting}
+              data-clarity-label="comment-submit-button"
               className="rounded-full bg-primary px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-primary-foreground disabled:opacity-60"
             >
               {isSubmitting ? t("comments.sending") : t("comments.send")}
@@ -389,6 +402,7 @@ export function Comments() {
 
     try {
       const commentId = await submitComment({ authorName: name.trim(), body: message.trim(), email: email.trim() });
+      trackClarityEvent("comment-submit-success");
       const submittedAt = formatCommentDate(new Date().toISOString(), lang);
       setSubmittedComments((current) => [
         {
@@ -407,6 +421,7 @@ export function Comments() {
       setMessage("");
       setIsFormOpen(false);
     } catch (error) {
+      trackClarityEvent("comment-submit-error");
       setSubmitError(error instanceof Error ? error.message : "Unable to submit comment.");
     } finally {
       setIsSubmitting(false);
@@ -439,6 +454,7 @@ export function Comments() {
                     key={option.value}
                     type="button"
                     onClick={() => toggleSort(option.value)}
+                    data-clarity-label={`comments-sort-${option.value}`}
                     className={`relative inline-flex cursor-pointer items-center gap-1.5 pb-2 font-mono text-xs uppercase transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                       }`}
                   >
@@ -456,8 +472,10 @@ export function Comments() {
 
           {/* Add comment button */}
           <button
+            id="comment-open-form"
             type="button"
             onClick={() => setIsFormOpen(true)}
+            data-clarity-label="comments-open-form"
             className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-full bg-primary px-5 font-mono text-[11px] uppercase tracking-[0.2em] text-primary-foreground"
           >
             <MessageSquarePlus className="size-4" />
@@ -501,6 +519,7 @@ export function Comments() {
                       disabled={isLiking}
                       aria-pressed={isLiked}
                       aria-label={t(isLiked ? "comments.unlike" : "comments.like")}
+                      data-clarity-label="comment-like"
                       className={`mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                         } disabled:cursor-not-allowed disabled:opacity-60`}
                     >

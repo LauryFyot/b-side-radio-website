@@ -27,16 +27,18 @@ export function Vinyls() {
       kicker={(
         <LinkedText
           text={t("vinyls.kicker")}
-          links={{ traxsource: { href: TRAXSOURCE_URL, label: "TRAXSOURCE" } }}
+          links={{ traxsource: { href: TRAXSOURCE_URL, label: "TRAXSOURCE", clarityLabel: "partner-traxsource" } }}
         />
       )}
       tone="surface"
       headerAction={(
         <a
+          id="partner-traxsource-vinyls"
           href={TRAXSOURCE_URL}
           target="_blank"
           rel="noreferrer"
           aria-label="Traxsource"
+          data-clarity-label="partner-traxsource"
           className="grid size-14 shrink-0 place-items-center rounded-full border border-border p-4 transition-colors hover:border-primary"
         >
           <img src={traxsourceLogo} alt="Traxsource" className="size-full object-contain" />
@@ -133,6 +135,7 @@ export function Vinyls() {
                       target="_blank"
                       rel="noreferrer"
                       aria-label={`${t("common.buy")} ${v.title}`}
+                      data-clarity-label={v.buyUrl?.toLowerCase().includes("traxsource.com") ? "partner-traxsource" : "vinyl-purchase"}
                       className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                     >
                       <ShoppingBag className="size-4" />

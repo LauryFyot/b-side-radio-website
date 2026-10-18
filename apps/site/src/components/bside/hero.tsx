@@ -74,14 +74,14 @@ export function Hero() {
             REMIXES<br />
             &amp; <span className="hero-outline">MASHUPS</span>
           </p>
-          <a className="hero-partner" href="https://www.traxsource.com/" target="_blank" rel="noreferrer" aria-label="Traxsource">
+          <a id="partner-traxsource-hero" data-clarity-label="partner-traxsource" className="hero-partner" href="https://www.traxsource.com/" target="_blank" rel="noreferrer" aria-label="Traxsource">
             <span>Partnership</span>
             <img src={traxsourceLogo} alt="Traxsource" />
           </a>
         </div>
         <div className="hero-actions">
-          <a className="hero-chat" href="#comments">{t("hero.which")}</a>
-          <button type="button" onClick={toggleLive} className="hero-listen" aria-pressed={playing}>
+          <a className="hero-chat" href="#comments" data-clarity-label="navigation-comments">{t("hero.which")}</a>
+          <button id="player-toggle-hero" type="button" onClick={toggleLive} className="hero-listen" aria-pressed={playing} data-clarity-label="player-toggle-hero">
             {playing ? <Pause className="size-4 shrink-0 fill-current" /> : <Play className="size-4 shrink-0 fill-current" />}
             {playing ? t("hero.listening") : t("hero.listen")}
           </button>
