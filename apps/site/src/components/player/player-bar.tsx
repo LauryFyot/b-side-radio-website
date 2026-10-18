@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
 import { getRadioProvider } from "@/lib/radio";
 import { findCurrentShow } from "@/lib/schedule-utils";
+import { trackClarityEvent } from "@/lib/clarity";
 
 export function Equalizer({ active, className = "h-5" }: { active: boolean; className?: string }) {
   return (
@@ -26,6 +27,7 @@ export function Equalizer({ active, className = "h-5" }: { active: boolean; clas
 
 export function PlayerBar() {
   const barRef = useRef<HTMLDivElement>(null);
+  const radioPlaybackTrackedRef = useRef(false);
   const { audioRef, playing, source, toggleLive, setPlaying } = usePlayer();
   const [volume, setVolume] = useState(0.8);
   const [now, setNow] = useState(() => new Date());
@@ -84,14 +86,30 @@ export function PlayerBar() {
         preload="auto"
         autoPlay
         onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
+        onPlaying={() => {
+          if (source.kind === "live" && !radioPlaybackTrackedRef.current) {
+            trackClarityEvent("radio-play-start");
+            radioPlaybackTrackedRef.current = true;
+          }
+        }}
+        onPause={() => {
+          setPlaying(false);
+          radioPlaybackTrackedRef.current = false;
+        }}
+        onError={() => {
+          if (source.kind === "live") trackClarityEvent("radio-play-error");
+          setPlaying(false);
+          radioPlaybackTrackedRef.current = false;
+        }}
       />
       <div ref={barRef} className="fixed inset-x-0 bottom-0 z-50 px-2 pb-2 sm:px-4 sm:pb-4">
         <div className="mx-auto grid max-w-7xl grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-3xl border border-border bg-surface/95 px-3 py-2.5 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.35)] backdrop-blur-md sm:gap-5 sm:px-6 sm:py-3">
           <button
+            id="player-toggle-bar"
             type="button"
             onClick={toggleLive}
             aria-label={playing ? t("player.pause") : t("player.play")}
+            data-clarity-label="player-toggle-bar"
             className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-95 sm:size-14"
           >
             {playing ? <Pause className="size-5 fill-current" /> : <Play className="size-5 translate-x-[1px] fill-current" />}
@@ -133,9 +151,11 @@ export function PlayerBar() {
               />
             </label>
             <a
+              id="partner-traxsource-player"
               href={buyUrl}
               target="_blank"
               rel="noreferrer"
+              data-clarity-label="partner-traxsource"
               className="inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors hover:border-primary hover:text-primary"
             >
               <ShoppingBag className="size-3.5" />

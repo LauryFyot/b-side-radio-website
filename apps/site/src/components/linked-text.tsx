@@ -5,6 +5,7 @@ type InlineLink = {
   label?: string;
   target?: "_blank" | "_self";
   className?: string;
+  clarityLabel?: string;
 };
 
 export function LinkedText({ text, links }: { text: string; links: Record<string, InlineLink> }) {
@@ -25,6 +26,7 @@ export function LinkedText({ text, links }: { text: string; links: Record<string
           href={link.href}
           target={link.target}
           rel={link.target === "_blank" ? "noreferrer" : undefined}
+          data-clarity-label={link.clarityLabel}
           className={link.className ?? "relative z-10 cursor-pointer pointer-events-auto font-medium text-primary underline decoration-primary underline-offset-2 transition-colors hover:text-foreground"}
         >
           {link.label ?? key}

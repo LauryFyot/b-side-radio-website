@@ -4,6 +4,7 @@ import { SectionManager } from "./section-manager";
 import { usePlayer } from "@/components/player/player-context";
 import { useI18n } from "@/lib/i18n";
 import { useSiteContent } from "@/lib/siteContent";
+import { trackClarityEvent } from "@/lib/clarity";
 
 function formatTrackDuration(seconds?: number) {
   if (!seconds || Number.isNaN(seconds)) {
@@ -33,6 +34,7 @@ export function MixSessions() {
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const trackAudioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
+  const startedMixIdsRef = useRef(new Set<string>());
 
   useEffect(() => {
     let cancelled = false;
@@ -100,9 +102,12 @@ export function MixSessions() {
               className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 rounded-2xl border border-border bg-background p-4 transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-[0_14px_30px_-20px_rgba(0,0,0,0.45)]"
             >
               <button
+                id={`mix-play-${index}`}
                 type="button"
                 onClick={() => playLocalMix(id)}
                 aria-label={`${active ? t("player.pause") : t("mixSessions.listen")} ${mix.title}`}
+                aria-pressed={active}
+                data-clarity-label="mix-play"
                 className="grid size-11 shrink-0 place-items-center rounded-full border border-primary text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 {active ? <Pause className="size-4 fill-current" /> : <Play className="size-4 fill-current" />}
@@ -126,8 +131,26 @@ export function MixSessions() {
                     preload="metadata"
                     src={mix.src}
                     onPlay={() => setPlayingTrackId(id)}
-                    onPause={() => setPlayingTrackId((current) => (current === id ? null : current))}
-                    onEnded={() => setPlayingTrackId(null)}
+                    onPlaying={() => {
+                      if (!startedMixIdsRef.current.has(id)) {
+                        startedMixIdsRef.current.add(id);
+                        trackClarityEvent("mix-play-start");
+                      }
+                    }}
+                    onPause={() => {
+                      startedMixIdsRef.current.delete(id);
+                      setPlayingTrackId((current) => (current === id ? null : current));
+                    }}
+                    onEnded={() => {
+                      startedMixIdsRef.current.delete(id);
+                      trackClarityEvent("mix-play-complete");
+                      setPlayingTrackId(null);
+                    }}
+                    onError={() => {
+                      startedMixIdsRef.current.delete(id);
+                      trackClarityEvent("mix-play-error");
+                      setPlayingTrackId(null);
+                    }}
                     aria-label={`${t("mixSessions.listen")} ${mix.title}`}
                   />
                 )}

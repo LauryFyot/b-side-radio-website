@@ -25,7 +25,7 @@ export const nowPlaying: NowPlaying = {
   title: "Billie Jean (B Side Rework)",
   artist: "Michael Jackson x Purple Disco Machine",
   original: "Original : Michael Jackson — Billie Jean (1982)",
-  buyUrl: "https://www.beatport.com/search?q=purple%20disco%20machine",
+  buyUrl: "https://www.traxsource.com/search?q=purple%20disco%20machine",
 };
 
 export const nextUp = {
@@ -175,16 +175,16 @@ export const weekSchedule: DaySchedule[] = [
 ];
 
 export const vinyls: Vinyl[] = [
-  { side: "A1", title: "Le Freak", artist: "Chic", year: "1978", labelColor: "#FF0000", remixedBy: "Dimitri From Paris", buyUrl: "https://www.beatport.com/search?q=le%20freak%20dimitri%20from%20paris" },
-  { side: "A2", title: "Blue Monday", artist: "New Order", year: "1983", labelColor: "#B65151", remixedBy: "Vitalic", buyUrl: "https://www.beatport.com/search?q=blue%20monday%20vitalic" },
-  { side: "A3", title: "Around The World", artist: "Daft Punk", year: "1997", labelColor: "#F2F2F2", remixedBy: "Folamour", buyUrl: "https://www.beatport.com/search?q=around%20the%20world%20folamour" },
-  { side: "A4", title: "Show Me Love", artist: "Robin S", year: "1993", labelColor: "#FF0000", remixedBy: "DJ Eddy", buyUrl: "https://www.beatport.com/search?q=show%20me%20love%20dj%20eddy" },
-  { side: "A5", title: "Groove Is In The Heart", artist: "Deee-Lite", year: "1990", labelColor: "#B65151", remixedBy: "Purple Disco Machine", buyUrl: "https://www.beatport.com/search?q=groove%20is%20in%20the%20heart%20purple%20disco%20machine" },
-  { side: "B1", title: "Music Sounds Better", artist: "Stardust", year: "1998", labelColor: "#F2F2F2", remixedBy: "DJ Bart", buyUrl: "https://www.beatport.com/search?q=music%20sounds%20better%20dj%20bart" },
-  { side: "B2", title: "I Feel Love", artist: "Donna Summer", year: "1977", labelColor: "#FF0000", remixedBy: "Roisin Murphy", buyUrl: "https://www.beatport.com/search?q=i%20feel%20love%20roisin%20murphy" },
-  { side: "B3", title: "Give Me The Night", artist: "George Benson", year: "1980", labelColor: "#B65151", remixedBy: "Yuksek", buyUrl: "https://www.beatport.com/search?q=give%20me%20the%20night%20yuksek" },
-  { side: "B4", title: "Ain't Nobody", artist: "Chaka Khan", year: "1983", labelColor: "#F2F2F2", remixedBy: "DJ LeCyr", buyUrl: "https://www.beatport.com/search?q=ain%27t%20nobody%20dj%20lecyr" },
-  { side: "B5", title: "Insomnia", artist: "Faithless", year: "1995", labelColor: "#FF0000", remixedBy: "Mount Kimbie", buyUrl: "https://www.beatport.com/search?q=insomnia%20mount%20kimbie" },
+  { side: "A1", title: "Le Freak", artist: "Chic", year: "1978", labelColor: "#FF0000", remixedBy: "Dimitri From Paris", buyUrl: "https://www.traxsource.com/search?q=le%20freak%20dimitri%20from%20paris" },
+  { side: "A2", title: "Blue Monday", artist: "New Order", year: "1983", labelColor: "#B65151", remixedBy: "Vitalic", buyUrl: "https://www.traxsource.com/search?q=blue%20monday%20vitalic" },
+  { side: "A3", title: "Around The World", artist: "Daft Punk", year: "1997", labelColor: "#F2F2F2", remixedBy: "Folamour", buyUrl: "https://www.traxsource.com/search?q=around%20the%20world%20folamour" },
+  { side: "A4", title: "Show Me Love", artist: "Robin S", year: "1993", labelColor: "#FF0000", remixedBy: "DJ Eddy", buyUrl: "https://www.traxsource.com/search?q=show%20me%20love%20dj%20eddy" },
+  { side: "A5", title: "Groove Is In The Heart", artist: "Deee-Lite", year: "1990", labelColor: "#B65151", remixedBy: "Purple Disco Machine", buyUrl: "https://www.traxsource.com/search?q=groove%20is%20in%20the%20heart%20purple%20disco%20machine" },
+  { side: "B1", title: "Music Sounds Better", artist: "Stardust", year: "1998", labelColor: "#F2F2F2", remixedBy: "DJ Bart", buyUrl: "https://www.traxsource.com/search?q=music%20sounds%20better%20dj%20bart" },
+  { side: "B2", title: "I Feel Love", artist: "Donna Summer", year: "1977", labelColor: "#FF0000", remixedBy: "Roisin Murphy", buyUrl: "https://www.traxsource.com/search?q=i%20feel%20love%20roisin%20murphy" },
+  { side: "B3", title: "Give Me The Night", artist: "George Benson", year: "1980", labelColor: "#B65151", remixedBy: "Yuksek", buyUrl: "https://www.traxsource.com/search?q=give%20me%20the%20night%20yuksek" },
+  { side: "B4", title: "Ain't Nobody", artist: "Chaka Khan", year: "1983", labelColor: "#F2F2F2", remixedBy: "DJ LeCyr", buyUrl: "https://www.traxsource.com/search?q=ain%27t%20nobody%20dj%20lecyr" },
+  { side: "B5", title: "Insomnia", artist: "Faithless", year: "1995", labelColor: "#FF0000", remixedBy: "Mount Kimbie", buyUrl: "https://www.traxsource.com/search?q=insomnia%20mount%20kimbie" },
 ];
 
 export type MixSession = {
@@ -203,7 +203,7 @@ export const mixSessions: MixSession[] = [
     duration: "6:12",
     dj: "DJ Eddy",
     src: "http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3",
-    buyUrl: "https://www.beatport.com/search?q=edit",
+    buyUrl: "https://www.traxsource.com/search?q=edit",
   },
   {
     title: "BSR Selection #2",
@@ -211,7 +211,7 @@ export const mixSessions: MixSession[] = [
     duration: "5:44",
     dj: "DJ Eddy",
     src: "http://byeddy.free.fr/MIXES/BSR_byeddy_2.mp3",
-    buyUrl: "https://www.beatport.com/search?q=edit",
+    buyUrl: "https://www.traxsource.com/search?q=edit",
   },
   {
     title: "Funky House Cut",
@@ -219,7 +219,7 @@ export const mixSessions: MixSession[] = [
     duration: "7:03",
     dj: "DJ Bart",
     src: "http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3",
-    buyUrl: "https://www.beatport.com/search?q=funky+house",
+    buyUrl: "https://www.traxsource.com/search?q=funky+house",
   },
   {
     title: "Late Night Cut",
@@ -227,7 +227,7 @@ export const mixSessions: MixSession[] = [
     duration: "6:37",
     dj: "DJ Bart",
     src: "http://byeddy.free.fr/MIXES/BSR_djbart_2.mp3",
-    buyUrl: "https://www.beatport.com/search?q=funky+house",
+    buyUrl: "https://www.traxsource.com/search?q=funky+house",
   },
   {
     title: "Klub Time Weapon",
@@ -235,7 +235,7 @@ export const mixSessions: MixSession[] = [
     duration: "5:58",
     dj: "DJ LeCyr",
     src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3",
-    buyUrl: "https://www.beatport.com/search?q=tech+house",
+    buyUrl: "https://www.traxsource.com/search?q=tech+house",
   },
   {
     title: "B Side Closer",
@@ -243,7 +243,7 @@ export const mixSessions: MixSession[] = [
     duration: "8:21",
     dj: "DJ LeCyr",
     src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_2.mp3",
-    buyUrl: "https://www.beatport.com/search?q=tech+house",
+    buyUrl: "https://www.traxsource.com/search?q=tech+house",
   },
 ];
 

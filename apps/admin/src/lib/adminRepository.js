@@ -3,6 +3,7 @@
 // Keeps Supabase queries in one place so hooks/components stay UI-focused.
 import { supabase } from './supabaseClient';
 import { isDbId, toSlug, toTimeInput } from '../utils/adminHelpers';
+import { trackAdminClarityEvent } from './clarity';
 
 const ADMIN_MEDIA_BUCKET = import.meta.env.VITE_SUPABASE_MEDIA_BUCKET || 'admin-media';
 const R2_UPLOAD_URL = import.meta.env.VITE_R2_UPLOAD_URL || import.meta.env.VITE_CLOUDFLARE_R2_UPLOAD_URL || '';
@@ -89,36 +90,44 @@ async function uploadToCloudflareR2(file, folder) {
 }
 
 export async function uploadAdminFile(file, folder) {
-  if (!file) {
-    throw new Error('No file selected.');
+  try {
+    if (!file) {
+      throw new Error('No file selected.');
+    }
+
+    if (R2_UPLOAD_URL) {
+      const publicUrl = await uploadToCloudflareR2(file, folder);
+      trackAdminClarityEvent('admin-media-upload-success');
+      return publicUrl;
+    }
+
+    if (!supabase) {
+      throw new Error('Supabase is not initialized.');
+    }
+
+    const path = buildStoragePath(folder, file);
+    const uploadResult = await supabase.storage.from(ADMIN_MEDIA_BUCKET).upload(path, file, {
+      upsert: false,
+      contentType: file.type || undefined
+    });
+
+    if (uploadResult.error) {
+      throw new Error(uploadResult.error.message || 'Unable to upload file.');
+    }
+
+    const publicResult = supabase.storage.from(ADMIN_MEDIA_BUCKET).getPublicUrl(path);
+    const publicUrl = publicResult.data?.publicUrl || '';
+
+    if (publicUrl === '') {
+      throw new Error('Unable to resolve the uploaded file URL.');
+    }
+
+    trackAdminClarityEvent('admin-media-upload-success');
+    return publicUrl;
+  } catch (error) {
+    trackAdminClarityEvent('admin-media-upload-error');
+    throw error;
   }
-
-  if (R2_UPLOAD_URL) {
-    return uploadToCloudflareR2(file, folder);
-  }
-
-  if (!supabase) {
-    throw new Error('Supabase is not initialized.');
-  }
-
-  const path = buildStoragePath(folder, file);
-  const uploadResult = await supabase.storage.from(ADMIN_MEDIA_BUCKET).upload(path, file, {
-    upsert: false,
-    contentType: file.type || undefined
-  });
-
-  if (uploadResult.error) {
-    throw new Error(uploadResult.error.message || 'Unable to upload file.');
-  }
-
-  const publicResult = supabase.storage.from(ADMIN_MEDIA_BUCKET).getPublicUrl(path);
-  const publicUrl = publicResult.data?.publicUrl || '';
-
-  if (publicUrl === '') {
-    throw new Error('Unable to resolve the uploaded file URL.');
-  }
-
-  return publicUrl;
 }
 
 export async function synchronizeR2Mixes(candidateUrls = []) {
