@@ -20,6 +20,47 @@
         script.async = true;
         script.src = 'https://www.googletagmanager.com/gtag/js?id=G-3SNWYSPZ5Z';
         document.head.appendChild(script);
+
+        document.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+
+          const playerButton = target.closest('button[data-clarity-label]');
+          const playerLocations = {
+            'player-toggle-hero': 'hero',
+            'player-toggle-bar': 'player_bar',
+            'mix-play': 'mix_sessions',
+            'replay-play': 'replays',
+          };
+          const buttonLocation = playerLocations[playerButton?.getAttribute('data-clarity-label')];
+          if (buttonLocation && !playerButton.disabled) {
+            window.gtag('event', 'player_click', {
+              button_location: buttonLocation,
+              button_id: playerButton.id,
+              player_action: playerButton.getAttribute('aria-pressed') === 'true' ? 'pause' : 'play',
+            });
+          }
+
+          const link = target.closest('a[href]');
+          if (link) {
+            const url = new URL(link.href, window.location.href);
+            if (url.hostname === 'traxsource.com' || url.hostname.endsWith('.traxsource.com')) {
+              window.gtag('event', 'traxsource_click', {
+                button_location: link.id === 'partner-traxsource-player'
+                  ? 'player_bar' : link.closest('section[id]')?.id || 'other',
+                link_type: link.id === 'partner-traxsource-player' || link.closest('li') ? 'purchase' : 'partnership',
+                link_url: url.href,
+              });
+            }
+          }
+
+          if (target.closest('#equipe')) {
+            window.gtag('event', 'team_click', {
+              button_location: 'equipe',
+              member_name: target.closest('[data-team-member]')?.getAttribute('data-team-member') || 'section',
+            });
+          }
+        }, { capture: true });
       })();
     </script>
     <meta charset="UTF-8" />
@@ -45,7 +86,7 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap"
     />
     <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-    <script type="module" crossorigin src="./assets/index-BjOwwUiZ.js"></script>
+    <script type="module" crossorigin src="./assets/index-BHT2cAGx.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CmepBOyJ.css">
   </head>
   <body>
