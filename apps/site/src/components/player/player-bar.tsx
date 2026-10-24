@@ -1,4 +1,4 @@
-import { Pause, Play, ShoppingBag, Radio, Volume2 } from "lucide-react";
+import { Pause, Play, ShoppingCart, Radio, Volume2 } from "lucide-react";
 import { usePlayer } from "./player-context";
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
@@ -162,7 +162,7 @@ export function PlayerBar() {
               data-clarity-label="partner-traxsource"
               className="inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors hover:border-primary hover:text-primary"
             >
-              <ShoppingBag className="size-3.5" />
+              <ShoppingCart className="size-3.5" />
               <span className="hidden sm:inline">{t("player.buy")}</span>
             </a>
           </div>
