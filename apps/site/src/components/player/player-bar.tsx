@@ -93,6 +93,9 @@ export function PlayerBar() {
           }
         }}
         onPause={() => {
+          if (source.kind === "live" && radioPlaybackTrackedRef.current) {
+            trackClarityEvent("radio-pause");
+          }
           setPlaying(false);
           radioPlaybackTrackedRef.current = false;
         }}
@@ -109,6 +112,7 @@ export function PlayerBar() {
             type="button"
             onClick={toggleLive}
             aria-label={playing ? t("player.pause") : t("player.play")}
+            aria-pressed={playing}
             data-clarity-label="player-toggle-bar"
             className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-95 sm:size-14"
           >

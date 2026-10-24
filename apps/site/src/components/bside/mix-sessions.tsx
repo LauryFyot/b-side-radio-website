@@ -137,7 +137,10 @@ export function MixSessions() {
                         trackClarityEvent("mix-play-start");
                       }
                     }}
-                    onPause={() => {
+                    onPause={(event) => {
+                      if (startedMixIdsRef.current.has(id) && !event.currentTarget.ended) {
+                        trackClarityEvent("mix-pause");
+                      }
                       startedMixIdsRef.current.delete(id);
                       setPlayingTrackId((current) => (current === id ? null : current));
                     }}

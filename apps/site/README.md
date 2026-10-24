@@ -151,6 +151,39 @@ Variables utiles:
 
 En local, elles peuvent vivre dans `apps/site/.env`. Pour changer de radio, definir `VITE_RADIO_PROVIDER=azuracast`, puis relancer/redeployer le site.
 
+## Analytics GA4 et Clarity
+
+`src/lib/analytics.ts` centralise les traceurs et les evenements. Le suivi est actif
+uniquement en HTTPS sur `b-side-radio.com` et `www.b-side-radio.com`, hors `/admin`
+et `/dev`. Clarity depend de `VITE_CLARITY_PROJECT_ID_SITE`, mais GA4 fonctionne
+independamment de cette variable.
+
+| Evenement GA4 | Mesure | Parametres |
+| --- | --- | --- |
+| `radio_play`, `radio_pause`, `radio_error` | Demarrage audio reel, pause effective et erreur du live | `station_name` = `B Side Radio` |
+| `mix_play`, `mix_pause`, `mix_complete`, `mix_error` | Demarrage audio reel, pause, fin et erreur d'un mix | Aucun |
+| `player_click` | Intention de lecture/pause sur le hero, la barre ou les mix sessions | `button_location`, `button_id`, `player_action` (`play` ou `pause`) |
+| `traxsource_click` | Clic vers Traxsource, y compris sur une image dans le lien | `button_location` (`hero`, `vinyls`, `player_bar`...), `link_type` (`purchase` ou `partnership`) |
+| `comment_submit_success`, `comment_submit_error` | Resultat d'envoi d'un commentaire, sans son contenu | Aucun |
+
+Les noms Clarity existants sont conserves. `radio-pause` et `mix-pause` s'y ajoutent.
+Une reprise apres pause produit un nouveau demarrage, mais les notifications de
+buffering sans pause ne sont pas recomptees. Une pause audio peut etre provoquee
+par un autre lecteur : `player_click` mesure separement l'action de l'utilisateur.
+`radio_play` peut aussi venir du demarrage automatique ; ce n'est pas un clic.
+Les replays ne sont pas instrumentes ici.
+
+Apres deploiement, verifier les evenements dans le rapport Temps reel GA4.
+Pour ventiler les rapports, creer des dimensions personnalisees de portee
+Evenement pour `station_name`, `button_location`, `button_id`, `player_action`
+et `link_type` dans Administration > Definitions personnalisees. Leur disponibilite
+dans les rapports peut prendre 24 a 48 heures et n'est pas retroactive.
+Comparer les sessions contenant un evenement avec Clarity, pas le total des
+evenements GA4 avec les sessions Clarity. Les bloqueurs et le consentement peuvent
+creer des ecarts ; la restriction de production ne remplace pas le consentement.
+
+Test cible, depuis la racine : `npm --prefix apps/site run test:analytics`.
+
 ## Commandes utiles
 
 Depuis la racine du repo:
