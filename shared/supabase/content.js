@@ -170,6 +170,7 @@ export function mapSupabaseContentToSiteModel({ shows = [], slots = [], shows_sl
   const toScheduleItem = (item) => {
     const show = item?.show || {};
     return {
+      slotId: item?.id == null ? undefined : String(item.id),
       name: show.name || 'Show',
       host: show.slug || 'B Side Radio',
       start: item?.start_time ? String(item.start_time).slice(0, 5) : '00:00',

@@ -80,6 +80,8 @@ export function MixSessions() {
     });
   }
 
+  if (!mixSessions.some((mix) => mix.src?.trim())) return null;
+
   return (
     <SectionManager
       id="mix-sessions"

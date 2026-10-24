@@ -34,6 +34,7 @@ export const nextUp = {
 };
 
 export type Show = {
+  slotId?: string;
   name: string;
   host: string;
   start: string;
@@ -196,80 +197,15 @@ export type MixSession = {
   buyUrl: string;
 };
 
-export const mixSessions: MixSession[] = [
-  {
-    title: "BSR Selection #1",
-    artist: "byEddy Edit",
-    duration: "6:12",
-    dj: "DJ Eddy",
-    src: "http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3",
-    buyUrl: "https://www.traxsource.com/search?q=edit",
-  },
-  {
-    title: "BSR Selection #2",
-    artist: "byEddy Edit",
-    duration: "5:44",
-    dj: "DJ Eddy",
-    src: "http://byeddy.free.fr/MIXES/BSR_byeddy_2.mp3",
-    buyUrl: "https://www.traxsource.com/search?q=edit",
-  },
-  {
-    title: "Funky House Cut",
-    artist: "DJ Bart",
-    duration: "7:03",
-    dj: "DJ Bart",
-    src: "http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3",
-    buyUrl: "https://www.traxsource.com/search?q=funky+house",
-  },
-  {
-    title: "Late Night Cut",
-    artist: "DJ Bart",
-    duration: "6:37",
-    dj: "DJ Bart",
-    src: "http://byeddy.free.fr/MIXES/BSR_djbart_2.mp3",
-    buyUrl: "https://www.traxsource.com/search?q=funky+house",
-  },
-  {
-    title: "Klub Time Weapon",
-    artist: "DJ LeCyr",
-    duration: "5:58",
-    dj: "DJ LeCyr",
-    src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3",
-    buyUrl: "https://www.traxsource.com/search?q=tech+house",
-  },
-  {
-    title: "B Side Closer",
-    artist: "DJ LeCyr",
-    duration: "8:21",
-    dj: "DJ LeCyr",
-    src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_2.mp3",
-    buyUrl: "https://www.traxsource.com/search?q=tech+house",
-  },
-];
+export const mixSessions: MixSession[] = [];
 
-export const replays = [
-  {
-    name: "Friday Funky Session",
-    dj: "DJ Eddy",
-    length: "62 min",
-    style: "Funky House / Disco",
-    src: "http://byeddy.free.fr/MIXES/BSR_byeddy_1.mp3",
-  },
-  {
-    name: "Saturday Klub Session",
-    dj: "DJ Bart",
-    length: "74 min",
-    style: "House / Mashups",
-    src: "http://byeddy.free.fr/MIXES/BSR_djbart_1.mp3",
-  },
-  {
-    name: "Sunday B Side Session",
-    dj: "DJ LeCyr",
-    length: "58 min",
-    style: "Tech House / Edits",
-    src: "http://byeddy.free.fr/MIXES/BSR_djlecyr_1.mp3",
-  },
-];
+export const replays: {
+  name: string;
+  dj: string;
+  length: string;
+  style: string;
+  src: string;
+}[] = [];
 
 export const team = [
   {
