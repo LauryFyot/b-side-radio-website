@@ -46,7 +46,23 @@ async function readApprovedComments() {
     console.warn('[supabase:comments]', error.message || error);
     return [];
   }
-  return normalizeRows(data);
+  const comments = normalizeRows(data);
+  if (!comments.length) return comments;
+  const result = await supabase.from('comment_replies')
+    .select('id,comment_id,author_name,body,created_at,updated_at')
+    .in('comment_id', comments.map((comment) => comment.id))
+    .order('created_at', { ascending: true });
+  if (result.error) {
+    console.warn('[supabase:comment_replies]', result.error.message || result.error);
+    return comments;
+  }
+  const repliesByComment = new Map();
+  for (const reply of normalizeRows(result.data)) {
+    const key = String(reply.comment_id);
+    if (!repliesByComment.has(key)) repliesByComment.set(key, []);
+    repliesByComment.get(key).push(reply);
+  }
+  return comments.map((comment) => ({ ...comment, replies: repliesByComment.get(String(comment.id)) || [] }));
 }
 
 // Insert a visitor comment; the DB trigger auto-approves it (see comment_insert_guard).

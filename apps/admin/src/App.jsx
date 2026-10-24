@@ -69,6 +69,7 @@ function App() {
             hasPendingChanges={editor.hasPendingChanges}
             onPublish={editor.publish}
             editor={editor}
+            adminUser={auth.adminUser}
           />
         </main>
       </div>

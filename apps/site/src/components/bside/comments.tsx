@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { ArrowDown, ArrowUp, Heart, MessageSquarePlus, X } from "lucide-react";
 import { SectionManager } from "./section-manager";
 import { useI18n, type Lang, type TKey } from "@/lib/i18n";
-import { useSiteContent } from "@/lib/siteContent";
+import { useSiteContent, type SiteCommentReply } from "@/lib/siteContent";
 import { trackClarityEvent } from "@/lib/clarity";
 import { likeComment, submitComment, unlikeComment } from "@shared/supabase/content.js";
 
@@ -15,6 +15,7 @@ type Comment = {
   atEn?: string;
   likes: number;
   isPersisted?: boolean;
+  replies?: SiteCommentReply[];
 };
 
 type SortKey = "date" | "likes";
@@ -309,6 +310,7 @@ export function Comments() {
       at: formatCommentDate(comment.at, lang),
       atEn: formatCommentDate(comment.at, lang),
       likes: comment.likes,
+      replies: comment.replies,
       isPersisted: true,
     }))
     : seedComments;
@@ -495,15 +497,18 @@ export function Comments() {
               const profileVinyl = commentProfileVinyls[getCommentVinylIndex(comment, commentProfileVinyls.length)];
 
               return (
-                <li key={comment.id} className="flex items-center gap-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-6 sm:rounded-full sm:px-6 sm:py-4">
-                  {profileVinyl && (
-                    <img
-                      src={profileVinyl.imageUrl}
-                      alt=""
-                      className="size-14 shrink-0 rounded-full object-cover ring-0 ring-border sm:size-18"
-                    />
-                  )}
-                  <div className="min-w-0 flex-1">
+                <li key={comment.id} className={`grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-x-6 sm:px-6 sm:py-4 ${comment.replies?.length ? "" : "sm:rounded-full"}`}>
+                  <div className="relative row-start-1 size-14 self-center sm:size-18" aria-hidden="true">
+                    {profileVinyl ? <>
+                      <img src={profileVinyl.imageUrl} alt="" className="size-full rounded-full object-cover" />
+                      <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full bg-primary font-display text-sm leading-none text-primary-foreground ring-[3px] ring-surface sm:size-7 sm:text-base">
+                        <span className="relative top-[0.07em]">{[...comment.name.trim()][0]?.toLocaleUpperCase(lang) || "?"}</span>
+                      </span>
+                    </> : <span className="grid size-full place-items-center rounded-full bg-primary font-display text-2xl leading-none text-primary-foreground">
+                      <span className="relative top-[0.07em]">{[...comment.name.trim()][0]?.toLocaleUpperCase(lang) || "?"}</span>
+                    </span>}
+                  </div>
+                  <div className="row-start-1 min-w-0">
                     <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                       <span className="font-display text-xl">{comment.name}</span>
                       <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-primary">
@@ -513,6 +518,7 @@ export function Comments() {
                     <p className="mt-1 text-[13px] text-muted-foreground">
                       {en ? (comment.messageEn ?? comment.message) : comment.message}
                     </p>
+                    <div className="mt-2 flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => handleToggleLike(comment)}
@@ -520,13 +526,36 @@ export function Comments() {
                       aria-pressed={isLiked}
                       aria-label={t(isLiked ? "comments.unlike" : "comments.like")}
                       data-clarity-label="comment-like"
-                      className={`mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
+                      className={`inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                         } disabled:cursor-not-allowed disabled:opacity-60`}
                     >
                       <Heart className={`size-3.5 ${isLiked ? "fill-primary" : ""}`} />
                       {getLikeCount(comment)}
                     </button>
+                    </div>
                   </div>
+                    {Boolean(comment.replies?.length) && <ul className="col-span-2 col-start-1 mt-3 min-w-0 space-y-3 sm:col-span-1 sm:col-start-2" aria-label={en ? "Replies" : "Reponses"}>
+                      {comment.replies!.map((reply) => (
+                        <li key={reply.id} className="min-w-0 rounded-lg bg-foreground/3 px-4 py-2">
+                          <div className="flex items-center gap-3">
+                            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary font-display text-lg leading-none text-primary-foreground" aria-hidden="true">
+                              <span className="relative top-[0.07em]">{[...reply.name.trim()][0]?.toLocaleUpperCase(lang) || "?"}</span>
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1">
+                                <span className="relative top-[0.07em] max-w-full break-words font-display text-lg leading-none">{reply.name}</span>
+                                <span className="rounded-full bg-red-50 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-red-700">{t("comments.staff")}</span>
+                              </div>
+                              <div className="-mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <time className="font-mono text-[10px] uppercase leading-none tracking-[0.15em] text-primary" dateTime={reply.createdAt}>{formatCommentDate(reply.createdAt, lang)}</time>
+                                {reply.updatedAt !== reply.createdAt && <span className="text-[10px] leading-none text-muted-foreground">{en ? "Edited" : "Modifie"}</span>}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="mt-2 whitespace-pre-wrap break-words text-[13px] text-muted-foreground">{reply.message}</p>
+                        </li>
+                      ))}
+                    </ul>}
                 </li>
               );
             })}

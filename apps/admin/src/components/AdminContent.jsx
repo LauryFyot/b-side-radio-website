@@ -32,7 +32,7 @@ function SpinnerIcon() {
   );
 }
 
-function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, editor }) {
+function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, editor, adminUser }) {
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
 
   function handleConfirmPublish() {
@@ -122,7 +122,7 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
           />
         )}
 
-        {activeTab === 'comments' && <CommentsSection comments={editor.comments} onSetCommentStatus={editor.setCommentStatus} />}
+        {activeTab === 'comments' && <CommentsSection comments={editor.comments} onSetCommentStatus={editor.setCommentStatus} adminUser={adminUser} />}
         {activeTab === 'banner' && <ScrollingBannerSection messages={editor.bannerMessages} onChange={editor.setBannerMessages} />}
         {activeTab === 'team' && (
           <TeamSection

@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Trash2 } from 'lucide-react';
+import CommentReplies from '../CommentReplies';
+import useCommentReplies from '../../hooks/useCommentReplies';
 
 const statusOrder = ['pending', 'approved', 'spam', 'removed'];
 const filterOrder = ['all', ...statusOrder];
@@ -70,8 +72,9 @@ function ActionIcon({ type }) {
 // Moderation panel for user comments.
 // Shows current status and creation metadata for each comment.
 // Lets admins stage status changes before publish persists them.
-function CommentsSection({ comments, onSetCommentStatus }) {
+function CommentsSection({ comments, onSetCommentStatus, adminUser }) {
   const [activeFilter, setActiveFilter] = useState('all');
+  const replies = useCommentReplies(adminUser?.id, comments);
 
   const counts = useMemo(() => {
     const result = { pending: 0, approved: 0, spam: 0, removed: 0, all: comments.length };
@@ -96,6 +99,10 @@ function CommentsSection({ comments, onSetCommentStatus }) {
       {/* Header */}
       <p className="m-0 text-[length:var(--admin-section-kicker-size)] font-bold uppercase tracking-[0.12em] text-[#7f7784]">Moderation</p>
       <h2 className="m-0 text-[length:var(--admin-section-title-size)] [font-weight:var(--admin-section-title-weight)] tracking-[var(--admin-subsection-title-spacing)]">Comments</h2>
+      {replies.error && <div role="alert" className="my-3 text-sm text-admin-red">
+        Replies unavailable: {replies.error}
+        <button type="button" className={`${commentButtonClass} ml-2`} onClick={replies.reload}>Retry</button>
+      </div>}
       <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-3">
         <p className="m-0 min-w-[280px] flex-1 text-xs">Approve, mark as spam or remove visitor comments before they show on the site.</p>
         {/* Filters */}
@@ -167,6 +174,7 @@ function CommentsSection({ comments, onSetCommentStatus }) {
                 Remove
               </button>
             </div>
+            <CommentReplies commentId={comment.id} controller={replies} />
           </article>
           );
         })}
