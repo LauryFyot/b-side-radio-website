@@ -85,7 +85,7 @@ function WeekTimeline({ weekSchedule, lang, timelineRef }: { weekSchedule: { day
                 ))}
                 {day.shows
                   .filter((show) => getShowEndMinutes(show) > bounds.start && parseTimeToMinutes(show.start) < bounds.end)
-                  .map((show) => {
+                  .map((show, index) => {
                     const start = Math.max(parseTimeToMinutes(show.start), bounds.start);
                     const rawEnd = getShowEndMinutes(show);
                     const end = Math.min(rawEnd, bounds.end);
@@ -97,7 +97,7 @@ function WeekTimeline({ weekSchedule, lang, timelineRef }: { weekSchedule: { day
                     return (
                       /* Show block: name wraps on 2 lines, full name available via title on hover */
                       <article
-                        key={`${day.day}-${show.name}-${show.start}`}
+                        key={show.slotId ?? `${day.day}-${show.name}-${show.start}-${show.end}-${index}`}
                         title={show.name}
                         className="absolute overflow-hidden rounded-sm border border-primary/25 bg-background px-2 py-1.5 shadow-[0_10px_24px_-20px_var(--foreground)]"
                         style={{ left: `${left}%`, width: `${boundedWidth}%` }}
@@ -123,9 +123,9 @@ function WeekTimeline({ weekSchedule, lang, timelineRef }: { weekSchedule: { day
 function ShowList({ shows, lang }: { shows: Show[]; lang: Lang }) {
   return (
     <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
-      {shows.map((show) => (
+      {shows.map((show, index) => (
         <li
-          key={`${show.name}-${show.start}`}
+          key={show.slotId ?? `${show.dayOfWeek}-${show.name}-${show.start}-${show.end}-${index}`}
           className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-2 px-4 py-5 transition-colors hover:bg-muted sm:grid-cols-[8rem_10rem_minmax(0,1fr)] sm:gap-8 sm:px-6"
         >
           <span className="font-mono text-xs tracking-[0.15em] text-primary">

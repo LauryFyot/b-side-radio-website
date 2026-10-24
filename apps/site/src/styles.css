@@ -298,16 +298,27 @@ html {
 .hero-chat:focus-visible { outline: 2px solid white; outline-offset: 4px; }
 
 .hero-chat {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   max-width: 220px;
-  padding: 8px 14px;
+  padding: 10px 16px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 65%, transparent);
   border-radius: 999px;
-  background: oklch(1 0 0 / 22%);
-  color: white;
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
+  font-weight: 700;
   text-align: center;
   text-transform: uppercase;
+  transition: background-color 150ms ease, border-color 150ms ease;
 }
+
+.hero-chat:hover { background: color-mix(in oklab, var(--background) 94%, var(--foreground)); border-color: var(--foreground); }
+.hero-chat:focus-visible { outline-color: var(--foreground); }
 
 .hero-marquee {
   width: 100%;
@@ -333,7 +344,7 @@ html {
   .hero-partner img { width: 52px; }
   .hero-actions { right: 14px; bottom: 46px; max-width: calc(100% - 150px); }
   .hero-listen { min-height: 44px; padding: 10px 16px; font-size: 17px; gap: 7px; }
-  .hero-chat { display: none; }
+  .hero-chat { max-width: 100%; }
 }
 
 @media (max-width: 374px) {

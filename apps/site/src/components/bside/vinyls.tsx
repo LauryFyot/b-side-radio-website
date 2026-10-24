@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { LinkedText } from "@/components/linked-text";
 import { SectionManager } from "./section-manager";
 import { useI18n } from "@/lib/i18n";
@@ -138,7 +138,7 @@ export function Vinyls() {
                       data-clarity-label={v.buyUrl?.toLowerCase().includes("traxsource.com") ? "partner-traxsource" : "vinyl-purchase"}
                       className="grid size-10 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                     >
-                      <ShoppingBag className="size-4" />
+                      <ShoppingCart className="size-4" />
                     </a>
                   ) : (
                     <button
@@ -147,7 +147,7 @@ export function Vinyls() {
                       aria-label={`${t("common.buy")} ${v.title}`}
                       className="grid size-10 shrink-0 cursor-not-allowed place-items-center rounded-full border border-border/60 text-muted-foreground/35"
                     >
-                      <ShoppingBag className="size-4" />
+                      <ShoppingCart className="size-4" />
                     </button>
                   )}
                 </div>
