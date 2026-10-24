@@ -1,4 +1,4 @@
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, MessageCircle } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import heroImg from "@/assets/mixbannerbw.jpeg";
 import traxsourceLogo from "../../../../../assets/images/traxsource-logo-long-blue.png";
@@ -80,7 +80,10 @@ export function Hero() {
           </a>
         </div>
         <div className="hero-actions">
-          <a className="hero-chat" href="#comments" data-clarity-label="navigation-comments">{t("hero.which")}</a>
+          <a className="hero-chat" href="#comments" data-clarity-label="navigation-comments">
+            <MessageCircle className="size-4 shrink-0" aria-hidden="true" />
+            <span>{t("hero.which")}</span>
+          </a>
           <button id="player-toggle-hero" type="button" onClick={toggleLive} className="hero-listen" aria-pressed={playing} data-clarity-label="player-toggle-hero">
             {playing ? <Pause className="size-4 shrink-0 fill-current" /> : <Play className="size-4 shrink-0 fill-current" />}
             {playing ? t("hero.listening") : t("hero.listen")}
