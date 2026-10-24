@@ -497,7 +497,7 @@ export function Comments() {
               const profileVinyl = commentProfileVinyls[getCommentVinylIndex(comment, commentProfileVinyls.length)];
 
               return (
-                <li key={comment.id} className={`grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-x-6 sm:px-6 sm:py-4 ${comment.replies?.length ? "" : "sm:rounded-full"}`}>
+                <li key={comment.id} className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-x-6 sm:px-6 sm:py-4">
                   <div className="relative row-start-1 size-14 self-center sm:size-18" aria-hidden="true">
                     {profileVinyl ? <>
                       <img src={profileVinyl.imageUrl} alt="" className="size-full rounded-full object-cover" />
