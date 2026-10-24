@@ -32,7 +32,7 @@ function SpinnerIcon() {
   );
 }
 
-function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, editor }) {
+function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingChanges, onPublish, editor, adminUser }) {
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
 
   function handleConfirmPublish() {
@@ -107,6 +107,7 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
             onUpdateTrack={editor.updateTrack}
             onUploadTrackMp3={editor.uploadTrackMp3}
             onRemoveTrack={editor.removeTrack}
+            onReorder={editor.reorderTracks}
           />
         )}
 
@@ -117,10 +118,11 @@ function AdminContent({ activeTab, onTabChange, tabs, isPublishing, hasPendingCh
             onUpdateCover={editor.updateCover}
             onUploadCoverImage={editor.uploadCoverImage}
             onRemoveCover={editor.removeCover}
+            onReorder={editor.reorderCovers}
           />
         )}
 
-        {activeTab === 'comments' && <CommentsSection comments={editor.comments} onSetCommentStatus={editor.setCommentStatus} />}
+        {activeTab === 'comments' && <CommentsSection comments={editor.comments} onSetCommentStatus={editor.setCommentStatus} adminUser={adminUser} />}
         {activeTab === 'banner' && <ScrollingBannerSection messages={editor.bannerMessages} onChange={editor.setBannerMessages} />}
         {activeTab === 'team' && (
           <TeamSection

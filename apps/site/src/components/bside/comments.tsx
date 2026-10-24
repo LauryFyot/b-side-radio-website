@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { ArrowDown, ArrowUp, Heart, MessageSquarePlus, X } from "lucide-react";
+import { Heart, MessageSquarePlus, X } from "lucide-react";
 import { SectionManager } from "./section-manager";
-import { useI18n, type Lang, type TKey } from "@/lib/i18n";
-import { useSiteContent } from "@/lib/siteContent";
+import { useI18n, type TKey } from "@/lib/i18n";
+import { useSiteContent, type SiteCommentReply } from "@/lib/siteContent";
 import { trackClarityEvent } from "@/lib/clarity";
+import { formatCommentDate, formatCommentTimestamp } from "@/lib/comment-date";
 import { likeComment, submitComment, unlikeComment } from "@shared/supabase/content.js";
 
 type Comment = {
@@ -15,21 +16,16 @@ type Comment = {
   atEn?: string;
   likes: number;
   isPersisted?: boolean;
+  replies?: SiteCommentReply[];
 };
 
 type SortKey = "date" | "likes";
-type SortDirection = "asc" | "desc";
-
-type CommentSort = {
-  key: SortKey;
-  direction: SortDirection;
-};
 
 const LIKED_COMMENTS_STORAGE_KEY = "bside-liked-comments";
 
 const sortOptions: { value: SortKey; labelKey: TKey }[] = [
-  { value: "date", labelKey: "comments.sortDate" },
-  { value: "likes", labelKey: "comments.sortLikes" },
+  { value: "date", labelKey: "comments.sortRecent" },
+  { value: "likes", labelKey: "comments.sortPopular" },
 ];
 
 function getCommentVinylIndex(comment: Comment, count: number) {
@@ -37,23 +33,6 @@ function getCommentVinylIndex(comment: Comment, count: number) {
   const hash = [...key].reduce((total, char) => total + char.charCodeAt(0), 0);
 
   return count > 0 ? hash % count : 0;
-}
-
-function formatCommentDate(value: string, lang: Lang) {
-  if (!value) {
-    return "";
-  }
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat(lang === "en" ? "en-US" : "fr-FR", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(date);
 }
 
 function readLikedIds(): Set<string> {
@@ -287,16 +266,19 @@ export function Comments() {
   const [submitError, setSubmitError] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [submittedComments, setSubmittedComments] = useState<Comment[]>([]);
-  const [sort, setSort] = useState<CommentSort>({ key: "date", direction: "desc" });
+  const [sort, setSort] = useState<SortKey>("date");
   const [likedIds, setLikedIds] = useState<Set<string>>(() => readLikedIds());
   const [likeOverrides, setLikeOverrides] = useState<Record<string, number>>({});
   const [likingIds, setLikingIds] = useState<Set<string>>(new Set());
+  const [now, setNow] = useState(() => Date.now());
   const { t, lang } = useI18n();
   const en = lang === "en";
   const commentProfileVinyls = useMemo(() => vinyls.filter((vinyl) => vinyl.imageUrl), [vinyls]);
 
   useEffect(() => {
     setLikedIds(readLikedIds());
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
   }, []);
 
   // Both sources are already ordered newest first, so "oldest" is simply the reverse.
@@ -306,9 +288,10 @@ export function Comments() {
       name: comment.name,
       message: comment.message,
       messageEn: comment.message,
-      at: formatCommentDate(comment.at, lang),
-      atEn: formatCommentDate(comment.at, lang),
+      at: comment.at,
+      atEn: comment.atEn,
       likes: comment.likes,
+      replies: comment.replies,
       isPersisted: true,
     }))
     : seedComments;
@@ -318,23 +301,9 @@ export function Comments() {
     return likeOverrides[comment.id] ?? comment.likes;
   }
 
-  function toggleSort(nextKey: SortKey) {
-    setSort((current) => ({
-      key: nextKey,
-      direction: current.key === nextKey && current.direction === "desc" ? "asc" : "desc",
-    }));
-  }
-
   const sortedComments = useMemo(() => {
-    if (sort.key === "date" && sort.direction === "asc") {
-      return [...baseComments].reverse();
-    }
-
-    if (sort.key === "likes") {
-      return [...baseComments].sort((a, b) => {
-        const diff = getLikeCount(b) - getLikeCount(a);
-        return sort.direction === "desc" ? diff : -diff;
-      });
+    if (sort === "likes") {
+      return [...baseComments].sort((first, second) => getLikeCount(second) - getLikeCount(first));
     }
 
     return baseComments;
@@ -403,7 +372,7 @@ export function Comments() {
     try {
       const commentId = await submitComment({ authorName: name.trim(), body: message.trim(), email: email.trim() });
       trackClarityEvent("comment-submit-success");
-      const submittedAt = formatCommentDate(new Date().toISOString(), lang);
+      const submittedAt = new Date().toISOString();
       setSubmittedComments((current) => [
         {
           id: String(commentId),
@@ -434,41 +403,35 @@ export function Comments() {
         {/* max-w-[var(--comments-max-width)] */}
 
         {/* Comments header */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] items-center gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
             {/* Published comments counter */}
-            <span className="inline-flex h-9 items-center gap-2 rounded-full bg-primary/10 px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-              <span className="grid size-5 place-items-center rounded-full bg-primary/20 text-[11px] font-bold leading-none tracking-normal">
+            <span className="col-span-2 inline-flex shrink-0 items-center gap-3 sm:col-span-1">
+              <span className="size-2 shrink-0 rounded-full bg-primary shadow-[0_0_0_5px_color-mix(in_oklab,var(--primary)_4%,transparent)]" aria-hidden="true" />
+              <span className="relative top-[0.07em] font-display text-3xl leading-none text-foreground">
                 {sortedComments.length}
               </span>
-              {t("comments.published")}
+              <span className="font-mono text-[11px] uppercase tracking-normal text-muted-foreground">{t("comments.messages")}</span>
             </span>
             {/* Sort filters */}
-            <div className="flex items-center gap-4 border-b border-border/70">
+            <div className="grid h-9 min-w-0 grid-cols-2 rounded-full border border-border bg-surface p-0.5 sm:justify-self-end sm:p-1" role="group" aria-label={t("comments.sortLabel")}>
               {sortOptions.map((option) => {
-                const isActive = sort.key === option.value;
-                const SortIcon = isActive && sort.direction === "asc" ? ArrowUp : ArrowDown;
+                const isActive = sort === option.value;
 
                 return (
                   <button
                     key={option.value}
                     type="button"
-                    onClick={() => toggleSort(option.value)}
+                    onClick={() => setSort(option.value)}
+                    aria-pressed={isActive}
                     data-clarity-label={`comments-sort-${option.value}`}
-                    className={`relative inline-flex cursor-pointer items-center gap-1.5 pb-2 font-mono text-xs uppercase transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    className={`inline-flex h-full min-w-0 cursor-pointer items-center justify-center rounded-full font-mono text-[9px] uppercase tracking-normal transition-colors sm:px-5 sm:text-[11px] ${isActive ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
                       }`}
                   >
                     {t(option.labelKey)}
-                    <SortIcon className="size-3.5" strokeWidth={2.4} />
-                    <span
-                      className={`absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary transition-opacity ${isActive ? "opacity-100" : "opacity-0"
-                        }`}
-                    />
                   </button>
                 );
               })}
             </div>
-          </div>
 
           {/* Add comment button */}
           <button
@@ -476,10 +439,11 @@ export function Comments() {
             type="button"
             onClick={() => setIsFormOpen(true)}
             data-clarity-label="comments-open-form"
-            className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-full bg-primary px-5 font-mono text-[11px] uppercase tracking-[0.2em] text-primary-foreground"
+            title={t("comments.writeCta")}
+            className="inline-flex h-9 min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-primary px-2 font-sans text-[11px] uppercase leading-tight tracking-normal text-primary-foreground sm:gap-2 sm:px-5 sm:font-mono sm:tracking-[0.2em]"
           >
-            <MessageSquarePlus className="size-4" />
-            {t("comments.writeCta")}
+            <MessageSquarePlus className="size-4 shrink-0" aria-hidden="true" />
+            <span className="min-w-0">{t("comments.writeCta")}</span>
           </button>
         </div>
 
@@ -495,24 +459,28 @@ export function Comments() {
               const profileVinyl = commentProfileVinyls[getCommentVinylIndex(comment, commentProfileVinyls.length)];
 
               return (
-                <li key={comment.id} className="flex items-center gap-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-6 sm:rounded-full sm:px-6 sm:py-4">
-                  {profileVinyl && (
-                    <img
-                      src={profileVinyl.imageUrl}
-                      alt=""
-                      className="size-14 shrink-0 rounded-full object-cover ring-0 ring-border sm:size-18"
-                    />
-                  )}
-                  <div className="min-w-0 flex-1">
+                <li key={comment.id} className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 rounded-3xl border border-border bg-surface px-2 py-2 sm:gap-x-6 sm:px-6 sm:py-4">
+                  <div className="relative row-start-1 size-14 self-center sm:size-18" aria-hidden="true">
+                    {profileVinyl ? <>
+                      <img src={profileVinyl.imageUrl} alt="" className="size-full rounded-full object-cover" />
+                      <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full bg-primary font-display text-sm leading-none text-primary-foreground ring-[3px] ring-surface sm:size-6 sm:text-base">
+                        <span className="relative top-[0.07em]">{[...comment.name.trim()][0]?.toLocaleUpperCase(lang) || "?"}</span>
+                      </span>
+                    </> : <span className="grid size-full place-items-center rounded-full bg-primary font-display text-2xl leading-none text-primary-foreground">
+                      <span className="relative top-[0.07em]">{[...comment.name.trim()][0]?.toLocaleUpperCase(lang) || "?"}</span>
+                    </span>}
+                  </div>
+                  <div className="row-start-1 min-w-0">
                     <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                       <span className="font-display text-xl">{comment.name}</span>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-primary">
-                        {en ? (comment.atEn ?? comment.at) : comment.at}
-                      </span>
+                      <time className="font-sans text-[10px] tracking-normal text-primary" dateTime={comment.isPersisted ? comment.at : undefined} title={formatCommentTimestamp(comment.at, lang)}>
+                        {formatCommentDate(en ? (comment.atEn ?? comment.at) : comment.at, lang, now)}
+                      </time>
                     </p>
                     <p className="mt-1 text-[13px] text-muted-foreground">
                       {en ? (comment.messageEn ?? comment.message) : comment.message}
                     </p>
+                    <div className="mt-2 flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => handleToggleLike(comment)}
@@ -520,13 +488,36 @@ export function Comments() {
                       aria-pressed={isLiked}
                       aria-label={t(isLiked ? "comments.unlike" : "comments.like")}
                       data-clarity-label="comment-like"
-                      className={`mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
+                      className={`inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                         } disabled:cursor-not-allowed disabled:opacity-60`}
                     >
                       <Heart className={`size-3.5 ${isLiked ? "fill-primary" : ""}`} />
                       {getLikeCount(comment)}
                     </button>
+                    </div>
                   </div>
+                    {Boolean(comment.replies?.length) && <ul className="col-span-2 col-start-1 mt-3 min-w-0 space-y-3 sm:col-span-1 sm:col-start-2" aria-label={en ? "Replies" : "Reponses"}>
+                      {comment.replies!.map((reply) => (
+                        <li key={reply.id} className="min-w-0 rounded-lg bg-foreground/3 p-4">
+                          <div className="flex items-center gap-3">
+                            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary font-display text-lg leading-none text-primary-foreground" aria-hidden="true">
+                              <span className="relative top-[0.07em]">{[...reply.name.trim()][0]?.toLocaleUpperCase(lang) || "?"}</span>
+                            </span>
+                            <div className="flex min-w-0 flex-1 flex-col gap-1">
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <span className="relative top-[0.07em] max-w-full break-words font-display text-lg leading-none">{reply.name}</span>
+                                <span className="rounded-full bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-primary dark:bg-primary/15 dark:text-red-400">{t("comments.staff")}</span>
+                              </div>
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <time className="font-sans text-[10px] leading-none tracking-normal text-primary" dateTime={reply.createdAt} title={formatCommentTimestamp(reply.createdAt, lang)}>{formatCommentDate(reply.createdAt, lang, now)}</time>
+                                {reply.updatedAt !== reply.createdAt && <span className="text-[10px] leading-none text-muted-foreground">{t("comments.edited")}</span>}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="mt-2 whitespace-pre-wrap break-words text-[13px] text-muted-foreground">{reply.message}</p>
+                        </li>
+                      ))}
+                    </ul>}
                 </li>
               );
             })}

@@ -33,6 +33,32 @@ npm run build
 npm run preview
 ```
 
+## Reponses aux commentaires
+
+Sur une base existante, executer `supabase/comment-replies-migration.sql` dans
+le SQL Editor Supabase avant de deployer cette fonctionnalite. `supabase/schema.sql`
+inclut les memes definitions pour une nouvelle installation.
+
+Les comptes actifs avec un role `admin`, `super_admin` ou `moderator` peuvent
+repondre depuis l'onglet Comments. Le role `editor` seul ne donne pas ce droit.
+Renseigner leur nom public dans `public.profiles.display_name` (Table Editor,
+ligne dont l'id correspond au compte Auth). Aucun email n'est publie en remplacement.
+La base fixe l'identite de l'auteur et conserve son nom au moment de la creation.
+
+Chaque membre peut poster une reponse de 1 a 1000 caracteres par commentaire.
+Plusieurs membres peuvent repondre, mais seul l'auteur peut modifier ou supprimer
+sa propre reponse, meme si l'autre compte est super-admin. Les reponses ne peuvent
+pas contenir de sous-reponses. Le texte est affiche sans interpretation HTML.
+
+`Save reply` et la suppression sont immediats, independants de `Publish changes`.
+La moderation des commentaires reste publiee via `Publish changes`. Les reponses
+d'un commentaire non approuve sont masquees au public ; supprimer definitivement
+le commentaire supprime ses reponses. Le site les relit au prochain chargement.
+La suppression d'un profil ayant repondu est refusee tant que ses reponses existent.
+
+Tests PostgreSQL locaux (aucun acces Supabase necessaire) :
+`npm --prefix apps/admin run test:replies` depuis la racine.
+
 ## Note
 
 L'onglet `Scrolling banner` gere une liste ordonnee de messages francais et anglais.
@@ -53,6 +79,19 @@ La migration est relancable et ne remplace pas les portraits deja modifies.
 
 Le bouton `Publish` envoie toutes les modifications directement a Supabase.
 Ne jamais exposer une `service_role_key` dans ce frontend.
+
+Les cartes `Vinyl covers` et `Mix sessions` se reorganisent depuis leur poignee
+de deplacement, a la souris ou au tactile. Au clavier, placer le focus sur la
+poignee, appuyer sur Espace, utiliser les fleches, puis Espace pour deposer
+(Echap pour annuler). Les champs et les boutons d'upload restent independants
+du glisser-deposer. Pendant un upload MP3, le tri des mix est desactive.
+Les nouvelles cartes sont ajoutees en premiere position. L'ordre reste en
+brouillon jusqu'a `Publish changes`, qui enregistre les positions `sort_order`.
+Les mix restent limites a 8 cartes. Les uploads sont rattaches a l'identite
+de la carte, meme si une nouvelle carte est ajoutee pendant le transfert.
+
+Test de l'ordre des cartes : `npm --prefix apps/admin run test:ordering` depuis
+la racine du repo.
 
 Les uploads de covers, covers vinyl et MP3 passent par Supabase Storage dans le bucket `admin-media`, puis l'URL publique est sauvegardee dans la table concernnee.
 

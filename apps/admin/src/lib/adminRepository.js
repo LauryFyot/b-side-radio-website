@@ -183,6 +183,40 @@ export async function signOutUser() {
   await supabase.auth.signOut();
 }
 
+const REPLY_FIELDS = 'id,comment_id,author_id,author_name,body,created_at,updated_at';
+
+export async function fetchCommentReplyContext(commentIds) {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) throw new Error('Please sign in again.');
+  const [profile, canReply, replies] = await Promise.all([
+    supabase.from('profiles').select('display_name').eq('id', data.user.id).single()
+      .then((result) => throwOnError(result, 'Unable to read your public name.')),
+    supabase.rpc('can_reply_to_comments')
+      .then((result) => throwOnError(result, 'Apply the comment replies migration before replying.')),
+    commentIds.length
+      ? supabase.from('comment_replies').select(REPLY_FIELDS).in('comment_id', commentIds).order('created_at', { ascending: true })
+        .then((result) => throwOnError(result, 'Unable to load replies. Apply the comment replies migration.'))
+      : []
+  ]);
+  return { userId: data.user.id, displayName: profile.display_name?.trim() || '', canReply: Boolean(canReply), replies };
+}
+
+export async function saveCommentReply({ commentId, replyId, body }) {
+  const text = body.trim();
+  if (!text || text.length > 1000) throw new Error('Your reply must contain 1 to 1000 characters.');
+  const query = replyId == null
+    ? supabase.from('comment_replies').insert({ comment_id: commentId, body: text })
+    : supabase.from('comment_replies').update({ body: text }).eq('id', replyId);
+  const result = await query.select(REPLY_FIELDS).single();
+  if (result.error?.code === '23505') throw new Error('You already replied to this comment. Reload to edit your existing reply.');
+  return throwOnError(result, 'Unable to save your reply.');
+}
+
+export async function deleteCommentReply(replyId) {
+  const result = await supabase.from('comment_replies').delete().eq('id', replyId).select('id').single();
+  return throwOnError(result, 'Unable to delete your reply.');
+}
+
 export async function fetchBootstrapData() {
   // Read all datasets needed by the admin UI in parallel.
   if (!supabase) {

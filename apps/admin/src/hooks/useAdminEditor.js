@@ -4,7 +4,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { fetchBootstrapData, publishAdminData, publishScrollingBanner, synchronizeR2Mixes, uploadAdminFile } from '../lib/adminRepository';
 import { trackAdminClarityEvent } from '../lib/clarity';
-import { isDbId, toSlug } from '../utils/adminHelpers';
+import { isDbId, toSlug, getMediaItemKey, prependMediaItem, reorderMediaItems } from '../utils/adminHelpers';
 
 const MAX_MIX_SESSIONS = 8;
 const MAX_TEAM_MEMBERS = 8;
@@ -156,14 +156,24 @@ function useAdminEditor() {
   }
 
   function addCover() {
-    setCovers((prev) => [...prev, { id: null, image_url: '', title: '', artist: '', release_year: '', remixed_by: '', sort_order: prev.length, is_active: true }]);
+    const cover = { id: null, draft_key: globalThis.crypto.randomUUID(), image_url: '', title: '', artist: '', release_year: '', remixed_by: '', is_active: true };
+    setCovers((prev) => prependMediaItem(prev, cover));
   }
 
   function addTrack() {
+    const draftKey = globalThis.crypto.randomUUID();
     setTracks((prev) => prev.length >= MAX_MIX_SESSIONS
       ? prev
-      : [...prev, { id: null, title: `Mix Session ${prev.length + 1}`, dj_name: '', recommended_by: '', cover_url: '', buy_url: '', mp3_url: '', sort_order: prev.length, is_active: true }]
+      : prependMediaItem(prev, { id: null, draft_key: draftKey, title: `Mix Session ${prev.length + 1}`, dj_name: '', recommended_by: '', cover_url: '', buy_url: '', mp3_url: '', is_active: true })
     );
+  }
+
+  function reorderCovers(activeKey, overKey) {
+    setCovers((prev) => reorderMediaItems(prev, activeKey, overKey));
+  }
+
+  function reorderTracks(activeKey, overKey) {
+    setTracks((prev) => reorderMediaItems(prev, activeKey, overKey));
   }
 
   function addVideo() {
@@ -227,8 +237,9 @@ function useAdminEditor() {
   }
 
   async function uploadCoverImage(index, file) {
+    const key = getMediaItemKey(covers[index]);
     const publicUrl = await uploadAdminFile(file, 'covers');
-    updateCover(index, 'image_url', publicUrl);
+    setCovers((prev) => prev.map((cover) => getMediaItemKey(cover) === key ? { ...cover, image_url: publicUrl } : cover));
     return publicUrl;
   }
 
@@ -245,9 +256,10 @@ function useAdminEditor() {
   }
 
   async function uploadTrackMp3(index, file) {
+    const key = getMediaItemKey(tracks[index]);
     const publicUrl = await uploadAdminFile(file, 'tracks');
     uploadedMixUrls.current.add(publicUrl);
-    updateTrack(index, 'mp3_url', publicUrl);
+    setTracks((prev) => prev.map((track) => getMediaItemKey(track) === key ? { ...track, mp3_url: publicUrl } : track));
     return publicUrl;
   }
 
@@ -341,6 +353,8 @@ function useAdminEditor() {
     addSlot,
     addCover,
     addTrack,
+    reorderCovers,
+    reorderTracks,
     addVideo,
     addTeamMember,
     moveTeamMember,

@@ -24,6 +24,21 @@ type SupabaseCommentRow = {
   body?: string | null;
   created_at?: string | null;
   likes_count?: number | null;
+  replies?: {
+    id: number | string;
+    author_name: string;
+    body: string;
+    created_at: string;
+    updated_at: string;
+  }[];
+};
+
+export type SiteCommentReply = {
+  id: string;
+  name: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type SiteComment = {
@@ -33,6 +48,7 @@ export type SiteComment = {
   at: string;
   atEn: string;
   likes: number;
+  replies: SiteCommentReply[];
 };
 
 export const fallbackContent = {
@@ -66,6 +82,13 @@ function mapComments(comments: unknown): SiteComment[] {
       at: String(row.created_at || ''),
       atEn: String(row.created_at || ''),
       likes: Number(row.likes_count) || 0,
+      replies: (row.replies || []).map((reply) => ({
+        id: String(reply.id),
+        name: reply.author_name,
+        message: reply.body,
+        createdAt: reply.created_at,
+        updatedAt: reply.updated_at,
+      })),
     };
   });
 }
