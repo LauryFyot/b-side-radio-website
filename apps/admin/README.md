@@ -54,6 +54,19 @@ La migration est relancable et ne remplace pas les portraits deja modifies.
 Le bouton `Publish` envoie toutes les modifications directement a Supabase.
 Ne jamais exposer une `service_role_key` dans ce frontend.
 
+Les cartes `Vinyl covers` et `Mix sessions` se reorganisent depuis leur poignee
+de deplacement, a la souris ou au tactile. Au clavier, placer le focus sur la
+poignee, appuyer sur Espace, utiliser les fleches, puis Espace pour deposer
+(Echap pour annuler). Les champs et les boutons d'upload restent independants
+du glisser-deposer. Pendant un upload MP3, le tri des mix est desactive.
+Les nouvelles cartes sont ajoutees en premiere position. L'ordre reste en
+brouillon jusqu'a `Publish changes`, qui enregistre les positions `sort_order`.
+Les mix restent limites a 8 cartes. Les uploads sont rattaches a l'identite
+de la carte, meme si une nouvelle carte est ajoutee pendant le transfert.
+
+Test de l'ordre des cartes : `npm --prefix apps/admin run test:ordering` depuis
+la racine du repo.
+
 Les uploads de covers, covers vinyl et MP3 passent par Supabase Storage dans le bucket `admin-media`, puis l'URL publique est sauvegardee dans la table concernnee.
 
 ```mermaid

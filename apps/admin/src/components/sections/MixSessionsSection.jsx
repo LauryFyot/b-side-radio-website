@@ -2,15 +2,16 @@
 // Supports MP3 URL/file input, live audio preview, and duration hints.
 import { useEffect, useState } from 'react';
 import { AudioLines, LoaderCircle, Plus, Trash2, Upload } from 'lucide-react';
-import { formatDuration } from '../../utils/adminHelpers';
+import { formatDuration, getMediaItemKey } from '../../utils/adminHelpers';
+import SortableMediaGrid, { SortableMediaCard } from '../SortableMediaGrid';
 
 const MAX_MIX_SESSIONS = 8;
 
 function getMixSessionKey(track, index) {
-  return track.id == null ? `draft-${index}` : `saved-${track.id}`;
+  return getMediaItemKey(track);
 }
 
-function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp3, onRemoveTrack }) {
+function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp3, onRemoveTrack, onReorder }) {
   const [durations, setDurations] = useState({});
   const [uploadingKey, setUploadingKey] = useState(null);
 
@@ -78,14 +79,18 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-3">
+      <SortableMediaGrid items={tracks} onReorder={onReorder} className="grid grid-cols-1 gap-[14px] lg:grid-cols-3">
         {tracks.map((track, i) => {
           const key = getMixSessionKey(track, i);
           const isUploading = uploadingKey === key;
           return (
-          <article className={`tone-${(i % 4) + 1} flex min-h-[248px] flex-col gap-2 rounded-[var(--admin-radius)] p-[18px] text-white`} key={key}>
+          <SortableMediaCard id={key} label={`Move mix session ${i + 1}`} disabled={uploadingKey !== null} className={`tone-${(i % 4) + 1} flex min-h-[248px] flex-col gap-2 rounded-[var(--admin-radius)] p-[18px] text-white`} key={key}>
+            {(dragHandle) => <>
             <div className="mb-0.5 flex items-center justify-between">
-              <span className={`inline-flex min-h-2 items-center justify-center rounded-full px-2 py-0.5 font-bold text-xs ${i % 4 === 1 || i % 4 === 3 ? 'bg-[rgba(49,29,35,0.18)]' : 'bg-[rgba(0,0,0,0.16)]'}`}>#{i + 1}</span>
+              <div className="flex items-center gap-2">
+                {dragHandle}
+                <span className={`inline-flex min-h-2 items-center justify-center rounded-full px-2 py-0.5 font-bold text-xs ${i % 4 === 1 || i % 4 === 3 ? 'bg-[rgba(49,29,35,0.18)]' : 'bg-[rgba(0,0,0,0.16)]'}`}>#{i + 1}</span>
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-base opacity-90">{formatDuration(durations[key]) || '--:--'}</span>
                 <button
@@ -179,10 +184,11 @@ function MixSessionsSection({ tracks, onAddTrack, onUpdateTrack, onUploadTrackMp
               value={track.recommended_by || ''}
               onChange={(event) => onUpdateTrack(i, 'recommended_by', event.target.value)}
             />
-          </article>
+            </>}
+          </SortableMediaCard>
           );
         })}
-      </div>
+      </SortableMediaGrid>
     </section>
   );
 }
