@@ -5,6 +5,7 @@ import { PGlite } from '@electric-sql/pglite';
 
 const schema = readFileSync(new URL('../../../supabase/schema.sql', import.meta.url), 'utf8');
 const migration = readFileSync(new URL('../../../supabase/comment-replies-migration.sql', import.meta.url), 'utf8');
+const legacyImport = readFileSync(new URL('../../../supabase/import-legacy-eddy-replies.sql', import.meta.url), 'utf8');
 
 test('reply migration matches the initial schema', () => {
   const definitions = migration.trim().replace(/^begin;\s*/, '').replace(/\s*commit;$/, '').replace(/\s+/g, ' ');
@@ -110,3 +111,104 @@ test('PostgreSQL enforces staff reply permissions and visibility', async (suite)
     assert.equal((await db.query('select * from comment_replies')).rows.length, 0);
   });
 });
+
+for (const config of [
+  {
+    name: 'Eddy', script: legacyImport, table: 'eddy_reply_import',
+    authorId: 'c16e2d8e-28f1-467f-9adf-b293650ef59c', authorName: 'EDDY BSIDE RADIO',
+    legacyName: 'ByEddy@B.side radio', sourceId: 133, parentId: 22, count: 25
+  },
+  {
+    name: 'Bart',
+    script: readFileSync(new URL('../../../supabase/import-legacy-bart-replies.sql', import.meta.url), 'utf8'),
+    table: 'bart_reply_import', authorId: 'd67c7d3d-d3c4-4bad-a8ae-c88d2ed53eb5', authorName: 'DJ BART BSIDE RADIO',
+    legacyName: 'dj bart from bsr', sourceId: 92, parentId: 33, count: 7
+  }
+]) {
+test(`legacy ${config.name} import is atomic, repeatable and refuses conflicts`, async (suite) => {
+  const db = new PGlite();
+  suite.after(() => db.close());
+  await db.exec(`
+    create role anon; create role authenticated; create schema auth;
+    create function auth.uid() returns uuid language sql stable as $$select null::uuid$$;
+    create table profiles(id uuid primary key, display_name text, is_active boolean);
+    create table comments(id bigint primary key, author_name text, body text, status text, created_at timestamptz);
+    create function can_moderate_comments(uid uuid default auth.uid()) returns boolean language sql stable as $$select false$$;
+    insert into profiles values
+      ('${config.authorId}','${config.authorName}',true),
+      ('00000000-0000-0000-0000-000000000002','Other staff',true);
+    create table fixture_map(source_id bigint, parent_id bigint);
+  `);
+  await db.exec(config.script.match(new RegExp(`insert into ${config.table}[\\s\\S]*?;`))[0].replace(config.table, 'fixture_map'));
+  await db.exec(`
+    insert into comments select parent_id,'Visitor','Question '||parent_id,'approved','2026-10-23T12:00:00Z'::timestamptz from fixture_map;
+    insert into comments select source_id,'${config.legacyName}','Historical reply '||source_id,'approved','2026-10-24T12:00:00Z'::timestamptz from fixture_map;
+  `);
+  await db.exec(migration);
+  const countReplies = async () => (await db.query('select count(*)::integer as total from comment_replies')).rows[0].total;
+  const hiddenCount = async () => (await db.query("select count(*)::integer as total from comments where status='removed'")).rows[0].total;
+  const guardState = async () => (await db.query("select tgenabled from pg_trigger where tgname='comment_reply_guard'")).rows[0].tgenabled;
+  async function rejectedImport(pattern) {
+    await assert.rejects(() => db.exec(config.script), pattern);
+    await db.exec('rollback;');
+    assert.equal(await hiddenCount(), 0);
+    assert.equal(await guardState(), 'O');
+  }
+
+  await suite.test('a source with existing replies is not hidden', async () => {
+    await db.exec(`
+      alter table comment_replies disable trigger comment_reply_guard;
+      insert into comment_replies(comment_id,author_id,author_name,body)
+      values(${config.sourceId},'00000000-0000-0000-0000-000000000002','Other staff','Existing child reply');
+      alter table comment_replies enable trigger comment_reply_guard;
+    `);
+    await rejectedImport(new RegExp(`already have replies: ${config.sourceId}`));
+    assert.equal(await countReplies(), 1);
+    await db.exec('delete from comment_replies;');
+  });
+
+  await suite.test('an existing author reply is never overwritten', async () => {
+    await db.exec(`
+      alter table comment_replies disable trigger comment_reply_guard;
+      insert into comment_replies(comment_id,author_id,author_name,body)
+      values(${config.parentId},'${config.authorId}','${config.authorName}','Keep this reply');
+      alter table comment_replies enable trigger comment_reply_guard;
+    `);
+    await rejectedImport(/already exists/);
+    assert.equal((await db.query('select body from comment_replies')).rows[0].body, 'Keep this reply');
+    await db.exec('delete from comment_replies;');
+  });
+
+  await suite.test('failure during source updates rolls back the entire import', async () => {
+    await db.exec(`
+      create function reject_import_status() returns trigger language plpgsql as $$
+      begin raise exception 'Simulated status update failure'; end; $$;
+      create trigger reject_import_status before update on comments
+      for each row execute function reject_import_status();
+    `);
+    await rejectedImport(/Simulated status update failure/);
+    assert.equal(await countReplies(), 0);
+    await db.exec('drop trigger reject_import_status on comments; drop function reject_import_status();');
+  });
+
+  await suite.test(`${config.count} replies preserve text and dates, hide only sources and remain idempotent`, async () => {
+    await db.exec(config.script);
+    assert.equal(await countReplies(), config.count);
+    assert.equal(await hiddenCount(), config.count);
+    assert.equal((await db.query(`
+      select count(*)::integer as total from fixture_map mapping
+      join comments source on source.id=mapping.source_id
+      join comments parent on parent.id=mapping.parent_id
+      join comment_replies reply on reply.comment_id=mapping.parent_id
+      where reply.body=source.body and reply.created_at=source.created_at
+        and reply.updated_at=reply.created_at and parent.status='approved'
+        and reply.author_id='${config.authorId}'
+        and reply.author_name='${config.authorName}'
+      `)).rows[0].total, config.count);
+      await db.exec(config.script);
+      assert.equal(await countReplies(), config.count);
+    assert.equal(await guardState(), 'O');
+    await assert.rejects(() => db.query(`insert into comment_replies(comment_id,body) values(${config.parentId},'Unsigned reply')`), /Only active comment moderators/);
+  });
+});
+}
