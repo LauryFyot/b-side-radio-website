@@ -17,12 +17,20 @@ export function cleanSongText(value) {
   return String(value || '').replace(/\.[a-z0-9]{2,4}$/i, '').trim();
 }
 
+function removeRadioDjTopic(value) {
+  return String(value || '')
+    .split(/\s+-\s+/)
+    .filter((part) => part.trim().toLowerCase() !== 'topic')
+    .join(' - ')
+    .trim();
+}
+
 export function cleanTrackMetadata(value) {
-  return cleanSongText(value).replace(/^(?:BSL|BSK|FZ|HT|ML|SKB|SKE|TOP|TT|WU)/, '').trimStart();
+  return cleanSongText(removeRadioDjTopic(value)).replace(/^(?:BSL|BSK|FZ|HT|ML|SKB|SKE|TOP(?!IC)|TT|WU)/, '').trimStart();
 }
 
 export function splitSongText(value) {
-  return cleanSongText(value)
+  return cleanSongText(removeRadioDjTopic(value))
     .split(' - ')
     .map((part) => part.trim())
     .filter(Boolean);
@@ -85,7 +93,7 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
     const source = Array.isArray(icecastSource)
       ? icecastSource.find((item) => String(item?.listenurl || '').endsWith('/stream')) || icecastSource[0]
       : icecastSource;
-    const metadata = String(source?.title || '').split(' - ').map((part) => part.trim());
+    const metadata = removeRadioDjTopic(source?.title).split(' - ').map((part) => part.trim());
     const [artist = '', title = '', comment = '', image = ''] = metadata;
     const trackTitle = cleanTrackMetadata(title);
     const trackArtist = cleanTrackMetadata(artist);
@@ -110,7 +118,7 @@ export function normalizeNowPlayingPayload(payload, fallbackStationId = 1) {
   const station = extractStation(payload, fallbackStationId);
   const nowPlaying = station?.now_playing || station?.nowplaying || station?.live || payload?.now_playing || payload?.nowplaying || payload?.live || null;
   const track = nowPlaying?.song || nowPlaying?.track || nowPlaying || {};
-  const rawText = track?.text || track?.subtitle || track?.title || track?.name || station?.text || nowPlaying?.text || '';
+  const rawText = removeRadioDjTopic(track?.text || track?.subtitle || track?.title || track?.name || station?.text || nowPlaying?.text || '');
   const parts = splitSongText(rawText);
   const artistName = cleanTrackMetadata(track?.artist || track?.artist_name || track?.artiste || track?.artists?.[0]?.name || parts[0] || '');
   const title = cleanTrackMetadata(track?.title || track?.name || parts[1] || '')
