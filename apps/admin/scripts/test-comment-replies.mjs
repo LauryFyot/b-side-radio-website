@@ -5,6 +5,7 @@ import { PGlite } from '@electric-sql/pglite';
 
 const schema = readFileSync(new URL('../../../supabase/schema.sql', import.meta.url), 'utf8');
 const migration = readFileSync(new URL('../../../supabase/comment-replies-migration.sql', import.meta.url), 'utf8');
+const legacyImport = readFileSync(new URL('../../../supabase/import-legacy-eddy-replies.sql', import.meta.url), 'utf8');
 
 test('reply migration matches the initial schema', () => {
   const definitions = migration.trim().replace(/^begin;\s*/, '').replace(/\s*commit;$/, '').replace(/\s+/g, ' ');
@@ -108,5 +109,92 @@ test('PostgreSQL enforces staff reply permissions and visibility', async (suite)
     assert.equal((await db.query('delete from comment_replies where id=$1 returning id', [alice.id])).rows.length, 1);
     await db.exec('reset role; delete from comments where id=1;');
     assert.equal((await db.query('select * from comment_replies')).rows.length, 0);
+  });
+});
+
+test('legacy Eddy import is atomic, repeatable and refuses conflicts', async (suite) => {
+  const db = new PGlite();
+  suite.after(() => db.close());
+  await db.exec(`
+    create role anon; create role authenticated; create schema auth;
+    create function auth.uid() returns uuid language sql stable as $$select null::uuid$$;
+    create table profiles(id uuid primary key, display_name text, is_active boolean);
+    create table comments(id bigint primary key, author_name text, body text, status text, created_at timestamptz);
+    create function can_moderate_comments(uid uuid default auth.uid()) returns boolean language sql stable as $$select false$$;
+    insert into profiles values
+      ('c16e2d8e-28f1-467f-9adf-b293650ef59c','EDDY BSIDE RADIO',true),
+      ('00000000-0000-0000-0000-000000000002','Other staff',true);
+    create table fixture_map(source_id bigint, parent_id bigint);
+  `);
+  await db.exec(legacyImport.match(/insert into eddy_reply_import[\s\S]*?;/)[0].replace('eddy_reply_import', 'fixture_map'));
+  await db.exec(`
+    insert into comments select parent_id,'Visitor','Question '||parent_id,'approved','2026-10-23T12:00:00Z'::timestamptz from fixture_map;
+    insert into comments select source_id,'ByEddy@B.side radio','Historical reply '||source_id,'approved','2026-10-24T12:00:00Z'::timestamptz from fixture_map;
+  `);
+  await db.exec(migration);
+  const countReplies = async () => (await db.query('select count(*)::integer as total from comment_replies')).rows[0].total;
+  const hiddenCount = async () => (await db.query("select count(*)::integer as total from comments where status='removed'")).rows[0].total;
+  const guardState = async () => (await db.query("select tgenabled from pg_trigger where tgname='comment_reply_guard'")).rows[0].tgenabled;
+  async function rejectedImport(pattern) {
+    await assert.rejects(() => db.exec(legacyImport), pattern);
+    await db.exec('rollback;');
+    assert.equal(await hiddenCount(), 0);
+    assert.equal(await guardState(), 'O');
+  }
+
+  await suite.test('a source with existing replies is not hidden', async () => {
+    await db.exec(`
+      alter table comment_replies disable trigger comment_reply_guard;
+      insert into comment_replies(comment_id,author_id,author_name,body)
+      values(133,'00000000-0000-0000-0000-000000000002','Other staff','Existing child reply');
+      alter table comment_replies enable trigger comment_reply_guard;
+    `);
+    await rejectedImport(/already have replies: 133/);
+    assert.equal(await countReplies(), 1);
+    await db.exec('delete from comment_replies;');
+  });
+
+  await suite.test('an existing Eddy reply is never overwritten', async () => {
+    await db.exec(`
+      alter table comment_replies disable trigger comment_reply_guard;
+      insert into comment_replies(comment_id,author_id,author_name,body)
+      values(22,'c16e2d8e-28f1-467f-9adf-b293650ef59c','EDDY BSIDE RADIO','Keep this reply');
+      alter table comment_replies enable trigger comment_reply_guard;
+    `);
+    await rejectedImport(/already exists/);
+    assert.equal((await db.query('select body from comment_replies')).rows[0].body, 'Keep this reply');
+    await db.exec('delete from comment_replies;');
+  });
+
+  await suite.test('failure during source updates rolls back the entire import', async () => {
+    await db.exec(`
+      create function reject_import_status() returns trigger language plpgsql as $$
+      begin raise exception 'Simulated status update failure'; end; $$;
+      create trigger reject_import_status before update on comments
+      for each row execute function reject_import_status();
+    `);
+    await rejectedImport(/Simulated status update failure/);
+    assert.equal(await countReplies(), 0);
+    await db.exec('drop trigger reject_import_status on comments; drop function reject_import_status();');
+  });
+
+  await suite.test('25 replies preserve text and dates, hide only sources and remain idempotent', async () => {
+    await db.exec(legacyImport);
+    assert.equal(await countReplies(), 25);
+    assert.equal(await hiddenCount(), 25);
+    assert.equal((await db.query(`
+      select count(*)::integer as total from fixture_map mapping
+      join comments source on source.id=mapping.source_id
+      join comments parent on parent.id=mapping.parent_id
+      join comment_replies reply on reply.comment_id=mapping.parent_id
+      where reply.body=source.body and reply.created_at=source.created_at
+        and reply.updated_at=reply.created_at and parent.status='approved'
+        and reply.author_id='c16e2d8e-28f1-467f-9adf-b293650ef59c'
+        and reply.author_name='EDDY BSIDE RADIO'
+    `)).rows[0].total, 25);
+    await db.exec(legacyImport);
+    assert.equal(await countReplies(), 25);
+    assert.equal(await guardState(), 'O');
+    await assert.rejects(() => db.query("insert into comment_replies(comment_id,body) values(22,'Unsigned reply')"), /Only active comment moderators/);
   });
 });
