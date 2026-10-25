@@ -148,6 +148,22 @@ L'export contient aussi des reponses de DJ Bart, notamment **55 -> 54**, **59 ->
 des profils fourni. Ne pas attribuer ces messages a Eddy ou MIZANY.
 Ils ne font pas partie de la migration proposee pour Eddy.
 
+### Import Bart prepare apres confirmation du profil
+
+Profil confirme : `d67c7d3d-d3c4-4bad-a8ae-c88d2ed53eb5`, nom public
+`DJ BART BSIDE RADIO`. Le script `supabase/import-legacy-bart-replies.sql`
+importe **34 -> 33**, **55 -> 54**, **59 -> 58**, **62 -> 61**, **76 -> 75**,
+**82 -> 81** et **92 -> 91**. Pour le message collectif 92, le dernier
+commentaire des deux destinataires, celui de Loic, a ete retenu.
+
+Les messages **21, 49, 52, 56, 73 et 102** restent autonomes : annonces
+ou remerciements collectifs sans parent unique identifiable.
+
+Comme pour Eddy : sauvegarder les tables, executer le script entier dans le SQL
+Editor Supabase avec les droits administrateur de base de donnees, et ne pas
+supprimer les commentaires sources au prealable. Les textes et dates sont conserves,
+les anciennes reponses passent en `removed`, et tout conflit annule l'import.
+
 ## Regles pour le futur script, apres validation
 
 1. Verifier le profil, chaque identifiant, le texte et les dates attendus avant d'ecrire.

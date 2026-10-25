@@ -112,7 +112,20 @@ test('PostgreSQL enforces staff reply permissions and visibility', async (suite)
   });
 });
 
-test('legacy Eddy import is atomic, repeatable and refuses conflicts', async (suite) => {
+for (const config of [
+  {
+    name: 'Eddy', script: legacyImport, table: 'eddy_reply_import',
+    authorId: 'c16e2d8e-28f1-467f-9adf-b293650ef59c', authorName: 'EDDY BSIDE RADIO',
+    legacyName: 'ByEddy@B.side radio', sourceId: 133, parentId: 22, count: 25
+  },
+  {
+    name: 'Bart',
+    script: readFileSync(new URL('../../../supabase/import-legacy-bart-replies.sql', import.meta.url), 'utf8'),
+    table: 'bart_reply_import', authorId: 'd67c7d3d-d3c4-4bad-a8ae-c88d2ed53eb5', authorName: 'DJ BART BSIDE RADIO',
+    legacyName: 'dj bart from bsr', sourceId: 92, parentId: 33, count: 7
+  }
+]) {
+test(`legacy ${config.name} import is atomic, repeatable and refuses conflicts`, async (suite) => {
   const db = new PGlite();
   suite.after(() => db.close());
   await db.exec(`
@@ -122,21 +135,21 @@ test('legacy Eddy import is atomic, repeatable and refuses conflicts', async (su
     create table comments(id bigint primary key, author_name text, body text, status text, created_at timestamptz);
     create function can_moderate_comments(uid uuid default auth.uid()) returns boolean language sql stable as $$select false$$;
     insert into profiles values
-      ('c16e2d8e-28f1-467f-9adf-b293650ef59c','EDDY BSIDE RADIO',true),
+      ('${config.authorId}','${config.authorName}',true),
       ('00000000-0000-0000-0000-000000000002','Other staff',true);
     create table fixture_map(source_id bigint, parent_id bigint);
   `);
-  await db.exec(legacyImport.match(/insert into eddy_reply_import[\s\S]*?;/)[0].replace('eddy_reply_import', 'fixture_map'));
+  await db.exec(config.script.match(new RegExp(`insert into ${config.table}[\\s\\S]*?;`))[0].replace(config.table, 'fixture_map'));
   await db.exec(`
     insert into comments select parent_id,'Visitor','Question '||parent_id,'approved','2026-10-23T12:00:00Z'::timestamptz from fixture_map;
-    insert into comments select source_id,'ByEddy@B.side radio','Historical reply '||source_id,'approved','2026-10-24T12:00:00Z'::timestamptz from fixture_map;
+    insert into comments select source_id,'${config.legacyName}','Historical reply '||source_id,'approved','2026-10-24T12:00:00Z'::timestamptz from fixture_map;
   `);
   await db.exec(migration);
   const countReplies = async () => (await db.query('select count(*)::integer as total from comment_replies')).rows[0].total;
   const hiddenCount = async () => (await db.query("select count(*)::integer as total from comments where status='removed'")).rows[0].total;
   const guardState = async () => (await db.query("select tgenabled from pg_trigger where tgname='comment_reply_guard'")).rows[0].tgenabled;
   async function rejectedImport(pattern) {
-    await assert.rejects(() => db.exec(legacyImport), pattern);
+    await assert.rejects(() => db.exec(config.script), pattern);
     await db.exec('rollback;');
     assert.equal(await hiddenCount(), 0);
     assert.equal(await guardState(), 'O');
@@ -146,19 +159,19 @@ test('legacy Eddy import is atomic, repeatable and refuses conflicts', async (su
     await db.exec(`
       alter table comment_replies disable trigger comment_reply_guard;
       insert into comment_replies(comment_id,author_id,author_name,body)
-      values(133,'00000000-0000-0000-0000-000000000002','Other staff','Existing child reply');
+      values(${config.sourceId},'00000000-0000-0000-0000-000000000002','Other staff','Existing child reply');
       alter table comment_replies enable trigger comment_reply_guard;
     `);
-    await rejectedImport(/already have replies: 133/);
+    await rejectedImport(new RegExp(`already have replies: ${config.sourceId}`));
     assert.equal(await countReplies(), 1);
     await db.exec('delete from comment_replies;');
   });
 
-  await suite.test('an existing Eddy reply is never overwritten', async () => {
+  await suite.test('an existing author reply is never overwritten', async () => {
     await db.exec(`
       alter table comment_replies disable trigger comment_reply_guard;
       insert into comment_replies(comment_id,author_id,author_name,body)
-      values(22,'c16e2d8e-28f1-467f-9adf-b293650ef59c','EDDY BSIDE RADIO','Keep this reply');
+      values(${config.parentId},'${config.authorId}','${config.authorName}','Keep this reply');
       alter table comment_replies enable trigger comment_reply_guard;
     `);
     await rejectedImport(/already exists/);
@@ -178,10 +191,10 @@ test('legacy Eddy import is atomic, repeatable and refuses conflicts', async (su
     await db.exec('drop trigger reject_import_status on comments; drop function reject_import_status();');
   });
 
-  await suite.test('25 replies preserve text and dates, hide only sources and remain idempotent', async () => {
-    await db.exec(legacyImport);
-    assert.equal(await countReplies(), 25);
-    assert.equal(await hiddenCount(), 25);
+  await suite.test(`${config.count} replies preserve text and dates, hide only sources and remain idempotent`, async () => {
+    await db.exec(config.script);
+    assert.equal(await countReplies(), config.count);
+    assert.equal(await hiddenCount(), config.count);
     assert.equal((await db.query(`
       select count(*)::integer as total from fixture_map mapping
       join comments source on source.id=mapping.source_id
@@ -189,12 +202,13 @@ test('legacy Eddy import is atomic, repeatable and refuses conflicts', async (su
       join comment_replies reply on reply.comment_id=mapping.parent_id
       where reply.body=source.body and reply.created_at=source.created_at
         and reply.updated_at=reply.created_at and parent.status='approved'
-        and reply.author_id='c16e2d8e-28f1-467f-9adf-b293650ef59c'
-        and reply.author_name='EDDY BSIDE RADIO'
-    `)).rows[0].total, 25);
-    await db.exec(legacyImport);
-    assert.equal(await countReplies(), 25);
+        and reply.author_id='${config.authorId}'
+        and reply.author_name='${config.authorName}'
+      `)).rows[0].total, config.count);
+      await db.exec(config.script);
+      assert.equal(await countReplies(), config.count);
     assert.equal(await guardState(), 'O');
-    await assert.rejects(() => db.query("insert into comment_replies(comment_id,body) values(22,'Unsigned reply')"), /Only active comment moderators/);
+    await assert.rejects(() => db.query(`insert into comment_replies(comment_id,body) values(${config.parentId},'Unsigned reply')`), /Only active comment moderators/);
   });
 });
+}
