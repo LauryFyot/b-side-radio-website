@@ -5,7 +5,7 @@ import vm from "node:vm";
 import ts from "typescript";
 
 const source = readFileSync(new URL("../src/components/player/player-context.tsx", import.meta.url), "utf8");
-const compiled = ts.transpileModule(source, {
+const withAutoplay = ts.transpileModule(source.replace("const ENABLE_AUTOPLAY = false;", "const ENABLE_AUTOPLAY = true;"), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
 }).outputText;
 const withoutAutoplay = ts.transpileModule(source.replace("const ENABLE_AUTOPLAY = true;", "const ENABLE_AUTOPLAY = false;"), {
@@ -28,6 +28,7 @@ function mountPlayer({ autoplay = false, fail = false, deferred = false } = {}) 
   let cursor = 0;
   const audio = {
     src: "", loads: 0, plays: 0, pauses: 0, fail, pending: [],
+    getAttribute(name) { return name === "src" && this.src ? this.src : null; },
     load() { this.loads += 1; },
     play() {
       this.plays += 1;
@@ -61,7 +62,7 @@ function mountPlayer({ autoplay = false, fail = false, deferred = false } = {}) 
     removeEventListener: (name) => listeners.delete(name),
   };
   const exports = {};
-  vm.runInNewContext(autoplay ? compiled : withoutAutoplay, {
+  vm.runInNewContext(autoplay ? withAutoplay : withoutAutoplay, {
     exports, window, Element,
     require: (name) => {
       if (name === "react") return react;
@@ -121,7 +122,7 @@ for (const selector of ["#player-toggle-hero", "#player-toggle-bar"]) {
     assert.equal(player.audio.plays, 1);
     await player.click(icon, true);
     assert.equal(player.audio.plays, 2);
-    assert.equal(player.audio.loads, 2);
+    assert.equal(player.audio.loads, 1);
     assert.equal(player.render().playing, true);
   });
 }
@@ -189,7 +190,7 @@ for (const explicitPlayer of [false, true]) {
     player.audio.fail = false;
     await player.click(new Element(explicitPlayer ? "#player-toggle-hero" : "main"), explicitPlayer);
     assert.equal(player.audio.plays, 2);
-    assert.equal(player.audio.loads, 2);
+    assert.equal(player.audio.loads, 1);
     assert.equal(player.audio.pauses, 0);
     assert.equal(player.render().playing, true);
   });

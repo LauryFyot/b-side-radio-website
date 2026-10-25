@@ -31,8 +31,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (!el) return false;
     const request = ++playRequestRef.current;
 
-    el.src = getRadioStreamUrl();
-    el.load();
+    const streamUrl = getRadioStreamUrl();
+    if (el.getAttribute("src") !== streamUrl) {
+      el.src = streamUrl;
+      el.load();
+    }
 
     try {
       await el.play();
