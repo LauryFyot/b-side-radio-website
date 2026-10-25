@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { getRadioStreamUrl } from '@/lib/radio';
 
+const ENABLE_AUTOPLAY = false;
+
 type Source = { kind: "live" } | { kind: "track"; id: string; title: string; artist: string; src: string };
 
 type PlayerState = {
@@ -18,39 +20,50 @@ const Ctx = createContext<PlayerState | null>(null);
 // Controls the persistent audio element used by the live stream and track previews.
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const autoplayAttemptedRef = useRef(false);
+  const firstGesturePendingRef = useRef(true);
+  const playRequestRef = useRef(0);
   const [source, setSource] = useState<Source>({ kind: "live" });
   const [playing, setPlaying] = useState(false);
 
   const play = useCallback(async () => {
     const el = audioRef.current;
-    if (!el) return;
+    if (!el) return false;
+    const request = ++playRequestRef.current;
 
     el.src = getRadioStreamUrl();
     el.load();
 
     try {
       await el.play();
+      if (request !== playRequestRef.current) return false;
+      firstGesturePendingRef.current = false;
       setPlaying(true);
+      return true;
     } catch {
-      setPlaying(false);
+      if (request === playRequestRef.current) setPlaying(false);
+      return false;
     }
   }, []);
 
   useEffect(() => {
-    void play();
+    if (ENABLE_AUTOPLAY && !autoplayAttemptedRef.current) {
+      autoplayAttemptedRef.current = true;
+      void play();
+    }
 
-    const onUserGesture = () => {
+    const onUserGesture = (event: MouseEvent) => {
+      if (!firstGesturePendingRef.current) return;
+      firstGesturePendingRef.current = false;
+      const target = event.target;
+      if (target instanceof Element && target.closest('#player-toggle-hero, #player-toggle-bar, [data-clarity-label="mix-play"], audio')) return;
       void play();
     };
 
-    window.addEventListener("pointerdown", onUserGesture, { once: true });
-    window.addEventListener("touchstart", onUserGesture, { once: true });
-    window.addEventListener("keydown", onUserGesture, { once: true });
+    window.addEventListener("click", onUserGesture, { once: true });
 
     return () => {
-      window.removeEventListener("pointerdown", onUserGesture);
-      window.removeEventListener("touchstart", onUserGesture);
-      window.removeEventListener("keydown", onUserGesture);
+      window.removeEventListener("click", onUserGesture);
     };
   }, [play]);
 
@@ -63,25 +76,25 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     toggleLive: () => {
       const el = audioRef.current;
       if (!el) return;
+      firstGesturePendingRef.current = false;
       if (source.kind !== "live") {
         setSource({ kind: "live" });
-        el.src = getRadioStreamUrl();
-        el.load();
         void play();
         return;
       }
       if (playing) {
+        playRequestRef.current += 1;
         el.pause();
         setPlaying(false);
       } else {
-        el.src = getRadioStreamUrl();
-        el.load();
         void play();
       }
     },
     playTrack: (t) => {
       const el = audioRef.current;
       if (!el) return;
+      firstGesturePendingRef.current = false;
+      playRequestRef.current += 1;
       el.pause();
       setSource({ kind: "live" });
       setPlaying(false);

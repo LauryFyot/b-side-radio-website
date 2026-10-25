@@ -10,6 +10,7 @@
     "test:supabase": "node scripts/test-supabase-content.mjs",
     "test:analytics": "node --test scripts/test-analytics.mjs",
     "test:comment-dates": "node --test scripts/test-comment-dates.mjs",
+    "test:player": "node --test scripts/test-player-gesture.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

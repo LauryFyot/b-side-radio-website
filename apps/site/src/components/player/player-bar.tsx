@@ -84,7 +84,6 @@ export function PlayerBar() {
       <audio
         ref={audioRef}
         preload="auto"
-        autoPlay
         onPlay={() => setPlaying(true)}
         onPlaying={() => {
           if (source.kind === "live" && !radioPlaybackTrackedRef.current) {
